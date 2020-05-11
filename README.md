@@ -16,7 +16,7 @@
   npm run start / npm run start:dev (dev热更新)
   
   // 客户端
-  cd client
+  cd client/pc, cd client/mobile
   npm install / yarn install
   npm run dev (dev热更新)
 ```
