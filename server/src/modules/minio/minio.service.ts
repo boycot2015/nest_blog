@@ -22,7 +22,7 @@ export class MinioService {
     initial() {
         this.minioClient = new Minio.Client({
             ...this.options,
-            endPoint: '192.168.0.111',
+            endPoint: '127.0.0.1',
             port: 9000,
             useSSL: false,
             accessKey: 'minioadmin',
@@ -47,10 +47,8 @@ export class MinioService {
             this.minioClient.bucketExists(bucketName)
         });
     }
-    async uploadFile(fileName, file: Buffer, type) {
+    async uploadFile(fileName, file: Buffer, type, BucketName = 'blog') {
         this.initial();
-        const res = await this.minioClient.listBuckets()
-        const BucketName = (res[0] && res[0].name) || 'myBucket'
         if (!this.minioClient.bucketExists(BucketName)) {
             await this.createBucket(BucketName);
         }
@@ -69,10 +67,11 @@ export class MinioService {
             throw new HttpException(e.message, 500);
         }
     }
-    async getObject(fileName) {
+    async getObject(fileName, type = 'image/jpeg', BucketName = 'blog') {
         this.initial();
-        const res = await this.minioClient.listBuckets()
-        const BucketName = (res[0] && res[0].name) || 'myBucket'
+        if (type === 'image/jpeg') {
+            return await this.minioClient.presignedUrl('GET', BucketName, fileName, 24 * 60 * 60 * 7)
+        }
         try {
             return await this.minioClient.getObject(BucketName, fileName);
         } catch (e) {

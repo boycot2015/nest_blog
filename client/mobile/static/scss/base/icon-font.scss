@@ -1,0 +1,56 @@
+@font-face {
+    font-family: 'iconIntegral';  /* project id 834086 */
+    src: url('//at.alicdn.com/t/font_834086_c5is6xjocxg.eot');
+    src: url('//at.alicdn.com/t/font_834086_c5is6xjocxg.eot?#iefix') format('embedded-opentype'),
+    url('//at.alicdn.com/t/font_834086_c5is6xjocxg.woff2') format('woff2'),
+    url('//at.alicdn.com/t/font_834086_c5is6xjocxg.woff') format('woff'),
+    url('//at.alicdn.com/t/font_834086_c5is6xjocxg.ttf') format('truetype'),
+    url('//at.alicdn.com/t/font_834086_c5is6xjocxg.svg#iconIntegral') format('svg');
+  }
+  .iconfont {
+    font-family: iconIntegral;
+    font-size: 24px;
+    color: $c-333;
+  }
+  .icon-home::after {
+    content: "\e61e";
+    font-family: iconIntegral;
+    font-size: 24px;
+    color: $c-333;
+  }
+  .icon-phone::after {
+    content: "\e620";
+    font-family: iconIntegral;
+    font-size: 24px;
+    color: $c-333;
+  }
+  .icon-shop::after {
+    content: "\e616";
+    font-family: iconIntegral;
+    font-size: 24px;
+    color: $c-333;
+  }
+  .icon-user::after {
+    content: "\e629";
+    font-family: iconIntegral;
+    font-size: 24px;
+    color: $c-333;
+  }
+  .icon-address::after {
+    content: "\e634";
+    font-family: iconIntegral;
+    font-size: 24px;
+    color: $c-333;
+  }
+  .icon-cart::after {
+    content: "\e610";
+    font-family: iconIntegral;
+    font-size: 24px;
+    color: $c-333;
+  }
+  .icon-cate::after {
+    content: "\e633";
+    font-family: iconIntegral;
+    font-size: 24px;
+    color: $c-333;
+  }

@@ -3,13 +3,16 @@ import {
     Post,
     Body,
     Req,
+    Query,
+    Get,
+    Param,
     UseInterceptors,
     HttpException,
     UploadedFile,
     UploadedFiles
 } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor, FileFieldsInterceptor } from '@nestjs/platform-express';
-import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiParam } from '@nestjs/swagger';
 // import { AuthGuard } from '@nestjs/passport';
 import { responseStatus } from "../../utils";
 import { createWriteStream } from 'fs';
@@ -27,8 +30,9 @@ export class UploadController {
     ) { }
     @Post()
     @ApiOperation({ summary: '上传文件', description: "上传文件" })
+    @ApiParam({name: 'file', type: 'file', required: true})
     @UseInterceptors(FileInterceptor('file')) // file对应HTML表单的name属性
-    async UploadedFile(@UploadedFile() file, @Body() body, @Req() req) {
+    async UploadedFile(@Param('file') @UploadedFile('file') file, @Body() body) {
         // const temp = req.header('authorization').split(' ');
         // const userId = (decryptByDES(temp[temp.length - 1]) as any)
         //     .userId;
@@ -79,5 +83,10 @@ export class UploadController {
             const writeImage = createWriteStream(join(__dirname, '../../../../public/upload', `${body.name}-${Date.now()}-${file.originalname}`))
             writeImage.write(file.buffer)
         }
+    }
+
+    @Get('/minio/list')
+    getMinioObject() {
+        this.minioService.getObject('banner (1).jpg')
     }
 }
