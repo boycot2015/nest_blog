@@ -1,0 +1,10 @@
+.wrapper {
+    :global {
+      .public-DraftStyleDefault-orderedListItem.public-DraftStyleDefault-listLTR:before {
+        top: 3px;
+      }
+    }
+  }
+  .bf-content {
+      height: 300px;
+  }

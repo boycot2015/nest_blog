@@ -1,0 +1,15 @@
+@tailwind base;
+@font-face {
+    font-family: 'iconIntegral';  /* project id 834086 */
+    src: url('//at.alicdn.com/t/font_834086_c5is6xjocxg.eot');
+    src: url('//at.alicdn.com/t/font_834086_c5is6xjocxg.eot?#iefix') format('embedded-opentype'),
+    url('//at.alicdn.com/t/font_834086_c5is6xjocxg.woff2') format('woff2'),
+    url('//at.alicdn.com/t/font_834086_c5is6xjocxg.woff') format('woff'),
+    url('//at.alicdn.com/t/font_834086_c5is6xjocxg.ttf') format('truetype'),
+    url('//at.alicdn.com/t/font_834086_c5is6xjocxg.svg#iconIntegral') format('svg');
+  }
+  svg {
+      vertical-align: baseline;
+  }
+@tailwind components;
+@tailwind utilities;

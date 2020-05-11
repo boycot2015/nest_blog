@@ -1,0 +1,20 @@
+.flexbox-h {
+    display: flex;
+    flex-direction: row;
+}
+.flexbox-v {
+    display: flex;
+    flex-direction: column;
+}
+.align-c {
+    align-items: center;
+}
+.align-l {
+    align-items: flex-start;
+}
+.align-r {
+    align-items: flex-end;
+}
+.pad20 {
+    padding: 20px;
+}
