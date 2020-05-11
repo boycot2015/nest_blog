@@ -1,14 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 import {
     Form, Tag, notification,
     Button, Row, Col, Input,
     Select, Table, Cascader,
     Badge
 } from 'antd';
-import Layout from '@/layouts';
 import Head from 'next/head';
 import Router from 'next/router';
-import $api from '@/api/apiList';
 const { Option, OptGroup } = Select;
 const columns = [
     {
@@ -72,77 +70,6 @@ const columns = [
                 <a>删除</a>
             </span>
         ),
-    },
-];
-let data = [
-    {
-        key: '1',
-        name: 'John Brown',
-        age: 32,
-        address: 'New York No. 1 Lake Park',
-        tags: ['nice', 'developer'],
-    },
-    {
-        key: '2',
-        name: 'Jim Green',
-        age: 42,
-        address: 'London No. 1 Lake Park',
-        tags: ['loser'],
-    },
-    {
-        key: '3',
-        name: 'Joe Black',
-        age: 32,
-        address: 'Sidney No. 1 Lake Park',
-        tags: ['cool', 'teacher'],
-    }, {
-        key: '4',
-        name: 'Joe Black',
-        age: 32,
-        address: 'Sidney No. 1 Lake Park',
-        tags: ['cool', 'teacher'],
-    }, {
-        key: '5',
-        name: 'Joe Black',
-        age: 32,
-        address: 'Sidney No. 1 Lake Park',
-        tags: ['cool', 'teacher'],
-    }, {
-        key: '6',
-        name: 'Joe Black',
-        age: 32,
-        address: 'Sidney No. 1 Lake Park',
-        tags: ['cool', 'teacher'],
-    }, {
-        key: '7',
-        name: 'Joe Black',
-        age: 32,
-        address: 'Sidney No. 1 Lake Park',
-        tags: ['cool', 'teacher'],
-    }, {
-        key: '8',
-        name: 'Joe Black',
-        age: 32,
-        address: 'Sidney No. 1 Lake Park',
-        tags: ['cool', 'teacher'],
-    }, {
-        key: '9',
-        name: 'Joe Black',
-        age: 32,
-        address: 'Sidney No. 1 Lake Park',
-        tags: ['cool', 'teacher'],
-    }, {
-        key: '10',
-        name: 'Joe Black',
-        age: 32,
-        address: 'Sidney No. 1 Lake Park',
-        tags: ['cool', 'teacher'],
-    }, {
-        key: '10',
-        name: 'Joe Black',
-        age: 32,
-        address: 'Sidney No. 1 Lake Park',
-        tags: ['cool', 'teacher'],
     },
 ];
 function handleChange (value) {
@@ -268,12 +195,12 @@ class User extends React.Component {
     constructor(props) {
         super(props)
     }
-    static async getInitialProps ({ query }) {
+    static async getInitialProps ({ ctx, router, api }) {
         // 从query参数中回去id
         //通过process的browser属性判断处于何种环境：Node环境下为false,浏览器为true
         // 发送服务器请求
-        const res = await $api.user.get({ params: query })
-        console.log(res.data, 'asdasdasdasdasd')
+        // let token = Base64.decode(req.headers[''])
+        const res = await api.user.get({params: {}})
         if (res && res.success) {
             return {
                 loading: false,
@@ -353,13 +280,13 @@ class User extends React.Component {
     render () {
         const { ...state } = this.state
         return (
-            <Layout>
+            <Fragment>
                 <Head>
                     <title>用户列表</title>
                 </Head>
                 <h3 className='text-gray-600 text-lg leading-4 mb-5 divide-x border-solid border-l-4 pl-2 border-orange-f9'>
                     <span>用户列表</span>
-                    {process.browser && !JSON.parse(localStorage.getItem('userinfo')).visitors && <Button className='float-right' onClick={() => Router.push('/user/add')} type='primary'>创建用户</Button>}
+                    {process.browser && localStorage.getItem('userinfo') && !JSON.parse(localStorage.getItem('userinfo')).visitors && <Button className='float-right' onClick={() => Router.push('/user/add')} type='primary'>创建用户</Button>}
                 </h3>
                 <AdvancedSearchForm setParentState={this.handlerFormSubmit.bind(this)} />
                 <Table
@@ -370,7 +297,7 @@ class User extends React.Component {
                     onChange={(pageData) => this.handlerFormSubmit(pageData, true)}
                     pagination={{ ...this.state.pageData }}
                 />
-            </Layout>
+            </Fragment>
         )
     }
 }

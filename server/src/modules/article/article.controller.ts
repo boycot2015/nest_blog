@@ -104,7 +104,7 @@ export class ArticleController {
     constructor(private articleService: ArticleService) { }
     @Get()
     @ApiOperation({ summary: '获取文章列表', description: "获取文章列表" })
-    // @UseGuards(AuthGuard())
+    @UseGuards(AuthGuard())
     get(@Query() data: GetArticle) {
         return this.articleService.get(data)
     }

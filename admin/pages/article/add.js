@@ -1,5 +1,4 @@
-import React from 'react';
-import Layout from '@/layouts';
+import React, { Fragment } from 'react';
 import { Editor as BraftEditor } from '@/components/Editor'
 import { Button, Select, Tag, message, Input } from 'antd';
 import Router, { withRouter } from 'next/router'
@@ -82,7 +81,7 @@ class ArticleAdd extends React.Component {
     }
     render () {
         return (
-            <Layout>
+            <Fragment>
                 <h3 className='text-gray-600 text-lg leading-4 mb-10 divide-x border-solid border-l-4 pl-2 border-orange-f9'>
                     <span>添加文章</span>
                     <div className="float-right">
@@ -126,7 +125,7 @@ class ArticleAdd extends React.Component {
                         />
                     </div>
                 </div>
-            </Layout>
+            </Fragment>
         )
     }
 }

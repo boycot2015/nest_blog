@@ -30,6 +30,7 @@ const routes = [
         name: 'login',
         meta: {
             title: '登录',
+            hideLayout: true,
             login: false
         }
     },

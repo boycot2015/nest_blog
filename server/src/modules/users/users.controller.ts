@@ -77,7 +77,7 @@ export class UsersController {
 
     @Get('/get')
     @ApiOperation({ summary: '获取用户列表' })
-    // @UseGuards(AuthGuard())
+    @UseGuards(AuthGuard())
     getAllUsers(@Query() data: QueryDt) {
         return this.usersService.getAllUsers(data)
     }

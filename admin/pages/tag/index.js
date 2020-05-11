@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 import Head from 'next/head';
-import Layout from '@/layouts';
 import {
     Form, Tag, notification,
     Button, Row, Col, Input,
@@ -118,7 +117,7 @@ class Setting extends React.Component {
     }
     render () {
         return (
-            <Layout>
+            <Fragment>
                 <Head>
                     <title>标签管理</title>
                 </Head>
@@ -132,7 +131,7 @@ class Setting extends React.Component {
                             tags={this.state.data} />
                     </Col>
                 </Row>
-            </Layout >
+            </Fragment >
         )
     }
 }

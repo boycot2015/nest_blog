@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 import {
     Form, Tag, notification,
     Button, Row, Col, Input,
     Select, Table, Cascader
 } from 'antd';
-import Layout from '@/layouts';
 import Head from 'next/head';
 import Router from 'next/router';
 const { Option, OptGroup } = Select;
@@ -173,7 +172,7 @@ class User extends React.Component {
     render () {
         const { ...state } = this.state
         return (
-            <Layout>
+            <Fragment>
                 <Head>
                     <title>创建用户</title>
                 </Head>
@@ -181,7 +180,7 @@ class User extends React.Component {
                     <span>创建用户</span>
                 </h3>
                 <AdvancedSearchForm InitFormData={this.data} setParentState={this.handlerFormSubmit.bind(this)} />
-            </Layout>
+            </Fragment>
         )
     }
 }

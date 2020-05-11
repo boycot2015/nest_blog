@@ -1,5 +1,4 @@
-import React from 'react';
-import Layout from '@/layouts';
+import React, { Fragment } from 'react';
 import { Editor as BraftEditor } from '@/components/Editor'
 import { Button, Select, Tag, message, Input } from 'antd';
 import Router, { withRouter } from 'next/router'
@@ -24,8 +23,9 @@ class ArticleEdit extends React.Component {
         tagsList: this.props.tagsList,
         total: this.props.total
     }
-    static async getInitialProps ({ query, cookies }) {
+    static async getInitialProps ({ ctx, cookies }) {
         // 从query参数中回去id
+        const { query } = ctx
         //通过process的browser属性判断处于何种环境：Node环境下为false,浏览器为true
         // 发送服务器请求
         const [res, detail] = await Promise.all([await $api.tag.get(), await $api.article.getById({ params: { id: query.id } })])
@@ -88,7 +88,7 @@ class ArticleEdit extends React.Component {
     }
     render () {
         return (
-            <Layout>
+            <Fragment>
                 <h3 className='text-gray-600 text-lg leading-4 mb-10 divide-x border-solid border-l-4 pl-2 border-orange-f9'>
                     <span>编辑文章</span>
                     <div className="float-right">
@@ -136,7 +136,7 @@ class ArticleEdit extends React.Component {
                         />
                     </div>
                 </div>
-            </Layout>
+            </Fragment>
         )
     }
 }
