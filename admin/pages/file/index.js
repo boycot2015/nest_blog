@@ -7,7 +7,6 @@ import {
     Button, Cascader
 } from 'antd';
 import Head from 'next/head';
-import $api from '@/api/apiList';
 import Router, { withRouter } from 'next/router'
 import { Editor as BraftEditor } from '@/components/Editor'
 import Base64 from 'js-base64'
@@ -15,60 +14,55 @@ const { Option, OptGroup } = Select;
 const columns = (props) => {
     return [
         {
-            title: '标题',
-            dataIndex: 'title',
-            key: 'title',
+            title: '文件名',
+            dataIndex: 'fileName',
+            key: 'fileName',
             width: 100,
             align: 'center',
             rowKey: record => record.dataIndex,
-            render: text => <a>{text}</a>,
+            render: fileName => <a>{fileName}</a>,
         },
         {
-            title: '内容概述',
-            dataIndex: 'content',
-            key: 'content',
-            width: 200,
+            title: '图片文件预览',
+            dataIndex: 'url',
+            key: 'url',
             ellipsis: 2,
-            // colSpan: 6,
-            rowKey: record => record.dataIndex,
-            render: text => <div style={{maxHeight: 100, overflow: 'hidden'}} dangerouslySetInnerHTML={{ __html: text }}></div>,
-        },
-        {
-            title: '状态',
-            dataIndex: 'status',
-            width: 100,
-            align: 'center',
-            key: 'status',
-            rowKey: record => record.dataIndex,
-            render: status => (
-                <span>
-                    <Badge status={status === 1001 ? 'success' : status === 1002 ? 'warning' : 'error'} />
-                    {status === 1001 ? '已发布' : status === 1002 ? '待审核' : '审核不通过'}
-                </span>
-            ),
-        },
-        {
-            title: '标签',
-            key: 'tags',
             width: 150,
             align: 'center',
             rowKey: record => record.dataIndex,
-            dataIndex: 'tags',
-            render: tags => (
-                <span>
-                    {tags.map((tag, index) => {
-                        let color = index > 1 ? 'geekblue' : 'green';
-                        if (tag.value === '前端') {
-                            color = 'volcano';
-                        }
-                        return (
-                            <Tag color={color} key={tag.id} className="mb-1">
-                                {tag.value.toUpperCase()}
-                            </Tag>
-                        );
-                    })}
-                </span>
-            ),
+            render: url => <a href={url} target='_blank'>
+                <div>
+                    <img src={url}/>
+                </div>
+            </a>,
+        },
+        {
+            title: '文件路径',
+            dataIndex: 'url',
+            key: 'url',
+            width: 200,
+            height: 80,
+            ellipsis: 2,
+            align: 'center',
+            rowKey: record => record.dataIndex,
+            render: url =>
+            <div>
+                <span>{url}</span>
+            </div>,
+        },
+        {
+            title: '上传时间',
+            dataIndex: 'createTime',
+            key: 'createTime',
+            width: 100,
+            height: 80,
+            ellipsis: 2,
+            align: 'center',
+            rowKey: record => record.dataIndex,
+            render: createTime =>
+            <div>
+                <span>{createTime}</span>
+            </div>,
         },
         {
             title: '操作',
@@ -77,10 +71,7 @@ const columns = (props) => {
             align: 'center',
             render: (text, record) => (
                 <span>
-                    <a style={{ marginRight: 16 }} onClick={() => props.handleReview(record.id)}>查看</a>
-                    <a style={{ marginRight: 16 }} onClick={() => Router.push('/article/edit?id=' + record.id)}>编辑</a>
-                    {record.status === 1002 && <a span style={{ marginRight: 16 }} >发布</a>}
-                    {(record.status === 1002 || record.status === 1003) && <a onClick={() => props.handleDelete(record.id)}> 删除</a>}
+                    <a style={{ marginRight: 16 }} onClick={() => props.handleCopy(text)}>复制路径</a>
                 </span>
             ),
         },
@@ -209,7 +200,7 @@ class Article extends React.Component {
         //通过process的browser属性判断处于何种环境：Node环境下为false,浏览器为true
         // 发送服务器请求
         let articleListData = []
-        const res = await api.article.get({ current: 1, pageSize: 10 })
+        const res = await api.file.get({ current: 1, pageSize: 10 })
         if (res && res.success) {
             return {
                 loading: false,
@@ -276,7 +267,7 @@ class Article extends React.Component {
     }
     async getPageData (params = {}) {
         const { current, pageSize } = params
-        const res = await $api.article.get({ params })
+        const res = await $api.file.get({ params })
         if (res && res.success) {
             this.setState({
                 loading: false,
@@ -299,24 +290,8 @@ class Article extends React.Component {
             })
         }
     }
-    handleDelete = (id) => {
-        $api.article.delete({ params: { id } }).then(res => {
-            if (res && res.success) {
-                message.success(res.data)
-                this.getPageData()
-            } else {
-                message.error(res.message)
-            }
-        })
-    }
-    handleReview (id) {
-        $api.article.getById({ params: { id } }).then(res => {
-            if (res && res.success) {
-                this.setState({ reviewData: res.data, modalVisible: true })
-            } else {
-                message.error(res.message)
-            }
-        })
+    handleCopy = (url) => {
+        message.success('复制成功！')
     }
     setArticle (callback) {
         return callback(this.state.reviewData)
@@ -334,10 +309,10 @@ class Article extends React.Component {
         return (
             <Fragment>
                 <Head>
-                    <title>文章列表</title>
+                    <title>文件列表</title>
                 </Head>
-                <h3 className='text-gray-600 text-lg leading-4 mb-5 divide-x border-solid border-l-4 pl-2 border-orange-f9'>文章列表</h3>
-                <AdvancedSearchForm setParentState={this.handlerFormSubmit.bind(this)} />
+                <h3 className='text-gray-600 text-lg leading-4 mb-5 divide-x border-solid border-l-4 pl-2 border-orange-f9'>文件列表</h3>
+                {/* <AdvancedSearchForm setParentState={this.handlerFormSubmit.bind(this)} /> */}
                 <Table
                     {...this.state}
                     rowKey={(record, index) => index}
@@ -354,7 +329,7 @@ class Article extends React.Component {
                     }}
                 />
                 <Modal
-                    title="文章详情"
+                    title="文件详情"
                     centered
                     width={800}
                     footer={null}

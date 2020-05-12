@@ -102,9 +102,9 @@ class Home extends React.Component {
                     renderItem={item => (
                         <List.Item>
                             <Skeleton loading={!loading} avatar active>
-                                <Card title={item.title} bodyStyle={{ height: 100 }}>
-                                    <span dangerouslySetInnerHTML={{ __html: item.content.slice(0, 200) }}>
-                                    </span>
+                                <Card title={item.title} bodyStyle={{ height: 120 }}>
+                                    <div style={{maxHeight: 100, overflow: 'hidden'}} dangerouslySetInnerHTML={{ __html: item.content }}>
+                                    </div>
                                 </Card>
                             </Skeleton>
                         </List.Item>

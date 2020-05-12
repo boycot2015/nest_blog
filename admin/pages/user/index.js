@@ -248,7 +248,7 @@ class User extends React.Component {
         const { current, pageSize } = isPage ? values : this.state.pageData
         const params = { current, pageSize, ...this.state.queryData }
         console.log(values, params, 'Text content did not match')
-        const res = await React.$api.user.get({ params })
+        const res = await $api.user.get({ params })
         // console.log(res.data.data[0], 'asdasdasdasdasd')
         if (res && res.success) {
             this.setState({
