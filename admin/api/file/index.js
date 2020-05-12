@@ -12,5 +12,11 @@ export default {
     },
     uploadFileFields (data) {
         return axios.post(url.uploadFileFields, data, headers)
+    },
+    get(params) {
+        return axios.get(url.get, { params })
+    },
+    getById(params) {
+        return axios.get(url.getById, { params })
     }
 }
