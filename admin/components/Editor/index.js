@@ -4,7 +4,7 @@ import { Spin, Upload, message } from 'antd';
 import {
     PictureOutlined
 } from '@ant-design/icons';
-import uploader from '@/api/upload';
+import uploader from '@/api/file';
 import { ContentUtils } from 'braft-utils';
 import 'braft-editor/dist/index.css';
 import 'braft-extensions/dist/table.css';
@@ -79,7 +79,7 @@ export const Editor = ({ value = '', onChange, disabled, placeholder = '请输�
                     ContentUtils.insertMedias(editorState, [
                         {
                             type: 'IMAGE',
-                            url: res.url,
+                            url: res.data,
                         },
                     ])
                 );

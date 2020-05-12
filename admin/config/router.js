@@ -8,7 +8,7 @@ import {
     UserOutlined,
     TagsOutlined,
     SkinOutlined,
-    PlusOutlined
+    FileSearchOutlined
 } from '@ant-design/icons';
 const routes = [
     {
@@ -76,6 +76,20 @@ const routes = [
         meta: {
             title: '标签管理',
             icon: <TagsOutlined style={
+                {
+                    fontSize: '20px'
+                }
+            } />,
+            showInMenu: true,
+            login: false
+        }
+    },
+    {
+        path: '/file',
+        name: 'file',
+        meta: {
+            title: '文件管理',
+            icon: <FileSearchOutlined style={
                 {
                     fontSize: '20px'
                 }
