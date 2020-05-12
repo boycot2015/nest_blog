@@ -101,9 +101,9 @@ class Home extends React.Component {
                     dataSource={this.state.homeData}
                     renderItem={item => (
                         <List.Item>
-                            <Skeleton loading={!loading} avatar active>
-                                <Card title={item.title} bodyStyle={{ height: 120 }}>
-                                    <div style={{maxHeight: 100, overflow: 'hidden'}} dangerouslySetInnerHTML={{ __html: item.content }}>
+                            <Skeleton loading={!loading} buttonActive>
+                                <Card title={item.title} bodyStyle={{ height: 150, overflow: 'hidden' }}>
+                                    <div style={{ maxHeight: 100, maxWidth: 350, margin: '0 auto', overflow: 'hidden' }} dangerouslySetInnerHTML={{ __html: item.content }}>
                                     </div>
                                 </Card>
                             </Skeleton>

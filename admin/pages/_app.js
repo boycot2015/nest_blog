@@ -6,15 +6,18 @@ import SetCookie from '@/middleware/header'
 import api from '@/api/apiList'
 import filters from '@/filters';
 import routes from '@/config/router'
+import { parseCookies, setCookie, destroyCookie } from 'nookies'
+
 class AntApp extends App {
     static async getInitialProps ({ Component, ctx, router }) {
         if (Component.getInitialProps) {
-            const { req, query } = ctx
+            let cookies = {}
             if (!process.browser) {
-                // 服务端设置请求头token
+                cookies = parseCookies(ctx);
                 SetCookie(ctx)
             }
-            let pageProps = await Component.getInitialProps({ ctx, router, api })
+            let pageProps = await Component.getInitialProps({ ctx, router, api, cookies })
+            pageProps.cookies = cookies
             return { pageProps }
         } else { return {} }
     }

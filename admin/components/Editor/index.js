@@ -18,7 +18,7 @@ import style from './index.module.scss';
 
 let BraftEditor;
 
-export const Editor = ({ value = '', onChange, disabled, placeholder = '请输入内容', styles }) => {
+export const Editor = ({ value = '', onChange, readOnly, placeholder = '请输入内容', styles }) => {
     const ref = useRef(null);
     const [editorState, setEditorState] = useState();
     const [mounted, setMounted] = useState(false);
@@ -201,12 +201,12 @@ export const Editor = ({ value = '', onChange, disabled, placeholder = '请输�
         height: 300,
         contentFormat: 'html',
         placeholder,
-        controls,
-        extendControls,
+        readOnly,
+        controls: controls,
+        extendControls: extendControls,
         fontFamilies: fontFamily,
-        disabled,
         value: editorState,
-        initialContent: '<p>Hello World!</p>',
+        initialContent: '<p>输入内容</p>',
         onChange: (editorState) => {
             setEditorState(editorState);
             const html = editorState.toHTML();

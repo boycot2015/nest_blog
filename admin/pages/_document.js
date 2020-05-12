@@ -11,6 +11,7 @@ export default class MyDocument extends Document {
       <html>
         <Head>
           <style>{`body { margin: 0 } /* custom! */`}</style>
+            {process.env.NODE_ENV !== 'production' && process.brower && (<link rel="stylesheet" type="text/css" href={'/_next/static/css/styles.chunk.css?v=' + Router.pathname} />)}
         </Head>
         <body className="custom_class">
           <Main />

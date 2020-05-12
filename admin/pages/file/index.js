@@ -27,7 +27,7 @@ const columns = (props) => {
             dataIndex: 'url',
             key: 'url',
             ellipsis: 2,
-            width: 150,
+            width: 70,
             align: 'center',
             rowKey: record => record.dataIndex,
             render: url => <a href={url} target='_blank'>

@@ -23,13 +23,12 @@ import {
     UserOutlined,
     PlusOutlined
 } from '@ant-design/icons';
-import '../static/css/index.css'
-import '../static/scss/index.scss'
 
 import api from '../api/apiList';
 import filters from '../filters';
-import { parseCookies, setCookie, destroyCookie } from 'nookies'
-
+import '../static/css/index.css'
+import '../static/scss/index.scss'
+import { Base64 } from 'js-base64';
 const { SubMenu } = Menu;
 const { Header, Sider, Content } = Layout;
 React.$api = api;
@@ -71,19 +70,8 @@ class Container extends React.Component {
     constructor(props) {
         super(props)
     }
-    static async getInitialProps ({ Component, ctx }) {
-        let pageProps = {};
-
-        let cookies = {};
-        console.log(Component, ctx)
-        if (ctx.isServer) {
-            cookies = parseCookies(ctx);
-        }
-        if (Component.getInitialProps) {
-            pageProps = await Component.getInitialProps({ ctx, cookies });
-        }
-
-        return { pageProps };
+    static async getInitialProps ({ Component, ctx, cookies }) {
+        return {}
     }
     toggle = () => {
         this.setState({
@@ -91,20 +79,25 @@ class Container extends React.Component {
         })
     }
     initData = () => {
+        console.log(this.props.children.props.cookies.token, 'this.props.cookies')
+        let token = this.props.children.props.cookies.token
+        if (token) {
+            token = JSON.parse(Base64.decode(token.split('.')[1]))
+        }
         let currentRoute = Routes[0]
         Routes.map(el => {
             if (el.path === this.props.router.pathname) {
                 currentRoute = el
             }
         })
-        return currentRoute
+        return {
+            collapsed: false,
+            userinfo: token || {},
+            currentRoute,
+            defaultSelectedKeys: [this.props.router.pathname]
+        }
     }
-    state = {
-        collapsed: false,
-        userinfo: {},
-        currentRoute: this.initData(),
-        defaultSelectedKeys: [this.props.router.pathname]
-    };
+    state = this.initData()
     handlerMenuClick = (el) => {
         this.setState({
             currentRoute: el
@@ -119,7 +112,6 @@ class Container extends React.Component {
     render () {
         return (
             <Layout className="flex-row">
-                {process.env.NODE_ENV !== 'production' && process.brower && (<link rel="stylesheet" type="text/css" href={'/_next/static/css/styles.chunk.css?v=' + Router.pathname} />)}
                 <Sider
                     theme="light"
                     trigger={null}

@@ -1,6 +1,9 @@
 import day from 'dayjs'
 import CryptoJS from 'crypto-js'
-
+import {
+    message
+} from 'antd';
+import uploader from '@/api/file';
 /** created by zch 2019-08-09
  * @description 采用DES对密码进行加密及解密
  */
@@ -61,3 +64,30 @@ export const timeFilter = (value) => {
         return '-'
     }
 }
+/** 2020-05-13 by boycot
+ * 上传文件
+ * @param {*} param 上传的文件
+ */
+export const uploadFile = async param => {
+    if (!param.file) {
+        return false;
+    }
+
+    let size = param.file.size || 0;
+
+    let hide = () => { };
+    if (size > 1024 * 1024 * 4) {
+        hide = message.loading('文件上传中...', 0);
+    }
+    let formdata = new FormData()
+    formdata.append('file', param.file)
+    formdata.append('name', param.file.uid)
+    console.log(param.file, 'param.file')
+    const res = await uploader.uploadFile(formdata)
+    hide();
+    if (res && res.success) {
+        return res
+    } else {
+        message.error('文件上传失败，可能过大！');
+    }
+};

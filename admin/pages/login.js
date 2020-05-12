@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import { Form, Button, Checkbox, Input } from 'antd';
+import { Form, Button, Checkbox, Input, message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import Head from 'next/head';
 import Router from 'next/router';
@@ -13,7 +13,7 @@ const NormalLoginForm = () => {
         values.password = aesEncrypt(values.password)
         userApi.login({ data: values }).then(res => {
             let userinfo = {}
-            if (res && res.data) {
+            if (res && res.success) {
                 userinfo = JSON.parse(Base64.decode(res.data.split('.')[1]))
                 localStorage.setItem('userinfo', JSON.stringify({
                     remember: values.remember,
@@ -22,6 +22,8 @@ const NormalLoginForm = () => {
                 console.log('Received values of form: ', res)
                 Cookies.setItem('token', res.data)
                 Router.push('/')
+            } else {
+                message.error(res.message)
             }
         })
     };

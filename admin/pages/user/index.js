@@ -200,7 +200,7 @@ class User extends React.Component {
         //通过process的browser属性判断处于何种环境：Node环境下为false,浏览器为true
         // 发送服务器请求
         // let token = Base64.decode(req.headers[''])
-        const res = await api.user.get({params: {}})
+        const res = await api.user.get({ params: {} })
         if (res && res.success) {
             return {
                 loading: false,
@@ -286,7 +286,8 @@ class User extends React.Component {
                 </Head>
                 <h3 className='text-gray-600 text-lg leading-4 mb-5 divide-x border-solid border-l-4 pl-2 border-orange-f9'>
                     <span>用户列表</span>
-                    {process.browser && localStorage.getItem('userinfo') && !JSON.parse(localStorage.getItem('userinfo')).visitors && <Button className='float-right' onClick={() => Router.push('/user/add')} type='primary'>创建用户</Button>}
+                    {/* process.browser && localStorage.getItem('userinfo') && !JSON.parse(localStorage.getItem('userinfo')).visitors &&  */}
+                    {<Button className='float-right' onClick={() => Router.push('/user/add')} type='primary'>创建用户</Button>}
                 </h3>
                 <AdvancedSearchForm setParentState={this.handlerFormSubmit.bind(this)} />
                 <Table

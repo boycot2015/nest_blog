@@ -62,7 +62,7 @@ const columns = (props) => {
                             color = 'volcano';
                         }
                         return (
-                            <Tag color={color} key={tag.id} className="mb-1">
+                            <Tag color={color} key={tag.id} className="mb-2">
                                 {tag.value.toUpperCase()}
                             </Tag>
                         );
@@ -373,6 +373,7 @@ class Article extends React.Component {
                                     return article;
                                 });
                             }}
+                            readOnly
                         ></BraftEditor>
                         <p className="tags">
                             <h3 className="text-2 mb-5 mt-5">关联标签</h3>

@@ -2,18 +2,28 @@ import React, { useState, Fragment } from 'react';
 import {
     Form, Tag, notification,
     Button, Row, Col, Input,
-    Select, Table, Cascader
+    Select, Table, Cascader, Upload
 } from 'antd';
 import Head from 'next/head';
 import Router from 'next/router';
+import { uploadFile } from '@/utils';
+import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 const { Option, OptGroup } = Select;
 function handleChange (value) {
     console.log(`selected ${value}`);
 }
+
 const AdvancedSearchForm = (props) => {
     const [form] = Form.useForm();
     const getFields = () => {
         const children = [
+            {
+                label: '头像',
+                type: 4,
+                required: true,
+                name: 'avatar',
+                placeholder: '头像'
+            },
             {
                 label: '用户名',
                 type: 1,
@@ -50,11 +60,19 @@ const AdvancedSearchForm = (props) => {
                 placeholder: '邮箱'
             }];
         let node = []
+        const uploadButton = (
+            <div>
+                {props.state.loading ? <LoadingOutlined /> : <PlusOutlined />}
+                <div className="ant-upload-text">Upload</div>
+            </div>
+        );
+        const { imageUrl } = props.state;
         children.map((el, indx) => {
             node.push(
                 <Form.Item
                     name={el.name}
                     label={el.label}
+                    key={el.name}
                     rules={[
                         {
                             required: el.required,
@@ -69,7 +87,19 @@ const AdvancedSearchForm = (props) => {
                             {/* <OptGroup label="Manager">
                                     </OptGroup> */}
                         </Select> :
-                            el.type === 3 ? <Cascader placeholder="请选择" options={options} onChange={handleChange} changeOnSelect /> : null}
+                            el.type === 3 ? <Cascader placeholder="请选择" options={options} onChange={handleChange} changeOnSelect /> :
+                                el.type === 4 ?
+                                    <Upload
+                                        name="avatar"
+                                        accept="image/*"
+                                        listType="picture-card"
+                                        className="avatar-uploader"
+                                        showUploadList={false}
+                                        customRequest={uploadFile}
+                                        onChange={props.handleChange}
+                                    >
+                                        {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+                                    </Upload> : null}
                 </Form.Item>
                 // <Row gutter={12}>
                 //     <Col span={10} key={indx}>
@@ -79,7 +109,6 @@ const AdvancedSearchForm = (props) => {
         })
         return node;
     };
-
     const onFormSubmit = values => {
         props.setParentState(values)
         console.log(values, 'onFormSubmit')
@@ -123,14 +152,14 @@ class User extends React.Component {
         loading: true,
         hasData: true
     }
-    static async getInitialProps ({ query }) {
+    static async getInitialProps ({ ctx }) {
         // const res = await axios.get('http://localhost:4000/users', { params: query })
         // console.log(res.data.data[0], 'asdasdasdasdasd')
         // 从query参数中回去id
         //通过process的browser属性判断处于何种环境：Node环境下为false,浏览器为true
         // 发送服务器请求
-        if (query.id) {
-            const res = await React.$api.user.getById({ params: query })
+        if (ctx.query.id) {
+            const res = await React.$api.user.getById({ params: ctx.query.id })
             // console.log(res.data.data[0], 'asdasdasdasdasd')
             if (res && res.success) {
                 return { loading: false, data: res.data }
@@ -164,6 +193,22 @@ class User extends React.Component {
             this.setState({ loading: false, data: [] })
         }
     }
+    handleChange = info => {
+        
+        if (info.file.status === 'uploading') {
+            this.setState({ loading: true });
+            return;
+        }
+        if (info.file.status === 'done') {
+            // Get this url from response in real world.
+            getBase64(info.file.originFileObj, imageUrl =>
+                this.setState({
+                    imageUrl,
+                    loading: false,
+                }),
+            );
+        }
+    };
     componentDidMount () {
         this.setState({ loading: false })
         // 如果没有缓存，通过localStorage在本地缓存数据
@@ -179,7 +224,7 @@ class User extends React.Component {
                 <h3 className='text-gray-600 text-lg leading-4 mb-5 divide-x border-solid border-l-4 pl-2 border-orange-f9'>
                     <span>创建用户</span>
                 </h3>
-                <AdvancedSearchForm InitFormData={this.data} setParentState={this.handlerFormSubmit.bind(this)} />
+                <AdvancedSearchForm state={this.state} handleChange={(info) => this.handleChange(info)} InitFormData={this.data} setParentState={this.handlerFormSubmit.bind(this)} />
             </Fragment>
         )
     }
