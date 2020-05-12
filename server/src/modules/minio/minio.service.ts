@@ -69,11 +69,28 @@ export class MinioService {
     }
     async getObject(fileName, type = 'image/jpeg', BucketName = 'blog') {
         this.initial();
-        if (type === 'image/jpeg') {
-            return await this.minioClient.presignedUrl('GET', BucketName, fileName, 24 * 60 * 60 * 7)
-        }
         try {
             return await this.minioClient.getObject(BucketName, fileName);
+        } catch (e) {
+            throw new HttpException(e.message, 500);
+        }
+    }
+    async getFileUrl(fileName, type = 'image/jpeg', BucketName = 'blog') {
+        this.initial();
+        try {
+            return await this.minioClient.presignedUrl('GET', BucketName, fileName, 24 * 60 * 60 * 7)
+        } catch (e) {
+            throw new HttpException(e.message, 500);
+        }
+    }
+    async getFileUrls(BucketName = 'blog', files) {
+        this.initial();
+        try {
+            for (const file of files[0]) {
+                file.url = await this.minioClient.presignedUrl('GET', BucketName, file.fileName)
+            }
+            console.log(files, 'files')
+            return Promise.resolve(files)
         } catch (e) {
             throw new HttpException(e.message, 500);
         }

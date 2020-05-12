@@ -37,12 +37,6 @@ export class MinioController {
             .userId;
         const fileHash = `${body.name}-${Date.now()} -${file.originalname}`
         await this.minioService.uploadFile(fileHash, file.buffer, file.mimetype);
-        // await this.uploadSerive.uploadFile({
-        //     userId,
-        //     fileName: fileHash,
-        //     fileType: file.mimetype,
-        //     originName: file.originalname,
-        // }, body);
         return { fileName: fileHash };
     }
 

@@ -7,7 +7,7 @@ import { Connection } from 'typeorm';
 import { ArticleModule } from './modules/article/article.module';
 import { UsersModule } from './modules/users/users.module';
 import { MinioModule } from './modules/minio/minio.module';
-import { UploadModule } from './modules/upload/upload.module';
+import { UploadModule } from './modules/file/file.module';
 
 import { TagModule } from './modules/tag/tag.module';
 import { PassportModule } from '@nestjs/passport';

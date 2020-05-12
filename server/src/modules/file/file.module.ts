@@ -3,16 +3,17 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 
-import { UploadController } from './upload.controller';
-import { UploadService } from './upload.service';
+import { UploadController } from './file.controller';
+import { FileService } from './file.service';
 import { MinioModule } from '../minio/minio.module';
 import { AuthService } from '../auth/auth.service';
 
-import { Tag } from '../../entities/tag.entity';
+import { File } from '../../entities/file.entity';
 
 @Module({
     imports: [
         MinioModule,
+        TypeOrmModule.forFeature([File]),
         PassportModule.register({ defaultStrategy: 'jwt' }),
         JwtModule.register({
             secretOrPrivateKey: 'secretKey',
@@ -20,8 +21,8 @@ import { Tag } from '../../entities/tag.entity';
                 expiresIn: 3600
             }
         })],
-    exports: [UploadService],
+    exports: [FileService],
     controllers: [UploadController],
-    providers: [AuthService, UploadService],
+    providers: [AuthService, FileService],
 })
 export class UploadModule { }
