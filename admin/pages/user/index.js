@@ -74,10 +74,9 @@ const columns = (props) => [
         rowKey: record => record.dataIndex,
         render: (text, record) => (
             <span>
-                <a style={{ marginRight: 16 }} href={`/user/edit?id=${record.id}`}>查看</a>
+                <a style={{ marginRight: 16 }} href={`/user/view?id=${record.id}`}>查看</a>
                 <a style={{ marginRight: 16 }} onClick={() => props.handleChangeStatus(record)}>{record.status && record.status === 1002 ? '启用' : '禁用'}</a>
                 <a style={{ marginRight: 16 }} href={`/user/edit?id=${record.id}`}>编辑</a>
-                <a>删除</a>
             </span>
         ),
     },
@@ -217,9 +216,9 @@ class User extends React.Component {
                 data: res.data[0],
                 pageData: {
                     current: 1,
-                    pageSize: 3,
+                    pageSize: 5,
                     total: res.data[1],
-                    pageSizeOptions: [10, 20, 50, 100]
+                    pageSizeOptions: [5, 10, 20, 50]
                 },
             }
         } else {
@@ -228,9 +227,9 @@ class User extends React.Component {
                 data: [],
                 pageData: {
                     current: 1,
-                    pageSize: 3,
+                    pageSize: 5,
                     total: 999,
-                    pageSizeOptions: [10, 20, 50, 100]
+                    pageSizeOptions: [5, 10, 20, 50]
                 }
             }
         }
@@ -249,16 +248,15 @@ class User extends React.Component {
             queryData: values,
             pageData: {
                 current: 1,
-                pageSize: 3,
+                pageSize: 5,
                 total: this.state.pageData.total,
-                pageSizeOptions: [10, 20, 50, 100]
+                pageSizeOptions: [5, 10, 20, 50]
             }
         })
         // 发送服务器请求
         const { current, pageSize } = isPage ? values : this.state.pageData
         const params = { current, pageSize, ...this.state.queryData }
         const res = await $api.user.get(params)
-        // console.log(res.data.data[0], 'asdasdasdasdasd')
         if (res && res.success) {
             this.setState({
                 loading: false,
@@ -287,7 +285,7 @@ class User extends React.Component {
         const res = await React.$api.user.status({ id, status })
         if (res && res.success) {
             message.success(res.message)
-            this.handlerFormSubmit({})
+            this.handlerFormSubmit({ ...this.state.pageData }, true)
             return
         }
         message.error(res.message)
@@ -316,7 +314,12 @@ class User extends React.Component {
                     dataSource={state.hasData ? this.state.data : null}
                     columns={columns(this)}
                     onChange={(pageData) => this.handlerFormSubmit(pageData, true)}
-                    pagination={{ ...this.state.pageData }}
+                    pagination={{
+                        ...this.state.pageData,
+                        showSizeChanger: true,
+                        showTitle: (total, range) => '页',
+                        showTotal: (total, range) => `共 ${total} 条`
+                    }}
                 />
             </Fragment>
         )

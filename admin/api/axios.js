@@ -32,7 +32,7 @@ service.interceptors.request.use(
 
         //判断请求方式是否为POST，进行转换格式
         if (config.url.indexOf('upload') < 0) {
-            console.log(config.data, 'config.data')
+            // console.log(config.data, 'config.data')
             config.method === 'post'
                 ? config.data = qs.stringify({ ...config.data })
                 : config.params = { ...config.params };

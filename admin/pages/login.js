@@ -19,7 +19,7 @@ const NormalLoginForm = () => {
                     remember: values.remember,
                     ...userinfo
                 }))
-                console.log('Received values of form: ', res)
+                // console.log('Received values of form: ', res)
                 Cookies.setItem('token', res.data)
                 Router.push('/')
             } else {

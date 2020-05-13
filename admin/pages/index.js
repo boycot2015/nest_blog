@@ -30,7 +30,7 @@ class Home extends React.Component {
                     current: 1,
                     pageSize: 10,
                     total: res.data[1],
-                    pageSizeOptions: [3, 10, 20, 50, 100]
+                    pageSizeOptions: [5, 10, 20, 50]
                 },
             }
         } else {
@@ -41,7 +41,7 @@ class Home extends React.Component {
                     current: 1,
                     pageSize: 10,
                     total: 999,
-                    pageSizeOptions: [3, 10, 20, 50, 100]
+                    pageSizeOptions: [5, 10, 20, 50]
                 }
             }
         }

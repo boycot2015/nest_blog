@@ -31,8 +31,8 @@ const columns = (props) => {
             align: 'center',
             rowKey: record => record.dataIndex,
             render: url => <a href={url} target='_blank'>
-                <div style={{width: 70, margin: 'auto'}}>
-                    <img src={url}/>
+                <div style={{ width: 70, margin: 'auto' }}>
+                    <img src={url} />
                 </div>
             </a>,
         },
@@ -46,9 +46,9 @@ const columns = (props) => {
             align: 'center',
             rowKey: record => record.dataIndex,
             render: url =>
-            <div>
-                <span>{url}</span>
-            </div>,
+                <div>
+                    <span>{url}</span>
+                </div>,
         },
         {
             title: '上传时间',
@@ -60,9 +60,9 @@ const columns = (props) => {
             align: 'center',
             rowKey: record => record.dataIndex,
             render: createTime =>
-            <div>
-                <span>{createTime}</span>
-            </div>,
+                <div>
+                    <span>{React.$filters.timeFilter(new Date(createTime).getTime())}</span>
+                </div>,
         },
         {
             title: '操作',
@@ -209,7 +209,7 @@ class Article extends React.Component {
                     current: 1,
                     pageSize: 5,
                     total: res.data[1],
-                    pageSizeOptions: [3, 10, 20, 50, 100]
+                    pageSizeOptions: [5, 10, 20, 50]
                 },
             }
         } else {
@@ -220,7 +220,7 @@ class Article extends React.Component {
                     current: 1,
                     pageSize: 5,
                     total: 999,
-                    pageSizeOptions: [3, 10, 20, 50, 100]
+                    pageSizeOptions: [5, 10, 20, 50]
                 }
             }
         }
@@ -251,7 +251,7 @@ class Article extends React.Component {
                 current: 1,
                 pageSize: 5,
                 total: this.state.pageData.total,
-                pageSizeOptions: [3, 10, 20, 50, 100]
+                pageSizeOptions: [5, 10, 20, 50]
             }
         })
         // 发送服务器请求

@@ -36,22 +36,6 @@ const AdvancedSearchForm = (props) => {
                 placeholder: '用户名'
             },
             {
-                label: '密码',
-                type: 1,
-                inputType: 'password',
-                required: true,
-                name: 'password',
-                placeholder: '密码'
-            },
-            {
-                label: '确认密码',
-                type: 1,
-                inputType: 'password',
-                required: true,
-                name: 'repassword',
-                placeholder: '确认密码'
-            },
-            {
                 label: '状态',
                 type: 2,
                 name: 'status',
@@ -80,21 +64,16 @@ const AdvancedSearchForm = (props) => {
                     style={{ width: 600 }}
                     rules={[
                         {
-                            required: el.required,
                             message: el.placeholder,
                         },
                     ]}
                 >
-                    {el.type === 1 ? <Input type={el.inputType || 'text'} placeholder={el.placeholder} /> :
-                        el.type === 2 ? <Select placeholder="请选择" onChange={handleChange}>
-                            <Option value={1001}>启用</Option>
-                            <Option value={1002}>禁用</Option>
-                            {/* <OptGroup label="Manager">
-                                    </OptGroup> */}
-                        </Select> :
-                            el.type === 3 ? <Cascader placeholder="请选择" options={options} onChange={handleChange} changeOnSelect /> :
+                    {el.type === 1 ? <Input type={el.inputType || 'text'} disabled style={{ border: 0, background: 'white' }} placeholder={el.placeholder} /> :
+                        el.type === 2 ? <span className="ml-3 text-gray-ccc">{props.state.status === 1001 ? '启用' : '禁用'}</span> :
+                            el.type === 3 ? <Cascader placeholder="请选择" disabled style={{ border: 0, background: 'white' }} options={options} onChange={handleChange} changeOnSelect /> :
                                 el.type === 4 ?
                                     <Upload
+                                        disabled
                                         name="avatar"
                                         accept="image/*"
                                         listType="picture-card"
@@ -121,6 +100,7 @@ const AdvancedSearchForm = (props) => {
     return (
         <Form
             form={form}
+            disabled={true}
             name="advanced_search"
             labelAlign={'right'}
             wrapperCol={{ span: 18, offset: 0 }}
@@ -131,7 +111,7 @@ const AdvancedSearchForm = (props) => {
             onFinish={onFormSubmit}
         >
             {getFields()}
-            <Button type="primary" htmlType="submit" style={{ width: 100 }}>
+            {/* <Button type="primary" htmlType="submit" style={{ width: 100 }}>
                 提交
             </Button>
             <Button
@@ -141,7 +121,7 @@ const AdvancedSearchForm = (props) => {
                 }}
             >
                 返回
-            </Button>
+            </Button> */}
             {/* <Row gutter={10}>
                 <Col span={10} offset={1} style={{ textAlign: 'left' }}>
                 </Col>
@@ -226,12 +206,16 @@ class User extends React.Component {
         return (
             <Fragment>
                 <Head>
-                    <title>编辑用户</title>
+                    <title>用户中心</title>
                 </Head>
                 <h3 className='text-gray-600 text-lg leading-4 mb-5 divide-x border-solid border-l-4 pl-2 border-orange-f9'>
-                    <span>编辑用户</span>
+                    <span>用户中心</span>
                 </h3>
-                <AdvancedSearchForm state={this.state} handleFileChange={(info) => this.handleFileChange(info)} setParentState={this.handlerFormSubmit.bind(this)} />
+                <AdvancedSearchForm
+                    state={this.state}
+                    handleFileChange={(info) => this.handleFileChange(info)}
+                    setParentState={this.handlerFormSubmit.bind(this)}
+                />
             </Fragment>
         )
     }

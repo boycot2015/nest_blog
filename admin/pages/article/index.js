@@ -171,7 +171,7 @@ const AdvancedSearchForm = (props) => {
 
     const onFormSubmit = values => {
         props.setParentState(values)
-        console.log(values, 'onFormSubmit')
+        // console.log(values, 'onFormSubmit')
     };
     return (
         <Form
@@ -223,7 +223,7 @@ class Article extends React.Component {
                     current: 1,
                     pageSize: 10,
                     total: res.data[1],
-                    pageSizeOptions: [3, 10, 20, 50, 100]
+                    pageSizeOptions: [5, 10, 20, 50]
                 },
             }
         } else {
@@ -234,7 +234,7 @@ class Article extends React.Component {
                     current: 1,
                     pageSize: 10,
                     total: 999,
-                    pageSizeOptions: [3, 10, 20, 50, 100]
+                    pageSizeOptions: [5, 10, 20, 50]
                 }
             }
         }
@@ -265,7 +265,7 @@ class Article extends React.Component {
                 current: 1,
                 pageSize: 10,
                 total: this.state.pageData.total,
-                pageSizeOptions: [3, 10, 20, 50, 100]
+                pageSizeOptions: [5, 10, 20, 50]
             }
         })
         // 发送服务器请求

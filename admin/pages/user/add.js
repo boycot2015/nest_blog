@@ -62,7 +62,7 @@ const AdvancedSearchForm = (props) => {
         let node = []
         const uploadButton = (
             <div>
-                {props.state.loading ? <LoadingOutlined className="text-gray-400" style={{fontSize: '32px'}} /> : <PlusOutlined className="text-gray-400" style={{fontSize: '32px'}} />}
+                {props.state.loading ? <LoadingOutlined className="text-gray-400" style={{ fontSize: '32px' }} /> : <PlusOutlined className="text-gray-400" style={{ fontSize: '32px' }} />}
                 <div className="ant-upload-text"></div>
             </div>
         );
@@ -73,7 +73,7 @@ const AdvancedSearchForm = (props) => {
                     name={el.name}
                     label={el.label}
                     key={el.name}
-                    style={{width: 600}}
+                    style={{ width: 600 }}
                     rules={[
                         {
                             required: el.required,
@@ -98,6 +98,7 @@ const AdvancedSearchForm = (props) => {
                                         showUploadList={false}
                                         customRequest={props.handleFileChange}
                                     >
+                                        <Input type={el.inputType || 'text'} hidden value={imageUrl} placeholder={el.placeholder} />
                                         {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
                                     </Upload> : null}
                 </Form.Item>
@@ -111,7 +112,7 @@ const AdvancedSearchForm = (props) => {
     };
     const onFormSubmit = values => {
         props.setParentState(values)
-        console.log(values, 'onFormSubmit')
+        // console.log(values, 'onFormSubmit')
     };
     return (
         <Form
@@ -133,9 +134,10 @@ const AdvancedSearchForm = (props) => {
                 style={{ margin: '0 8px', width: 100 }}
                 onClick={() => {
                     form.resetFields();
+                    props.resetAvatar()
                 }}
             >
-                返回
+                重置
             </Button>
             {/* <Row gutter={10}>
                 <Col span={10} offset={1} style={{ textAlign: 'left' }}>
@@ -145,12 +147,8 @@ const AdvancedSearchForm = (props) => {
     );
 };
 class User extends React.Component {
-    constructor() {
-        super()
-    }
-    state = {
-        loading: true,
-        hasData: true
+    constructor(props) {
+        super(props)
     }
     static async getInitialProps ({ ctx }) {
         // const res = await axios.get('http://localhost:4000/users', { params: query })
@@ -158,14 +156,19 @@ class User extends React.Component {
         // 从query参数中回去id
         //通过process的browser属性判断处于何种环境：Node环境下为false,浏览器为true
         // 发送服务器请求
-        return { loading: false, data: {} }
+        return { loading: false, data: { status: 1001 } }
+    }
+    state = {
+        loading: true,
+        data: this.props.data,
+        hasData: true
     }
     async handlerFormSubmit (values) {
         this.setState({ loading: true })
         // 发送服务器请求
         const { username, password, status, email } = values
         let avatar = this.state.imageUrl
-        console.log({ username, password, status, avatar, email }, 'asdasdasdasdasd')
+        // console.log({ username, password, status, avatar, email }, 'asdasdasdasdasd')
         const res = await React.$api.user.add({ username, password, status, avatar, email })
         if (res && res.success) {
             Router.push('/user')
@@ -199,7 +202,13 @@ class User extends React.Component {
                 <h3 className='text-gray-600 text-lg leading-4 mb-5 divide-x border-solid border-l-4 pl-2 border-orange-f9'>
                     <span>创建用户</span>
                 </h3>
-                <AdvancedSearchForm state={this.state} handleFileChange={(info) => this.handleFileChange(info)} InitFormData={this.data} setParentState={this.handlerFormSubmit.bind(this)} />
+                <AdvancedSearchForm
+                    state={this.state}
+                    resetAvatar={() => this.setState({ imageUrl: '' })}
+                    handleFileChange={(info) => this.handleFileChange(info)}
+                    InitFormData={this.state.data}
+                    setParentState={this.handlerFormSubmit.bind(this)}
+                />
             </Fragment>
         )
     }

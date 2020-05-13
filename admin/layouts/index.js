@@ -45,9 +45,9 @@ const menu = (props) => {
         }
     }
     return (
-        <Menu onClick={handlerHeader}>
+        <Menu onClick={handlerHeader} className="text-center">
             {props.username ? <Menu.Item>
-                <a rel="noopener noreferrer" href="/userCenter">
+                <a rel="noopener noreferrer" href={`/user/view?id=${props.id}`}>
                     个人中心
             </a>
             </Menu.Item> : null}
@@ -126,8 +126,16 @@ class Container extends React.Component {
                         left: 0,
                     }}
                 >
-                    <div className="logo flex items-center flex-row overflow-hidden" style={{ height: 60 }}>
-                        <span className='flex-1 text-center text-lg'>{this.state.collapsed ? 'admin' : config.websiteName}</span>
+                    <div
+                        className="logo flex items-center flex-row overflow-hidden"
+                        onClick={() => {
+                            Router.push('/');
+                            this.setState({ currentRoute: Routes[0], defaultSelectedKeys: Routes[0] })
+                        }}
+                        style={{ height: 60 }}>
+                        <span className='flex-1 text-center text-lg'
+                            style={{ cursor: 'pointer' }}
+                        >{this.state.collapsed ? 'admin' : config.websiteName}</span>
                     </div>
                     <Menu theme="light" mode="inline"
                         defaultSelectedKeys={this.state.defaultSelectedKeys}
@@ -183,7 +191,9 @@ class Container extends React.Component {
                                 icon={<GithubOutlined />} />
                             <Dropdown overlay={menu(this.state.userinfo)} placement="bottomCenter">
                                 <div className='login-cont cursor-pointer'
-                                    onClick={() => this.state.userinfo.username ? Router.push('/userCenter') : Router.push('/login?redirect=' + this.props.router.pathname)}
+                                    onClick={() => this.state.userinfo.username ?
+                                        Router.push(`/user/view?id=${this.state.userinfo.id}`)
+                                        : Router.push('/login?redirect=' + this.props.router.pathname)}
                                 >
                                     <Avatar
                                         className={'mr-2 text-orange-f9 bg-gray-200'}

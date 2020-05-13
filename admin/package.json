@@ -3,7 +3,8 @@
     "version": "0.1.0",
     "private": true,
     "scripts": {
-        "dev": "node ./server/index.js --watch",
+        "dev": "node ./server/index.js",
+        "dev:hot": "node ./server/index.js --watch",
         "build": "next build",
         "start": "next start",
         "export": "next build && next export && serve out",
