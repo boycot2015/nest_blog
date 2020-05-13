@@ -139,4 +139,17 @@ export class ArticleService {
         return queryBy.getOne()
 
     }
+    // 设置文章状态
+    async setStatus ({id, status}) {
+        if (!id || !status) {
+            throw new HttpException("参数为空", responseStatus.failed.code);
+        }
+        let existUser = await this.articleRepository.findOne({ id })
+        if (!existUser) {
+            throw new HttpException("文章不存在！", responseStatus.failed.code);
+        }
+        const updatedArticle = { ...existUser, status }
+        await this.articleRepository.save(updatedArticle)
+        return responseStatus.success.message
+    }
 }

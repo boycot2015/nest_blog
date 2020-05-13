@@ -96,7 +96,19 @@ class EditArticleForm {
     })
     visitors: boolean;
 }
+export class ArticleState {
+    @ApiProperty({
+        description: '用户id',
+        required: true
+    })
+    id: number;
 
+    @ApiProperty({
+        description: '状态',
+        required: false
+    })
+    status: string;
+}
 
 @Controller('article')
 @ApiTags('文章列表')
@@ -133,5 +145,12 @@ export class ArticleController {
     @ApiQuery({ name: 'id', type: 'number', required: true })
     delete(@Query('id') id: number) {
         return this.articleService.delete(id)
+    }
+    @Post('/status')
+    @ApiOperation({ summary: '更改用户状态' })
+    @ApiQuery({ name: 'id', description: '文章id', required: true })
+    @UseGuards(AuthGuard())
+    public status(@Body() userStatus: ArticleState) {
+        return this.articleService.setStatus(userStatus)
     }
 }

@@ -47,6 +47,11 @@ export class QueryDt {
 
 export class UserForm {
     @ApiProperty({
+        description: '头像',
+        required: true
+    })
+    avatar: string;
+    @ApiProperty({
         description: '用户名'
 
     })
@@ -70,6 +75,21 @@ export class UserForm {
     })
     password: string
 }
+
+export class UserState {
+    @ApiProperty({
+        description: '用户id',
+        required: true
+    })
+    id: number;
+
+    @ApiProperty({
+        description: '状态',
+        required: false
+    })
+    status: string;
+}
+
 @ApiTags('用户信息')
 @Controller('user')
 export class UsersController {
@@ -86,7 +106,7 @@ export class UsersController {
     @ApiOperation({ summary: '获取用户' })
     @UseGuards(AuthGuard())
     @ApiQuery({ name: 'id', description: '用户id', required: true })
-    getUser(@Query('id') id): Promise<Users> {
+    getUser(@Query('id') id) {
         return this.usersService.getUser(+id)
     }
 
@@ -101,11 +121,24 @@ export class UsersController {
     public addUser(@Body() user: UserForm) {
         return this.usersService.addUser(user)
     }
+    @Post('/edit')
+    @ApiOperation({ summary: '编辑用户' })
+    @UseGuards(AuthGuard())
+    public editUser(@Body() user: UserForm) {
+        return this.usersService.editUser(user)
+    }
     @Post('/delete')
     @ApiOperation({ summary: '删除用户' })
     @ApiQuery({ name: 'id', description: '用户id', required: true })
     @UseGuards(AuthGuard())
     public delete(@Query('id') id: number) {
         return this.usersService.delete(id)
+    }
+    @Post('/status')
+    @ApiOperation({ summary: '更改用户状态' })
+    @ApiQuery({ name: 'id', description: '用户id', required: true })
+    @UseGuards(AuthGuard())
+    public status(@Body() userStatus: UserState) {
+        return this.usersService.setStatus(userStatus)
     }
 }

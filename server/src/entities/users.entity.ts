@@ -17,13 +17,16 @@ export class Users {
     @Column({ type: 'text', charset: 'utf8mb4', default: null, select: true })
     username: string;
 
+    @Column({ type: 'text', charset: 'utf8mb4', default: null, select: true })
+    avatar: string;
+
     @Column({ type: 'text', default: null, select: false })
     password: string;
 
     @Column({ type: 'text', default: null, select: true })
     email: string;
 
-    @Column({ type: 'text', default: null, select: false })
+    @Column({ type: 'text', default: null, select: true })
     cipher: string;
 
     @Column({ type: 'boolean', default: true, select: true })
