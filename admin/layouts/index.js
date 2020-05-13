@@ -26,15 +26,16 @@ import {
 
 import api from '../api/apiList';
 import filters from '../filters';
-import '../static/css/index.css'
-import '../static/scss/index.scss'
 import { Base64 } from 'js-base64';
+
 const { SubMenu } = Menu;
 const { Header, Sider, Content } = Layout;
 React.$api = api;
 React.$filters = filters;
 moment.locale('zh-cn');
 
+import '../static/css/index.css'
+import '../static/scss/index.scss'
 const menu = (props) => {
     const handlerHeader = (e) => {
         console.log(e)
@@ -185,11 +186,11 @@ class Container extends React.Component {
                                     onClick={() => this.state.userinfo.username ? Router.push('/userCenter') : Router.push('/login?redirect=' + this.props.router.pathname)}
                                 >
                                     <Avatar
-                                    className={'mr-2 text-orange-f9 bg-gray-200'}
-                                    src={this.state.userinfo.avatar}
-                                    icon={
-                                        this.state.userinfo.avatar && <UserOutlined />
-                                    }
+                                        className={'mr-2 text-orange-f9 bg-gray-200'}
+                                        src={this.state.userinfo.avatar}
+                                        icon={
+                                            this.state.userinfo.avatar && <UserOutlined />
+                                        }
                                     />
                                     <span>{this.state.userinfo.username}</span>
                                 </div>

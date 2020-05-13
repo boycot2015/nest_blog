@@ -36,7 +36,7 @@ const columns = (props) => {
             ellipsis: 2,
             // colSpan: 6,
             rowKey: record => record.dataIndex,
-            render: text => <div style={{maxHeight: 100, overflow: 'hidden'}} dangerouslySetInnerHTML={{ __html: text }}></div>,
+            render: text => <div style={{ maxHeight: 100, overflow: 'hidden' }} dangerouslySetInnerHTML={{ __html: text }}></div>,
         },
         {
             title: '状态',
@@ -67,7 +67,7 @@ const columns = (props) => {
                             color = 'volcano';
                         }
                         return (
-                            <Tag color={color} key={tag.id} className="mb-2">
+                            <Tag color={color} key={tag.id} style={{ marginBottom: 10 }}>
                                 {tag.value.toUpperCase()}
                             </Tag>
                         );
@@ -321,7 +321,7 @@ class Article extends React.Component {
                 })
             },
             cancelText: '取消'
-          })
+        })
     }
     handleReview (id) {
         $api.article.getById({ params: { id } }).then(res => {
@@ -415,7 +415,7 @@ class Article extends React.Component {
                                     );
                                 })}
                             </span>
-                        </div>:null}
+                        </div> : null}
                     </div>
                 </Modal>
             </Fragment>
