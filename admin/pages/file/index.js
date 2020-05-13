@@ -31,7 +31,7 @@ const columns = (props) => {
             align: 'center',
             rowKey: record => record.dataIndex,
             render: url => <a href={url} target='_blank'>
-                <div>
+                <div style={{width: 70, margin: 'auto'}}>
                     <img src={url}/>
                 </div>
             </a>,
@@ -200,14 +200,14 @@ class Article extends React.Component {
         //通过process的browser属性判断处于何种环境：Node环境下为false,浏览器为true
         // 发送服务器请求
         let articleListData = []
-        const res = await api.file.get({ current: 1, pageSize: 10 })
+        const res = await api.file.get({ current: 1, pageSize: 5 })
         if (res && res.success) {
             return {
                 loading: false,
                 data: res.data[0],
                 pageData: {
                     current: 1,
-                    pageSize: 10,
+                    pageSize: 5,
                     total: res.data[1],
                     pageSizeOptions: [3, 10, 20, 50, 100]
                 },
@@ -218,7 +218,7 @@ class Article extends React.Component {
                 data: [],
                 pageData: {
                     current: 1,
-                    pageSize: 10,
+                    pageSize: 5,
                     total: 999,
                     pageSizeOptions: [3, 10, 20, 50, 100]
                 }
@@ -249,7 +249,7 @@ class Article extends React.Component {
             queryData: values,
             pageData: {
                 current: 1,
-                pageSize: 10,
+                pageSize: 5,
                 total: this.state.pageData.total,
                 pageSizeOptions: [3, 10, 20, 50, 100]
             }
@@ -267,7 +267,7 @@ class Article extends React.Component {
     }
     async getPageData (params = {}) {
         const { current, pageSize } = params
-        const res = await $api.file.get({ params })
+        const res = await $api.file.get(params)
         if (res && res.success) {
             this.setState({
                 loading: false,

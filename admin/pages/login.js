@@ -11,7 +11,7 @@ import { Base64 } from 'js-base64';
 const NormalLoginForm = () => {
     const onFinish = values => {
         values.password = aesEncrypt(values.password)
-        userApi.login({ data: values }).then(res => {
+        userApi.login(values).then(res => {
             let userinfo = {}
             if (res && res.success) {
                 userinfo = JSON.parse(Base64.decode(res.data.split('.')[1]))

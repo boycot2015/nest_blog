@@ -1,6 +1,6 @@
 import React, { useState, Fragment } from 'react';
 import {
-    Form, Tag, notification,
+    Form, Tag, message,
     Button, Row, Col, Input,
     Select, Table, Cascader,
     Badge
@@ -8,7 +8,16 @@ import {
 import Head from 'next/head';
 import Router from 'next/router';
 const { Option, OptGroup } = Select;
-const columns = [
+const columns = (props) => [
+    {
+        title: '用户头像',
+        dataIndex: 'avatar',
+        align: 'center',
+        key: 'avatar',
+        width: 70,
+        rowKey: record => record.dataIndex,
+        render: avatar => <a><img src={avatar} /></a>,
+    },
     {
         title: '用户名',
         dataIndex: 'username',
@@ -65,8 +74,9 @@ const columns = [
         rowKey: record => record.dataIndex,
         render: (text, record) => (
             <span>
-                <a style={{ marginRight: 16 }} href="/user/view">查看</a>
-                <a style={{ marginRight: 16 }} href="/user/view">禁用</a>
+                <a style={{ marginRight: 16 }} href={`/user/edit?id=${record.id}`}>查看</a>
+                <a style={{ marginRight: 16 }} onClick={() => props.handleChangeStatus(record)}>{record.status && record.status === 1002 ? '启用' : '禁用'}</a>
+                <a style={{ marginRight: 16 }} href={`/user/edit?id=${record.id}`}>编辑</a>
                 <a>删除</a>
             </span>
         ),
@@ -200,7 +210,7 @@ class User extends React.Component {
         //通过process的browser属性判断处于何种环境：Node环境下为false,浏览器为true
         // 发送服务器请求
         // let token = Base64.decode(req.headers[''])
-        const res = await api.user.get({ params: {} })
+        const res = await api.user.get()
         if (res && res.success) {
             return {
                 loading: false,
@@ -247,8 +257,7 @@ class User extends React.Component {
         // 发送服务器请求
         const { current, pageSize } = isPage ? values : this.state.pageData
         const params = { current, pageSize, ...this.state.queryData }
-        console.log(values, params, 'Text content did not match')
-        const res = await $api.user.get({ params })
+        const res = await $api.user.get(params)
         // console.log(res.data.data[0], 'asdasdasdasdasd')
         if (res && res.success) {
             this.setState({
@@ -272,6 +281,17 @@ class User extends React.Component {
             })
         }
     }
+    async handleChangeStatus (item) {
+        let { id, status } = item
+        status = status === 1001 ? 1002 : 1001
+        const res = await React.$api.user.status({ id, status })
+        if (res && res.success) {
+            message.success(res.message)
+            this.handlerFormSubmit({})
+            return
+        }
+        message.error(res.message)
+    }
     componentDidMount () {
         this.setState({ loading: false })
         // 如果没有缓存，通过localStorage在本地缓存数据
@@ -294,7 +314,7 @@ class User extends React.Component {
                     {...this.state}
                     rowKey={(record, index) => index}
                     dataSource={state.hasData ? this.state.data : null}
-                    columns={columns}
+                    columns={columns(this)}
                     onChange={(pageData) => this.handlerFormSubmit(pageData, true)}
                     pagination={{ ...this.state.pageData }}
                 />

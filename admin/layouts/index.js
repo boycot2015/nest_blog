@@ -79,7 +79,7 @@ class Container extends React.Component {
         })
     }
     initData = () => {
-        console.log(this.props.children.props.cookies.token, 'this.props.cookies')
+        // console.log(this.props.children.props.cookies.token, 'this.props.cookies')
         let token = this.props.children.props.cookies.token
         if (token) {
             token = JSON.parse(Base64.decode(token.split('.')[1]))
@@ -178,13 +178,19 @@ class Container extends React.Component {
                         <Button type="primary" onClick={() => Router.push('/article/add')}>发表文章</Button>
                         <div className={'userinfo text-right flex flex-row items-center'}>
                             <Avatar className={'mr-5  text-orange-f9 bg-gray-200 cursor-pointer'}
+                                onClick={() => window.open('https://github.com/boycot2015/nest_blog')}
                                 icon={<GithubOutlined />} />
                             <Dropdown overlay={menu(this.state.userinfo)} placement="bottomCenter">
                                 <div className='login-cont cursor-pointer'
                                     onClick={() => this.state.userinfo.username ? Router.push('/userCenter') : Router.push('/login?redirect=' + this.props.router.pathname)}
                                 >
                                     <Avatar
-                                        className={'mr-2 text-orange-f9 bg-gray-200'} icon={<UserOutlined />} />
+                                    className={'mr-2 text-orange-f9 bg-gray-200'}
+                                    src={this.state.userinfo.avatar}
+                                    icon={
+                                        this.state.userinfo.avatar && <UserOutlined />
+                                    }
+                                    />
                                     <span>{this.state.userinfo.username}</span>
                                 </div>
                             </Dropdown>

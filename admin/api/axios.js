@@ -4,7 +4,8 @@ import {
 import axios from 'axios';
 import qs from 'qs';
 import { parseCookies, setCookie, destroyCookie } from 'nookies'
-
+import { message } from 'antd';
+import Router from 'next/router';
 // 创建 axios 实例
 let service = axios.create({
     baseURL: baseUrl,//请求前缀
@@ -52,10 +53,8 @@ service.interceptors.response.use(
         return data
     },
     (error) => {
-        // console.log(error, 'config.headers')
         let info = {},
             { data } = (error && error.response) || {}
-
         if (error && !error.response) {
             info = {
                 code: 5000,
@@ -64,6 +63,15 @@ service.interceptors.response.use(
         } else {
             // 此处整理错误信息格式
             info = data
+            if (info.code === 401) {
+                destroyCookie('token')
+                if (process.browser) {
+                    message.error('用户信息认证失败，请重新登录！')
+                    localStorage.removeItem('userinfo')
+                    Router.push('/login')
+                    return
+                }
+            }
         }
         return info
     }

@@ -12,10 +12,14 @@ class AntApp extends App {
     static async getInitialProps ({ Component, ctx, router }) {
         if (Component.getInitialProps) {
             let cookies = {}
+            const {res, req } = ctx
             if (!process.browser) {
                 cookies = parseCookies(ctx);
                 SetCookie(ctx)
             }
+            // if (res.response.data.code === 401) {
+            //     cookies = destroyCookie(ctx);
+            // }
             let pageProps = await Component.getInitialProps({ ctx, router, api, cookies })
             pageProps.cookies = cookies
             return { pageProps }

@@ -4,8 +4,13 @@ import {
     Select, Table, Tag,
     notification, Badge,
     message, Modal,
+    Alert,
     Button, Cascader
 } from 'antd';
+import {
+    ExclamationCircleOutlined
+} from '@ant-design/icons';
+
 import Head from 'next/head';
 import $api from '@/api/apiList';
 import Router, { withRouter } from 'next/router'
@@ -79,7 +84,7 @@ const columns = (props) => {
                 <span>
                     <a style={{ marginRight: 16 }} onClick={() => props.handleReview(record.id)}>查看</a>
                     <a style={{ marginRight: 16 }} onClick={() => Router.push('/article/edit?id=' + record.id)}>编辑</a>
-                    {record.status === 1002 && <a span style={{ marginRight: 16 }} >发布</a>}
+                    {record.status === 1002 && <a span style={{ marginRight: 16 }} onClick={() => props.handleChangeStatus(record)}>发布</a>}
                     {(record.status === 1002 || record.status === 1003) && <a onClick={() => props.handleDelete(record.id)}> 删除</a>}
                 </span>
             ),
@@ -300,14 +305,23 @@ class Article extends React.Component {
         }
     }
     handleDelete = (id) => {
-        $api.article.delete({ params: { id } }).then(res => {
-            if (res && res.success) {
-                message.success(res.data)
-                this.getPageData()
-            } else {
-                message.error(res.message)
-            }
-        })
+        Modal.confirm({
+            title: 'Confirm',
+            icon: <ExclamationCircleOutlined />,
+            content: '确认删除？',
+            okText: '确认',
+            onOk: () => {
+                $api.article.delete({ params: { id } }).then(res => {
+                    if (res && res.success) {
+                        message.success(res.data)
+                        this.getPageData()
+                    } else {
+                        message.error(res.message)
+                    }
+                })
+            },
+            cancelText: '取消'
+          })
     }
     handleReview (id) {
         $api.article.getById({ params: { id } }).then(res => {
@@ -317,6 +331,17 @@ class Article extends React.Component {
                 message.error(res.message)
             }
         })
+    }
+    async handleChangeStatus (item) {
+        let { id, status } = item
+        status = status === 1001 ? 1002 : 1001
+        const res = await React.$api.article.status({ data: { id, status } })
+        if (res && res.success) {
+            message.success(res.message)
+            this.handlerFormSubmit({})
+            return
+        }
+        message.error(res.message)
     }
     setArticle (callback) {
         return callback(this.state.reviewData)
@@ -375,7 +400,7 @@ class Article extends React.Component {
                             }}
                             readOnly
                         ></BraftEditor>
-                        <p className="tags">
+                        {this.state.reviewData.tags && this.state.reviewData.tags.length ? <div className="tags">
                             <h3 className="text-2 mb-5 mt-5">关联标签</h3>
                             <span>
                                 {this.state.reviewData.tags && this.state.reviewData.tags.map((tag, index) => {
@@ -390,7 +415,7 @@ class Article extends React.Component {
                                     );
                                 })}
                             </span>
-                        </p>
+                        </div>:null}
                     </div>
                 </Modal>
             </Fragment>

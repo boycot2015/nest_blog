@@ -1,6 +1,6 @@
 import React, { useState, Fragment } from 'react';
 import {
-    Form, Tag, notification,
+    Form, Tag, message,
     Button, Row, Col, Input,
     Select, Table, Cascader, Upload
 } from 'antd';
@@ -62,8 +62,8 @@ const AdvancedSearchForm = (props) => {
         let node = []
         const uploadButton = (
             <div>
-                {props.state.loading ? <LoadingOutlined /> : <PlusOutlined />}
-                <div className="ant-upload-text">Upload</div>
+                {props.state.loading ? <LoadingOutlined className="text-gray-400" style={{fontSize: '32px'}} /> : <PlusOutlined className="text-gray-400" style={{fontSize: '32px'}} />}
+                <div className="ant-upload-text"></div>
             </div>
         );
         const { imageUrl } = props.state;
@@ -73,6 +73,7 @@ const AdvancedSearchForm = (props) => {
                     name={el.name}
                     label={el.label}
                     key={el.name}
+                    style={{width: 600}}
                     rules={[
                         {
                             required: el.required,
@@ -95,8 +96,7 @@ const AdvancedSearchForm = (props) => {
                                         listType="picture-card"
                                         className="avatar-uploader"
                                         showUploadList={false}
-                                        customRequest={uploadFile}
-                                        onChange={props.handleChange}
+                                        customRequest={props.handleFileChange}
                                     >
                                         {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
                                     </Upload> : null}
@@ -158,55 +158,30 @@ class User extends React.Component {
         // 从query参数中回去id
         //通过process的browser属性判断处于何种环境：Node环境下为false,浏览器为true
         // 发送服务器请求
-        if (ctx.query.id) {
-            const res = await React.$api.user.getById({ params: ctx.query.id })
-            // console.log(res.data.data[0], 'asdasdasdasdasd')
-            if (res && res.success) {
-                return { loading: false, data: res.data }
-            } else {
-                return { loading: true, data: {} }
-            }
-            // if (!process.browser) {
-            // } else {
-            //     // 没有请求服务器的情况下在此使用缓存
-            //     const usersData = JSON.parse(sessionStorage.getItem('users'));
-            //     // 对查询的数据进行过滤和返回
-            //     return { data: usersData }
-            // }
-        } else {
-            return { loading: false, data: {} }
-        }
+        return { loading: false, data: {} }
     }
     async handlerFormSubmit (values) {
         this.setState({ loading: true })
         // 发送服务器请求
-        const res = await React.$api.user.add({ data: values })
-        console.log(res, 'asdasdasdasdasd')
+        const { username, password, status, email } = values
+        let avatar = this.state.imageUrl
+        console.log({ username, password, status, avatar, email }, 'asdasdasdasdasd')
+        const res = await React.$api.user.add({ username, password, status, avatar, email })
         if (res && res.success) {
             Router.push('/user')
-            // this.setState({ loading: false, data: res.data[0] })
         } else {
-            notification.error({
-                message: res.message,
-                description: res.data
-            })
+            message.error(res.message)
             this.setState({ loading: false, data: [] })
         }
     }
-    handleChange = info => {
-        
-        if (info.file.status === 'uploading') {
-            this.setState({ loading: true });
-            return;
-        }
-        if (info.file.status === 'done') {
-            // Get this url from response in real world.
-            getBase64(info.file.originFileObj, imageUrl =>
-                this.setState({
-                    imageUrl,
-                    loading: false,
-                }),
-            );
+    handleFileChange = async info => {
+        this.setState({ loading: true });
+        const res = await uploadFile(info)
+        if (res && res.success) {
+            this.setState({
+                imageUrl: res.data,
+                loading: false,
+            })
         }
     };
     componentDidMount () {
@@ -224,7 +199,7 @@ class User extends React.Component {
                 <h3 className='text-gray-600 text-lg leading-4 mb-5 divide-x border-solid border-l-4 pl-2 border-orange-f9'>
                     <span>创建用户</span>
                 </h3>
-                <AdvancedSearchForm state={this.state} handleChange={(info) => this.handleChange(info)} InitFormData={this.data} setParentState={this.handlerFormSubmit.bind(this)} />
+                <AdvancedSearchForm state={this.state} handleFileChange={(info) => this.handleFileChange(info)} InitFormData={this.data} setParentState={this.handlerFormSubmit.bind(this)} />
             </Fragment>
         )
     }

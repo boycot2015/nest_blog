@@ -1,5 +1,5 @@
 import axios from './axios';
-import { message, notification } from 'antd';
+import { message } from 'antd';
 import Router from 'next/router';
 const key = 'keepOnlyOne';
 import Cookies from 'js-cookies';
@@ -31,11 +31,7 @@ export function getDataFromServer (apiUrl, configObj) {
             if (response) {
                 // console.log(apiUrl, response, 'configObj')
                 if (!response.data) {
-                    notification.error({
-                        key,
-                        message: '操作失败',
-                        description: '返回的数据格式有误'
-                    });
+                    message.error('返回的数据格式有误');
                 }
                 if (response.code === 401) {
                     if (process.browser) {
@@ -74,7 +70,7 @@ export function getStreamData (exportArray, downLoadFileName, downLoadURL, _this
 
     //如果传入的数组为空直接返回
     if (!(exportArray.length > 0)) {
-        notification.warn({
+        message.warn({
             message: '请先选择导出的数据',
             description: '没有选择要导出的数据无法进行导出'
         });
@@ -135,14 +131,14 @@ export function getStreamData (exportArray, downLoadFileName, downLoadURL, _this
                 }
             }
         } else {
-            notification.warn({
+            message.warn({
                 message: '导出选中数据失败',
                 description: '调用接口导出选中的数据失败'
             });
         }
 
     }).catch(() => {
-        notification.error({
+        message.error({
             message: '操作失败',
             description: '网络异常,请稍后重试'
         });

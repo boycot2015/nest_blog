@@ -1,25 +1,22 @@
-import { getDataFromServer } from '../index'
+import axios from '@/api/axios'
 import url from './url'
 export default {
-    login (configObj) {
-        let {
-            method = 'post',
-            data = {}
-        } = configObj
-        return getDataFromServer(url.login, { method, data })
+    login (data) {
+        return axios.post(url.login, data)
     },
-    get (configObj) {
-        let {
-            method = 'get',
-            params = {}
-        } = configObj
-        return getDataFromServer(url.get, { method, params })
+    get (params) {
+        return axios.get(url.get, { params })
     },
-    add (configObj) {
-        let {
-            method = 'post',
-            data = {}
-        } = configObj
-        return getDataFromServer(url.add, { method, data })
+    add (data) {
+        return axios.post(url.add, data)
+    },
+    edit (data) {
+        return axios.post(url.edit, data)
+    },
+    getById (params) {
+        return axios.get(url.getById, { params })
+    },
+    status (data) {
+        return axios.post(url.status, data)
     }
 }

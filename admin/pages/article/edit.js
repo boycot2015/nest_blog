@@ -92,7 +92,7 @@ class ArticleEdit extends React.Component {
                 <h3 className='text-gray-600 text-lg leading-4 mb-10 divide-x border-solid border-l-4 pl-2 border-orange-f9'>
                     <span>编辑文章</span>
                     <div className="float-right">
-                        <Button className="mr-5" type='primary' onClick={() => this.submit(1002)}>保存草稿</Button>
+                        <Button className="mr-5" type='primary' onClick={() => this.submit(1002)}>保存待审核</Button>
                         <Button type='primary' ghost onClick={() => this.submit(1001)}>发布</Button>
                     </div>
                 </h3>

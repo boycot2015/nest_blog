@@ -36,4 +36,11 @@ export default {
         } = configObj
         return getDataFromServer(url.delete, { method, params })
     },
+    status (configObj) {
+        let {
+            method = 'post',
+            data = {}
+        } = configObj
+        return getDataFromServer(url.status, { method, data })
+    }
 }
