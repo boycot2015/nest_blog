@@ -35,7 +35,6 @@ export function getDataFromServer (apiUrl, configObj) {
                 }
                 if (response.code === 401) {
                     if (process.browser) {
-                        localStorage.removeItem('userinfo')
                         Cookies.removeItem('token')
                         Router.push('/login')
                     }

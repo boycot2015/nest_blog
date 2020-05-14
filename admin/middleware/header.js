@@ -1,7 +1,7 @@
 import axios from '@/api/axios';
 export default function ({ req, res }) {
     //获取cookie然后拆成键值对
-    console.log(req.headers, 'config.headers')
+    // console.log(req.headers, 'config.headers')
 
     if (req && req.headers.cookie) {
         let cookies = req.headers.cookie

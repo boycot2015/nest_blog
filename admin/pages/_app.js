@@ -6,24 +6,22 @@ import SetCookie from '@/middleware/header'
 import api from '@/api/apiList'
 import filters from '@/filters';
 import routes from '@/config/router'
+import { Base64 } from 'js-base64'
 import { parseCookies, setCookie, destroyCookie } from 'nookies'
 
 class AntApp extends App {
-    static async getInitialProps ({ Component, ctx, router }) {
+    static async getInitialProps ({ Component, ctx, router, redirect }) {
         if (Component.getInitialProps) {
             let cookies = {}
-            const {res, req } = ctx
-            if (!process.browser) {
-                cookies = parseCookies(ctx);
-                SetCookie(ctx)
-            }
-            // if (res.response.data.code === 401) {
-            //     cookies = destroyCookie(ctx);
-            // }
-            let pageProps = await Component.getInitialProps({ ctx, router, api, cookies })
-            pageProps.cookies = cookies
+            let userinfo = { visitors: true }
+            // const {res, req } = ctx
+            cookies = parseCookies(ctx);
+            SetCookie(ctx)
+            cookies.token && (userinfo = JSON.parse(Base64.decode(cookies.token.split('.')[1])))
+            let pageProps = await Component.getInitialProps({ ctx, router, api, cookies, userinfo })
+            pageProps = { cookies, userinfo, ...pageProps }
             return { pageProps }
-        } else { return {} }
+        } else return {}
     }
     render () {
         const { Component, pageProps, router } = this.props
@@ -35,7 +33,7 @@ class AntApp extends App {
         const hideLayout = currentRouter && currentRouter.meta && currentRouter.meta.hideLayout
         return (
             <Container>
-                {!hideLayout ? <Layout>
+                {!hideLayout ? <Layout {...pageProps}>
                     <Component {...pageProps} />
                 </Layout> : <Component {...pageProps} />}
             </Container>

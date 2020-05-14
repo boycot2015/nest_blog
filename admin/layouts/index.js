@@ -21,12 +21,11 @@ import {
     SettingOutlined,
     GithubOutlined,
     UserOutlined,
-    PlusOutlined
+    BgColorsOutlined
 } from '@ant-design/icons';
-
+import { parseCookies, setCookie, destroyCookie } from 'nookies'
 import api from '../api/apiList';
 import filters from '../filters';
-import { Base64 } from 'js-base64';
 
 const { SubMenu } = Menu;
 const { Header, Sider, Content } = Layout;
@@ -38,9 +37,8 @@ import '../static/css/index.css'
 import '../static/scss/index.scss'
 const menu = (props) => {
     const handlerHeader = (e) => {
-        console.log(e)
         if (e.key === 'item_1') {
-            localStorage.removeItem('userinfo')
+            destroyCookie({}, 'token')
             Router.push('/login')
         }
     }
@@ -60,31 +58,11 @@ const menu = (props) => {
     )
 }
 
-Router.events.on('routeChangeComplete', (url) => {
-    let isLogin = localStorage.getItem('userinfo')
-    if (url === '/login' && isLogin) {
-        Router.push('/')
-    }
-    if (!isLogin) Cookies.removeItem('token')
-})
 class Container extends React.Component {
     constructor(props) {
         super(props)
     }
-    static async getInitialProps ({ Component, ctx, cookies }) {
-        return {}
-    }
-    toggle = () => {
-        this.setState({
-            collapsed: !this.state.collapsed
-        })
-    }
     initData = () => {
-        // console.log(this.props.children.props.cookies.token, 'this.props.cookies')
-        let token = this.props.children.props.cookies.token
-        if (token) {
-            token = JSON.parse(Base64.decode(token.split('.')[1]))
-        }
         let currentRoute = Routes[0]
         Routes.map(el => {
             if (el.path === this.props.router.pathname) {
@@ -93,12 +71,20 @@ class Container extends React.Component {
         })
         return {
             collapsed: false,
-            userinfo: token || {},
             currentRoute,
             defaultSelectedKeys: [this.props.router.pathname]
         }
     }
-    state = this.initData()
+    toggle = () => {
+        this.setState({
+            collapsed: !this.state.collapsed
+        })
+    }
+
+    state = {
+        userinfo: this.props.userinfo,
+        ...this.initData()
+    }
     handlerMenuClick = (el) => {
         this.setState({
             currentRoute: el
@@ -106,9 +92,9 @@ class Container extends React.Component {
         Router.push(el.path)
     }
     componentDidMount () {
-        this.setState({
-            userinfo: JSON.parse(localStorage.getItem('userinfo')) || '{}'
-        })
+        // console.log(this.props.cookies, 'this.props.cookies')
+        const { router } = this.props
+        router.prefetch('/dynamic')
     }
     render () {
         return (
@@ -180,12 +166,15 @@ class Container extends React.Component {
                             left: !this.state.collapsed ? 200 : 80,
                         }}
                     >
-                        {React.createElement(this.state.collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
-                            className: 'trigger text-lg',
-                            onClick: this.toggle,
-                        })}
-                        <Button type="primary" onClick={() => Router.push('/article/add')}>发表文章</Button>
-                        <div className={'userinfo text-right flex flex-row items-center'}>
+                        <div className='flex-2 flex flex-row items-center justify-between' >
+                            {React.createElement(this.state.collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
+                                className: 'trigger text-lg tl',
+                                onClick: this.toggle,
+                            })}
+                            <BgColorsOutlined className='tl' />
+                            <Button type="primary" onClick={() => Router.push('/article/add')}>发表文章</Button>
+                        </div>
+                        <div className={'userinfo text-right flex flex-3 flex-row items-center'}>
                             <Avatar className={'mr-5  text-orange-f9 bg-gray-200 cursor-pointer'}
                                 onClick={() => window.open('https://github.com/boycot2015/nest_blog')}
                                 icon={<GithubOutlined />} />

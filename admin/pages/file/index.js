@@ -2,7 +2,6 @@ import React, { useState, Fragment } from 'react';
 import {
     Form, Row, Col, Input,
     Select, Table, Tag,
-    notification, Badge,
     message, Modal,
     Button, Cascader
 } from 'antd';
@@ -10,8 +9,13 @@ import Head from 'next/head';
 import Router, { withRouter } from 'next/router'
 import { Editor as BraftEditor } from '@/components/Editor'
 import Base64 from 'js-base64'
+import { copyCode } from '@/utils'
+
+
 const { Option, OptGroup } = Select;
 const columns = (props) => {
+    const { userinfo } = props.state
+    console.log(userinfo, 'userinfo')
     return [
         {
             title: '文件名',
@@ -20,19 +24,18 @@ const columns = (props) => {
             width: 100,
             align: 'center',
             rowKey: record => record.dataIndex,
-            render: fileName => <a>{fileName}</a>,
+            render: fileName => <p className={'text-left ellipsis2'}>{fileName}</p>,
         },
         {
             title: '图片文件预览',
             dataIndex: 'url',
             key: 'url',
-            ellipsis: 2,
-            width: 70,
+            width: 80,
             align: 'center',
             rowKey: record => record.dataIndex,
             render: url => <a href={url} target='_blank'>
-                <div style={{ width: 70, margin: 'auto' }}>
-                    <img src={url} />
+                <div style={{ height: 60 }}>
+                    <img src={url} style={{ height: '100%',margin: '0 auto' }} />
                 </div>
             </a>,
         },
@@ -46,7 +49,7 @@ const columns = (props) => {
             align: 'center',
             rowKey: record => record.dataIndex,
             render: url =>
-                <div>
+                <div className={'ellipsis'}>
                     <span>{url}</span>
                 </div>,
         },
@@ -72,6 +75,7 @@ const columns = (props) => {
             render: (text, record) => (
                 <span>
                     <a style={{ marginRight: 16 }} onClick={() => props.handleCopy(text)}>复制路径</a>
+                    {userinfo && !userinfo.visitors && <a style={{ marginRight: 16 }} onClick={() => props.handleDelete(record)}>删除</a>}
                 </span>
             ),
         },
@@ -195,7 +199,7 @@ class Article extends React.Component {
     constructor(props) {
         super(props)
     }
-    static async getInitialProps ({ api }) {
+    static async getInitialProps ({ api, userinfo }) {
         // 从query参数中回去id
         //通过process的browser属性判断处于何种环境：Node环境下为false,浏览器为true
         // 发送服务器请求
@@ -211,6 +215,7 @@ class Article extends React.Component {
                     total: res.data[1],
                     pageSizeOptions: [5, 10, 20, 50]
                 },
+                userinfo,
             }
         } else {
             return {
@@ -221,7 +226,8 @@ class Article extends React.Component {
                     pageSize: 5,
                     total: 999,
                     pageSizeOptions: [5, 10, 20, 50]
-                }
+                },
+                userinfo,
             }
         }
         if (!process.browser) {
@@ -240,7 +246,8 @@ class Article extends React.Component {
         queryData: {},
         hasData: true,
         modalVisible: false,
-        reviewData: {}
+        reviewData: {},
+        userinfo: this.props.userinfo
     }
     async handlerFormSubmit (values, isPage) {
         isPage && this.setState({ loading: true, pageData: values })
@@ -290,8 +297,20 @@ class Article extends React.Component {
             })
         }
     }
-    handleCopy = (url) => {
+    // 复制文件路径
+    handleCopy = (item) => {
+        copyCode(item.url)
         message.success('复制成功！')
+    }
+    // 删除文件
+    handleDelete (item) {
+        React.$api.file.delete({ id: item.id }).then(res => {
+            if (res && res.success) {
+                message.success(res.data)
+            } else {
+                message.error(res.message)
+            }
+        })
     }
     setArticle (callback) {
         return callback(this.state.reviewData)

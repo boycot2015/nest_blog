@@ -18,3 +18,24 @@
 .pad20 {
     padding: 20px;
 }
+.ellipsis{
+    overflow: hidden;      
+    text-overflow: ellipsis;      
+    display: -webkit-box; /* 将对象作为弹性伸缩盒子模型显示 */      
+    -webkit-line-clamp: 1; /* 控制最多显示几行 */      
+    -webkit-box-orient: vertical; /* 设置或检索伸缩盒对象的子元素的排列方式 */  
+}
+.ellipsis2{
+    overflow: hidden;      
+    text-overflow: ellipsis;      
+    display: -webkit-box; /* 将对象作为弹性伸缩盒子模型显示 */      
+    -webkit-line-clamp: 2; /* 控制最多显示几行 */      
+    -webkit-box-orient: vertical; /* 设置或检索伸缩盒对象的子元素的排列方式 */  
+}
+.ellipsis3{
+    overflow: hidden;      
+    text-overflow: ellipsis;      
+    display: -webkit-box; /* 将对象作为弹性伸缩盒子模型显示 */      
+    -webkit-line-clamp: 2; /* 控制最多显示几行 */      
+    -webkit-box-orient: vertical; /* 设置或检索伸缩盒对象的子元素的排列方式 */  
+}

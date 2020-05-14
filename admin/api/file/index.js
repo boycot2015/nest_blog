@@ -18,5 +18,8 @@ export default {
     },
     getById(params) {
         return axios.get(url.getById, { params })
+    },
+    delete (data) {
+        return axios.post(url.delete, data)
     }
 }

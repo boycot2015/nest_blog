@@ -11,7 +11,6 @@ const { Meta } = Card;
 import { timeFilter } from '@/utils'
 const { Countdown } = Statistic;
 
-const deadline = new Date('2020-10-01 00:00:00').getTime(); // Moment is also OK
 class Home extends React.Component {
     constructor(props) {
         super(props)
@@ -25,6 +24,7 @@ class Home extends React.Component {
         if (res && res.success) {
             return {
                 loading: false,
+                deadline: new Date('2020-10-01 00:00:00').getTime(),
                 homeData: res.data[0].slice(0, 4),
                 pageData: {
                     current: 1,
@@ -37,6 +37,7 @@ class Home extends React.Component {
             return {
                 loading: true,
                 data: [],
+                deadline: new Date('2020-10-01 00:00:00').getTime(),
                 pageData: {
                     current: 1,
                     pageSize: 10,
@@ -56,6 +57,7 @@ class Home extends React.Component {
     state = {
         // new Date().getFullYear() + '年' + (new Date().getMonth() + 1) + '月' + new Date().getDate() + '日 ' + new Date().toLocaleTimeString()
         currentTime: timeFilter(Date.now()),
+        deadline: this.props.deadline,
         loading: true,
         homeData: this.props.homeData,
         pageData: this.props.pageData,
@@ -77,7 +79,7 @@ class Home extends React.Component {
         };
     }
     render () {
-        const { loading } = this.state;
+        const { loading, deadline } = this.state;
         return (
             <Fragment>
                 <Head>

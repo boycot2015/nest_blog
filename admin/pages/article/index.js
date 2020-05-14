@@ -15,7 +15,6 @@ import Head from 'next/head';
 import $api from '@/api/apiList';
 import Router, { withRouter } from 'next/router'
 import { Editor as BraftEditor } from '@/components/Editor'
-import Base64 from 'js-base64'
 const { Option, OptGroup } = Select;
 const columns = (props) => {
     return [
@@ -84,7 +83,7 @@ const columns = (props) => {
                 <span>
                     <a style={{ marginRight: 16 }} onClick={() => props.handleReview(record.id)}>查看</a>
                     <a style={{ marginRight: 16 }} onClick={() => Router.push('/article/edit?id=' + record.id)}>编辑</a>
-                    {record.status === 1002 && <a span style={{ marginRight: 16 }} onClick={() => props.handleChangeStatus(record)}>发布</a>}
+                    {record.status === 1002 && <a style={{ marginRight: 16 }} onClick={() => props.handleChangeStatus(record)}>发布</a>}
                     {(record.status === 1002 || record.status === 1003) && <a onClick={() => props.handleDelete(record.id)}> 删除</a>}
                 </span>
             ),
@@ -213,7 +212,6 @@ class Article extends React.Component {
         // 从query参数中回去id
         //通过process的browser属性判断处于何种环境：Node环境下为false,浏览器为true
         // 发送服务器请求
-        let articleListData = []
         const res = await api.article.get({ current: 1, pageSize: 10 })
         if (res && res.success) {
             return {
@@ -238,23 +236,14 @@ class Article extends React.Component {
                 }
             }
         }
-        if (!process.browser) {
-        } else {
-            // 没有请求服务器的情况下在此使用缓存
-            articleListData = JSON.parse(sessionStorage.getItem('articleList'));
-            // 对查询的数据进行过滤和返回
-            return { data: articleListData }
-        }
     }
 
     state = {
-        loading: true,
-        data: this.props.data,
-        pageData: this.props.pageData,
         queryData: {},
         hasData: true,
         modalVisible: false,
-        reviewData: {}
+        reviewData: {},
+        ...this.props
     }
     async handlerFormSubmit (values, isPage) {
         isPage && this.setState({ loading: true, pageData: values })
@@ -305,8 +294,11 @@ class Article extends React.Component {
         }
     }
     handleDelete = (id) => {
+        const { pageData, queryData } = this.state
+        const { pageSize, current } = pageData
+        console.log(this.state, 'asdasdsa')
         Modal.confirm({
-            title: 'Confirm',
+            title: '温馨提示',
             icon: <ExclamationCircleOutlined />,
             content: '确认删除？',
             okText: '确认',
@@ -314,7 +306,7 @@ class Article extends React.Component {
                 $api.article.delete({ params: { id } }).then(res => {
                     if (res && res.success) {
                         message.success(res.data)
-                        this.getPageData()
+                        this.getPageData({ pageSize, current, ...queryData })
                     } else {
                         message.error(res.message)
                     }
@@ -349,7 +341,7 @@ class Article extends React.Component {
     componentDidMount () {
         this.setState({ loading: false })
         // 如果没有缓存，通过localStorage在本地缓存数据
-        sessionStorage.setItem('articleList', JSON.stringify(this.props.data))
+        // sessionStorage.setItem('articleList', JSON.stringify(this.props.data))
     }
     setModalVisible (modalVisible) {
         this.setState({ modalVisible });
@@ -374,8 +366,8 @@ class Article extends React.Component {
                     pagination={{
                         ...this.state.pageData,
                         showSizeChanger: true,
-                        showTitle: (total, range) => '页',
-                        showTotal: (total, range) => `共 ${total} 条`
+                        showTitle: (total, range) => <span>'页'</span>,
+                        showTotal: (total, range) => <span>{`共 ${total} 条`}</span>
                     }}
                 />
                 <Modal
@@ -384,13 +376,12 @@ class Article extends React.Component {
                     width={800}
                     footer={null}
                     visible={this.state.modalVisible}
-                    onOk={() => this.setModalVisible(false)}
                     onCancel={() => this.setModalVisible(false)}
                 >
                     <div className="review-content">
                         <h3 className="text-xl mb-5">{this.state.reviewData.title}</h3>
                         {/* <div dangerouslySetInnerHTML={{ __html: this.state.reviewData.content }}></div> */}
-                        <BraftEditor
+                        {this.state.modalVisible && <BraftEditor
                             value={this.state.reviewData.content}
                             onChange={(value) => {
                                 this.setArticle((article) => {
@@ -399,7 +390,7 @@ class Article extends React.Component {
                                 });
                             }}
                             readOnly
-                        ></BraftEditor>
+                        ></BraftEditor>}
                         {this.state.reviewData.tags && this.state.reviewData.tags.length ? <div className="tags">
                             <h3 className="text-2 mb-5 mt-5">关联标签</h3>
                             <span>

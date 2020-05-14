@@ -64,10 +64,9 @@ service.interceptors.response.use(
             // 此处整理错误信息格式
             info = data
             if (info.code === 401) {
-                destroyCookie('token')
+                destroyCookie({}, 'token')
                 if (process.browser) {
                     message.error('用户信息认证失败，请重新登录！')
-                    localStorage.removeItem('userinfo')
                     Router.push('/login')
                     return
                 }

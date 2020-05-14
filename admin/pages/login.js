@@ -4,23 +4,17 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import Head from 'next/head';
 import Router from 'next/router';
 import userApi from '../api/user';
-import Cookies from 'js-cookies'
+import { setCookie } from 'nookies'
 import { aesEncrypt } from '../utils'
 import { Base64 } from 'js-base64';
 
-const NormalLoginForm = () => {
+const NormalLoginForm = (props) => {
     const onFinish = values => {
         values.password = aesEncrypt(values.password)
         userApi.login(values).then(res => {
             let userinfo = {}
             if (res && res.success) {
-                userinfo = JSON.parse(Base64.decode(res.data.split('.')[1]))
-                localStorage.setItem('userinfo', JSON.stringify({
-                    remember: values.remember,
-                    ...userinfo
-                }))
-                // console.log('Received values of form: ', res)
-                Cookies.setItem('token', res.data)
+                setCookie(props, 'token', res.data)
                 Router.push('/')
             } else {
                 message.error(res.message)
@@ -95,7 +89,7 @@ class Login extends React.Component {
                     <title>用户登录</title>
                 </Head>
                 <div className='login-box pad20'>
-                    <NormalLoginForm></NormalLoginForm>
+                    <NormalLoginForm props={this.props}></NormalLoginForm>
                 </div>
             </div>
         )

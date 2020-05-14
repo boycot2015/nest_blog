@@ -153,7 +153,7 @@ class User extends React.Component {
     constructor(props) {
         super(props)
     }
-    static async getInitialProps ({ ctx, api }) {
+    static async getInitialProps ({ ctx, api, userinfo }) {
         //通过process的browser属性判断处于何种环境：Node环境下为false,浏览器为true
         // 发送服务器请求
         const { query } = ctx
@@ -165,7 +165,7 @@ class User extends React.Component {
                 res.data.repassword = res.data.password
                 return { loading: false, data: res.data, avatar: res.data.avatar }
             } else {
-                return { loading: true, data: {} }
+                return { loading: true, data: {}, userinfo }
             }
             // if (!process.browser) {
             // } else {
@@ -175,14 +175,13 @@ class User extends React.Component {
             //     return { data: usersData }
             // }
         } else {
-            return { loading: false, data: {} }
+            return { loading: false, data: {}, userinfo }
         }
     }
     state = {
         loading: true,
         hasData: true,
-        avatar: this.props.data.avatar,
-        data: this.props.data
+        ...this.props
     }
     async handlerFormSubmit (values) {
         this.setState({ loading: true })
@@ -193,16 +192,14 @@ class User extends React.Component {
         // console.log({ username, password, status, avatar, email }, this.state.data, 'asdasdasdasdasd')
         const res = await React.$api.user.edit({ ...this.state.data, username, password, status, avatar, email })
         if (res && res.success) {
-            let userinfo = (localStorage.getItem('userinfo') && JSON.parse(localStorage.getItem('userinfo'))) || {}
-            if (userinfo.id === this.state.data.id) {
+            if (this.state.userinfo.id === this.state.data.id) {
                 message.warning('用户信息发生变化，请重新登录！')
-                localStorage.removeItem('userinfo')
                 Router.push('/login')
                 return
             }
             Router.push('/user')
         } else {
-            message.error(res.message)
+            res && message.error(res.message)
             this.setState({ loading: false, data: {} })
         }
     }

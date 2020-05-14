@@ -161,8 +161,7 @@ class User extends React.Component {
     state = {
         loading: true,
         hasData: true,
-        avatar: this.props.data.avatar,
-        data: this.props.data
+        ...this.props
     }
     async handlerFormSubmit (values) {
         this.setState({ loading: true })
@@ -173,10 +172,8 @@ class User extends React.Component {
         // console.log({ username, password, status, avatar, email }, this.state.data, 'asdasdasdasdasd')
         const res = await React.$api.user.edit({ ...this.state.data, username, password, status, avatar, email })
         if (res && res.success) {
-            let userinfo = (localStorage.getItem('userinfo') && JSON.parse(localStorage.getItem('userinfo'))) || {}
-            if (userinfo.id === this.state.data.id) {
+            if (this.state.userinfo.id === this.state.data.id) {
                 message.warning('用户信息发生变化，请重新登录！')
-                localStorage.removeItem('userinfo')
                 Router.push('/login')
                 return
             }
