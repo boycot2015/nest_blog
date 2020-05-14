@@ -10,6 +10,7 @@ import {
     UploadedFile,
     UploadedFiles
 } from '@nestjs/common';
+import { aesDecrypt, responseStatus } from "../../utils";
 export class MinioService {
     options: ClientOptions;
     minioClient: Client;
@@ -89,8 +90,16 @@ export class MinioService {
             for (const file of files[0]) {
                 file.url = await this.minioClient.presignedUrl('GET', BucketName, file.fileName)
             }
-            console.log(files, 'files')
+            // console.log(files, 'files')
             return Promise.resolve(files)
+        } catch (e) {
+            throw new HttpException(e.message, 500);
+        }
+    }
+    async removeObject (fileName, type = 'image/jpeg', BucketName = 'blog') {
+        try {
+            await this.minioClient.removeObject(BucketName, fileName);
+            return responseStatus.success.message
         } catch (e) {
             throw new HttpException(e.message, 500);
         }

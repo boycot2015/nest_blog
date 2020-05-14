@@ -81,8 +81,11 @@ export class UsersService {
         let { password } = data
         // password = decryptByDES(password);
         password = aesDecrypt(password, data.cipher)
-        const canLogin = await this.usersRepository.findOne({ 'username': data.username, 'password': password })
-        if (canLogin) return this.authService.signIn(canLogin)
+        const loginUser = await this.usersRepository.findOne({ 'username': data.username, 'password': password })
+        const { status } = loginUser
+        console.log(status, 'userid')
+        if (loginUser && (status + '' === '1001')) return this.authService.signIn(loginUser)
+        else if ((status + '' === '1002')) throw new HttpException("该账户已被冻结，请联系管理员！", responseStatus.failed.code);
         else throw new HttpException("用户名或密码错误,请重新输入！", responseStatus.failed.code);
     }
     async getUser(id: number): Promise<Users> {

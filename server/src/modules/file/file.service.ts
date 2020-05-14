@@ -29,6 +29,7 @@ export class FileService {
         data.pageSize = data.pageSize || 10
         const { current = 1, pageSize = 12, status, ...otherParams } = data;
         let query = this.fileRepository.createQueryBuilder('article')
+        query.orderBy('update_time', 'DESC')
         query.skip(pageSize * (current - 1))
         .take(pageSize)
         const res = await query.getManyAndCount();

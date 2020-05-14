@@ -44,6 +44,15 @@ export class UploadController {
         return Promise.resolve(data)
     }
 
+    @Post('/delete')
+    @ApiOperation({ summary: '获取文件', description: "获取文件" })
+    async deleteFile (@Body() id: number) {
+        const res = await this.fileService.getById(id)
+        console.log(res, 'fileName')
+        const data = await this.minioService.removeObject(res.fileName)
+        return Promise.resolve(data)
+    }
+
     @Post('/upload')
     @ApiOperation({ summary: '上传文件', description: "上传文件" })
     @ApiParam({name: 'file', type: 'file', required: true})
