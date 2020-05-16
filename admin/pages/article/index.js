@@ -67,7 +67,7 @@ const columns = (props) => {
                         }
                         return (
                             <Tag color={color} key={tag.id} style={{ marginBottom: 10 }}>
-                                {tag.value.toUpperCase()}
+                                {tag.value[0].toUpperCase() + tag.value.slice(1)}
                             </Tag>
                         );
                     })}
@@ -212,14 +212,14 @@ class Article extends React.Component {
         // 从query参数中回去id
         //通过process的browser属性判断处于何种环境：Node环境下为false,浏览器为true
         // 发送服务器请求
-        const res = await api.article.get({ current: 1, pageSize: 10 })
+        const res = await api.article.get({ current: 1, pageSize: 5 })
         if (res && res.success) {
             return {
                 loading: false,
                 data: res.data[0],
                 pageData: {
                     current: 1,
-                    pageSize: 10,
+                    pageSize: 5,
                     total: res.data[1],
                     pageSizeOptions: [5, 10, 20, 50]
                 },
@@ -230,7 +230,7 @@ class Article extends React.Component {
                 data: [],
                 pageData: {
                     current: 1,
-                    pageSize: 10,
+                    pageSize: 5,
                     total: 999,
                     pageSizeOptions: [5, 10, 20, 50]
                 }
@@ -252,7 +252,7 @@ class Article extends React.Component {
             queryData: values,
             pageData: {
                 current: 1,
-                pageSize: 10,
+                pageSize: 5,
                 total: this.state.pageData.total,
                 pageSizeOptions: [5, 10, 20, 50]
             }
@@ -401,7 +401,7 @@ class Article extends React.Component {
                                     }
                                     return (
                                         <Tag color={color} key={tag.id} className="mb-1">
-                                            {tag.value.toUpperCase()}
+                                            {tag.value[0].toUpperCase() + tag.value.slice(1)}
                                         </Tag>
                                     );
                                 })}

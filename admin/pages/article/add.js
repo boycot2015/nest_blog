@@ -9,8 +9,13 @@ function tagRender (props) {
         'green', 'cyan', 'blue', 'geekblue', 'blue', 'purple'];
     console.log(props, 'data')
     return (
-        <Tag color={colors[Math.floor(Math.random() * (colors.length - 1))]} closable={closable} onClose={onClose} style={{ marginRight: 3 }}>
-            {value}
+        <Tag
+            key={value}
+            color={colors[Math.floor(Math.random() * (colors.length - 1))]}
+            closable={closable}
+            onClose={onClose}
+            style={{ marginRight: 3 }}>
+            {label}
         </Tag>
     );
 }
@@ -37,8 +42,8 @@ class ArticleAdd extends React.Component {
             return {
                 loading: false,
                 tagsList: res.data[0].map(el => ({
-                    value: el.value,
-                    label: el.label,
+                    value: el.id,
+                    label: el.value,
                     id: el.id
                 })),
                 total: res.data[1]

@@ -63,12 +63,18 @@ service.interceptors.response.use(
         } else {
             // 此处整理错误信息格式
             info = data
-            if (info.code === 401) {
+            if (info.code === 403) {
                 destroyCookie({}, 'token')
                 if (process.browser) {
                     message.error('用户信息认证失败，请重新登录！')
                     Router.push('/login')
-                    return
+                    return info
+                }
+            }
+            if (info.code === 401) {
+                if (process.browser) {
+                    info.message = '无权限进行此操作！'
+                    return info
                 }
             }
         }

@@ -13,13 +13,17 @@ export default {
     uploadFileFields (data) {
         return axios.post(url.uploadFileFields, data, headers)
     },
-    get(params) {
+    get (params) {
         return axios.get(url.get, { params })
     },
-    getById(params) {
+    getById (params) {
         return axios.get(url.getById, { params })
     },
-    delete (data) {
-        return axios.post(url.delete, data)
+    delete (params) {
+        return axios({
+            url: url.delete,
+            method: 'post',
+            params: params
+        })
     }
 }

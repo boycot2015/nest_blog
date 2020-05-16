@@ -17,8 +17,8 @@ import {
     MenuUnfoldOutlined,
     MenuFoldOutlined,
     RobotOutlined,
-    UnorderedListOutlined,
-    SettingOutlined,
+    SmileOutlined,
+    PlusOutlined,
     GithubOutlined,
     UserOutlined,
     BgColorsOutlined
@@ -58,6 +58,17 @@ const menu = (props) => {
     )
 }
 
+const customizeRenderEmpty = () => (
+    <div style={{ textAlign: 'center' }}>
+        {/* <SmileOutlined style={{ fontSize: 20 }} /> */}
+        <img src="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+            style={{
+                margin: '0 auto 30px',
+                width: 80
+            }} />
+        <p className={'text-gray-500'}>暂无数据</p>
+    </div>
+);
 class Container extends React.Component {
     constructor(props) {
         super(props)
@@ -72,6 +83,7 @@ class Container extends React.Component {
         return {
             collapsed: false,
             currentRoute,
+            selectedKeys: [this.props.router.pathname],
             defaultSelectedKeys: [this.props.router.pathname]
         }
     }
@@ -85,11 +97,17 @@ class Container extends React.Component {
         userinfo: this.props.userinfo,
         ...this.initData()
     }
-    handlerMenuClick = (el) => {
-        this.setState({
-            currentRoute: el
-        });
-        Router.push(el.path)
+    handlerMenuClick = ({ item, key, keyPath, domEvent }) => {
+        Routes.map(el => {
+            if (el.path === key) {
+                this.setState({
+                    currentRoute: el,
+                    selectedKeys: [key],
+                    defaultSelectedKeys: [key]
+                });
+            }
+            if (key === '/') Router.push('/')
+        })
     }
     componentDidMount () {
         // console.log(this.props.cookies, 'this.props.cookies')
@@ -97,6 +115,7 @@ class Container extends React.Component {
         router.prefetch('/dynamic')
     }
     render () {
+        const { userinfo } = this.state
         return (
             <Layout className="flex-row">
                 <Sider
@@ -115,16 +134,19 @@ class Container extends React.Component {
                     <div
                         className="logo flex items-center flex-row overflow-hidden"
                         onClick={() => {
-                            Router.push('/');
-                            this.setState({ currentRoute: Routes[0], defaultSelectedKeys: Routes[0] })
+                            this.handlerMenuClick({ key: '/' })
                         }}
                         style={{ height: 60 }}>
                         <span className='flex-1 text-center text-lg'
                             style={{ cursor: 'pointer' }}
                         >{this.state.collapsed ? 'admin' : config.websiteName}</span>
                     </div>
-                    <Menu theme="light" mode="inline"
+                    <Menu
+                        theme="light"
+                        mode="inline"
+                        onClick={({ item, key, keyPath, domEvent }) => this.handlerMenuClick({ item, key, keyPath, domEvent })}
                         defaultSelectedKeys={this.state.defaultSelectedKeys}
+                        selectedKeys={this.state.selectedKeys}
                     >
                         {Routes.map(el =>
                             (!el.children && el.meta.showInMenu ?
@@ -166,38 +188,38 @@ class Container extends React.Component {
                             left: !this.state.collapsed ? 200 : 80,
                         }}
                     >
-                        <div className='flex-2 flex flex-row items-center justify-between' >
+                        <div style={{ width: 240 }} className='flex-2 flex flex-row items-center justify-between' >
                             {React.createElement(this.state.collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
                                 className: 'trigger text-lg tl',
                                 onClick: this.toggle,
                             })}
-                            <BgColorsOutlined className='tl' />
-                            <Button type="primary" onClick={() => Router.push('/article/add')}>发表文章</Button>
+                            <BgColorsOutlined title="主题颜色" className='trigger tl flex-1' />
+                            <Button type="primary" icon={<PlusOutlined />} onClick={() => Router.push('/article/add')}>发表文章</Button>
                         </div>
                         <div className={'userinfo text-right flex flex-3 flex-row items-center'}>
                             <Avatar className={'mr-5  text-orange-f9 bg-gray-200 cursor-pointer'}
                                 onClick={() => window.open('https://github.com/boycot2015/nest_blog')}
                                 icon={<GithubOutlined />} />
-                            <Dropdown overlay={menu(this.state.userinfo)} placement="bottomCenter">
+                            <Dropdown overlay={menu(userinfo)} placement="bottomCenter">
                                 <div className='login-cont cursor-pointer'
-                                    onClick={() => this.state.userinfo.username ?
-                                        Router.push(`/user/view?id=${this.state.userinfo.id}`)
+                                    onClick={() => userinfo.username ?
+                                        Router.push(`/user/view?id=${userinfo.id}`)
                                         : Router.push('/login?redirect=' + this.props.router.pathname)}
                                 >
                                     <Avatar
                                         className={'mr-2 text-orange-f9 bg-gray-200'}
-                                        src={this.state.userinfo.avatar}
+                                        src={userinfo.avatar}
                                         icon={
-                                            this.state.userinfo.avatar && <UserOutlined />
+                                            !userinfo.avatar && <UserOutlined />
                                         }
                                     />
-                                    <span>{this.state.userinfo.username}</span>
+                                    <span>{userinfo.username} {!userinfo.visitors && '(管理员)'}</span>
                                 </div>
                             </Dropdown>
                         </div>
                     </Header>
                     <Breadcrumb className="h-5 leading-5 mt-20 ml-5">
-                        <Breadcrumb.Item href="">
+                        <Breadcrumb.Item href="/">
                             <RobotOutlined />
                         </Breadcrumb.Item>
                         <Breadcrumb.Item href={this.state.currentRoute.path}>
@@ -212,7 +234,7 @@ class Container extends React.Component {
                             minHeight: 'calc(100vh - 148px)',
                         }}
                     >
-                        <ConfigProvider locale={zhCN}>
+                        <ConfigProvider locale={zhCN} renderEmpty={customizeRenderEmpty}>
                             {this.props.children}
                         </ConfigProvider>
                     </Content>

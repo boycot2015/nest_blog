@@ -8,20 +8,19 @@ const colors = ['magenta', 'red', 'volcano', 'orange', 'gold', 'lime',
 function tagRender (props) {
     const { label, value, closable, onClose } = props;
     return (
-        <Tag color={colors[Math.floor(Math.random() * (colors.length - 1))]} closable={closable} onClose={onClose} style={{ marginRight: 3 }}>
-            {value}
+        <Tag
+            key={value}
+            color={colors[Math.floor(Math.random() * (colors.length - 1))]}
+            closable={closable}
+            onClose={onClose}
+            style={{ marginRight: 3 }}>
+            {label}
         </Tag>
     );
 }
 class ArticleEdit extends React.Component {
     constructor(props) {
         super(props)
-    }
-    state = {
-        loading: false,
-        articleForm: this.props.articleForm,
-        tagsList: this.props.tagsList,
-        total: this.props.total
     }
     static async getInitialProps ({ ctx, cookies }) {
         // 从query参数中回去id
@@ -34,15 +33,15 @@ class ArticleEdit extends React.Component {
             return {
                 loading: false,
                 tagsList: res.data[0].map(el => ({
-                    value: el.value,
-                    label: el.label,
+                    value: el.id,
+                    label: el.value,
                     id: el.id
                 })),
                 articleForm: {
                     id, title, content,
                     tags: (tags && tags.map(el => ({
-                        value: el.value,
-                        label: el.label,
+                        value: el.id,
+                        label: el.value,
                         id: el.id
                     }))) || [],
                     total: res.data[1]
@@ -60,6 +59,12 @@ class ArticleEdit extends React.Component {
             }
         }
 
+    }
+    state = {
+        loading: false,
+        articleForm: this.props.articleForm,
+        tagsList: this.props.tagsList,
+        total: this.props.total
     }
     setArticle (callback) {
         return callback(this.state.articleForm)
@@ -133,7 +138,8 @@ class ArticleEdit extends React.Component {
                             style={{ width: '500px' }}
                             labelInValue
                             options={this.state.tagsList}
-                        />
+                        >
+                        </Select>
                     </div>
                 </div>
             </Fragment>

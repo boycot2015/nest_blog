@@ -35,7 +35,7 @@ const columns = (props) => {
             rowKey: record => record.dataIndex,
             render: url => <a href={url} target='_blank'>
                 <div style={{ height: 60 }}>
-                    <img src={url} style={{ height: '100%',margin: '0 auto' }} />
+                    <img src={url} style={{ height: '100%', margin: '0 auto' }} />
                 </div>
             </a>,
         },
@@ -307,6 +307,7 @@ class Article extends React.Component {
         React.$api.file.delete({ id: item.id }).then(res => {
             if (res && res.success) {
                 message.success(res.data)
+                this.getPageData(this.props.pageData)
             } else {
                 message.error(res.message)
             }

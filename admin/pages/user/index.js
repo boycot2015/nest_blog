@@ -5,82 +5,88 @@ import {
     Select, Table, Cascader,
     Badge
 } from 'antd';
+import {
+    PlusOutlined
+} from '@ant-design/icons';
 import Head from 'next/head';
 import Router from 'next/router';
 const { Option, OptGroup } = Select;
-const columns = (props) => [
-    {
-        title: '用户头像',
-        dataIndex: 'avatar',
-        align: 'center',
-        key: 'avatar',
-        width: 70,
-        rowKey: record => record.dataIndex,
-        render: avatar => <a><img src={avatar} /></a>,
-    },
-    {
-        title: '用户名',
-        dataIndex: 'username',
-        align: 'center',
-        key: 'username',
-        width: 150,
-        rowKey: record => record.dataIndex,
-        render: text => <a>{text}</a>,
-    },
-    {
-        title: '账号状态',
-        align: 'center',
-        dataIndex: 'status',
-        key: 'status',
-        width: 150,
-        rowKey: record => record.dataIndex,
-        render: status =>
-            <span>
-                <Badge status={status === 1001 ? 'success' : 'default'} />
-                {status === 1001 ? '启用' : '禁用'}
-            </span>,
-    },
-    {
-        title: '电子邮箱',
-        align: 'center',
-        dataIndex: 'email',
-        key: 'email',
-        width: 150,
-        rowKey: record => record.dataIndex
-    },
-    {
-        title: '创建时间',
-        align: 'center',
-        dataIndex: 'createTime',
-        key: 'createTime',
-        width: 150,
-        rowKey: record => record.dataIndex,
-        render: time => React.$filters.timeFilter(new Date(time).getTime())
-    },
-    {
-        title: '修改时间',
-        align: 'center',
-        dataIndex: 'updateTime',
-        key: 'updateTime',
-        width: 150,
-        rowKey: record => record.dataIndex,
-        render: time => React.$filters.timeFilter(new Date(time).getTime())
-    },
-    {
-        title: '操作',
-        align: 'center',
-        key: 'action',
-        width: 150,
-        rowKey: record => record.dataIndex,
-        render: (text, record) => (
-            <span>
-                <a style={{ marginRight: 16 }} href={`/user/view?id=${record.id}`}>查看</a>
-                <a style={{ marginRight: 16 }} onClick={() => props.handleChangeStatus(record)}>{record.status && record.status === 1002 ? '启用' : '禁用'}</a>
-                <a style={{ marginRight: 16 }} href={`/user/edit?id=${record.id}`}>编辑</a>
-            </span>
-        ),
-    },
-];
+const columns = (props) => {
+    const { userinfo } = props.props
+    return [
+        {
+            title: '用户头像',
+            dataIndex: 'avatar',
+            align: 'center',
+            key: 'avatar',
+            width: 70,
+            rowKey: record => record.dataIndex,
+            render: avatar => <a><img src={avatar} /></a>,
+        },
+        {
+            title: '用户名',
+            dataIndex: 'username',
+            align: 'center',
+            key: 'username',
+            width: 150,
+            rowKey: record => record.dataIndex,
+            render: text => <a>{text}</a>,
+        },
+        {
+            title: '账号状态',
+            align: 'center',
+            dataIndex: 'status',
+            key: 'status',
+            width: 150,
+            rowKey: record => record.dataIndex,
+            render: status =>
+                <span>
+                    <Badge status={status === 1001 ? 'success' : 'default'} />
+                    {status === 1001 ? '启用' : '禁用'}
+                </span>,
+        },
+        {
+            title: '电子邮箱',
+            align: 'center',
+            dataIndex: 'email',
+            key: 'email',
+            width: 150,
+            rowKey: record => record.dataIndex
+        },
+        {
+            title: '创建时间',
+            align: 'center',
+            dataIndex: 'createTime',
+            key: 'createTime',
+            width: 150,
+            rowKey: record => record.dataIndex,
+            render: time => React.$filters.timeFilter(new Date(time).getTime())
+        },
+        {
+            title: '修改时间',
+            align: 'center',
+            dataIndex: 'updateTime',
+            key: 'updateTime',
+            width: 150,
+            rowKey: record => record.dataIndex,
+            render: time => React.$filters.timeFilter(new Date(time).getTime())
+        },
+        {
+            title: '操作',
+            align: 'center',
+            key: 'action',
+            width: 150,
+            rowKey: record => record.dataIndex,
+            render: (text, record) => (
+                <span>
+                    <a style={{ marginRight: 16 }} href={`/user/view?id=${record.id}`}>查看</a>
+                    {!userinfo.visitors && <a style={{ marginRight: 16 }} onClick={() => props.handleChangeStatus(record)}>{record.status && record.status === 1002 ? '启用' : '禁用'}</a>}
+                    {!userinfo.visitors && <a style={{ marginRight: 16 }} href={`/user/edit?id=${record.id}`}>编辑</a>}
+                </span>
+            ),
+        },
+    ];
+}
 function handleChange (value) {
     console.log(`selected ${value}`);
 }
@@ -204,7 +210,7 @@ class User extends React.Component {
     constructor(props) {
         super(props)
     }
-    static async getInitialProps ({ ctx, router, api }) {
+    static async getInitialProps ({ ctx, router, api, userinfo }) {
         // 从query参数中回去id
         //通过process的browser属性判断处于何种环境：Node环境下为false,浏览器为true
         // 发送服务器请求
@@ -220,6 +226,7 @@ class User extends React.Component {
                     total: res.data[1],
                     pageSizeOptions: [5, 10, 20, 50]
                 },
+                userinfo
             }
         } else {
             return {
@@ -230,7 +237,8 @@ class User extends React.Component {
                     pageSize: 5,
                     total: 999,
                     pageSizeOptions: [5, 10, 20, 50]
-                }
+                },
+                userinfo
             }
         }
     }
@@ -305,7 +313,7 @@ class User extends React.Component {
                 <h3 className='text-gray-600 text-lg leading-4 mb-5 divide-x border-solid border-l-4 pl-2 border-orange-f9'>
                     <span>用户列表</span>
                     {/* process.browser && localStorage.getItem('userinfo') && !JSON.parse(localStorage.getItem('userinfo')).visitors &&  */}
-                    {<Button className='float-right' onClick={() => Router.push('/user/add')} type='primary'>创建用户</Button>}
+                    {this.props.userinfo && !this.props.userinfo.visitors && <Button className='float-right' onClick={() => Router.push('/user/add')} icon={<PlusOutlined />} type='primary'>创建用户</Button>}
                 </h3>
                 <AdvancedSearchForm setParentState={this.handlerFormSubmit.bind(this)} />
                 <Table

@@ -97,14 +97,12 @@ export class UsersController {
 
     @Get('/get')
     @ApiOperation({ summary: '获取用户列表' })
-    @UseGuards(AuthGuard())
     getAllUsers(@Query() data: QueryDt) {
         return this.usersService.getAllUsers(data)
     }
 
     @Get('/get/ById')
     @ApiOperation({ summary: '获取用户' })
-    @UseGuards(AuthGuard())
     @ApiQuery({ name: 'id', description: '用户id', required: true })
     getUser(@Query('id') id) {
         return this.usersService.getUser(+id)

@@ -33,16 +33,15 @@ export function getDataFromServer (apiUrl, configObj) {
                 if (!response.data) {
                     message.error('返回的数据格式有误');
                 }
-                if (response.code === 401) {
-                    if (process.browser) {
-                        Cookies.removeItem('token')
-                        Router.push('/login')
-                    }
-                }
+                // if (response.code === 401) {
+                //     if (process.browser) {
+                //         Cookies.removeItem('token')
+                //         Router.push('/login')
+                //     }
+                // }
                 resolve(response);
             } else {
                 //处理特殊的情况就是response返回什么也没有Unauthorized
-                message.error('服务器错误');
                 resolve(response);
             }
         }).catch(function (error) {
@@ -152,7 +151,7 @@ export class FileProvider {
     static async uploadFile (file) {
         const formData = new FormData();
         formData.append("file", file);
-        
+
         return axios.post("/upload", formData, {
             headers: {
                 "Content-Type": "multipart/form-data"

@@ -15,7 +15,7 @@ import { join } from 'path';
 
 export class FileService {
     constructor(@InjectRepository(File)
-    private readonly fileRepository: Repository<File>) {}
+    private readonly fileRepository: Repository<File>) { }
     async create(data) {
         const res = await this.fileRepository.findOne({ fileName: data.fileName });
         if (!res) {
@@ -28,10 +28,10 @@ export class FileService {
         data.current = data.current || 1
         data.pageSize = data.pageSize || 10
         const { current = 1, pageSize = 12, status, ...otherParams } = data;
-        let query = this.fileRepository.createQueryBuilder('article')
+        let query = this.fileRepository.createQueryBuilder('file')
         query.orderBy('update_time', 'DESC')
         query.skip(pageSize * (current - 1))
-        .take(pageSize)
+            .take(pageSize)
         const res = await query.getManyAndCount();
         if (!res) {
             throw new HttpException(`文件不存在！`, 400);
@@ -47,5 +47,16 @@ export class FileService {
             return res
         }
         throw new HttpException(`文件不存在！`, 400);
+    }
+    async delete(id: number) {
+        if (id) {
+            const res = await this.fileRepository.findOne({ id });
+            if (!res) {
+                throw new HttpException(`文件不存在！`, 400);
+            }
+            await this.fileRepository.remove(res)
+            return responseStatus.success.message
+        }
+        throw new HttpException(`参数为空~`, 400);
     }
 }
