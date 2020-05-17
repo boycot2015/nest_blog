@@ -17,7 +17,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         if (!user) {
             throw new UnauthorizedException();
         }
-        if (user.visitors === true) throw new HttpException('无权限进行此操作！', HttpStatus.FORBIDDEN);
+        if (!user.administrator === true) throw new HttpException('无权限进行此操作！', HttpStatus.FORBIDDEN);
         return user;
     }
 }

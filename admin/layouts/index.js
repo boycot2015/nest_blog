@@ -24,15 +24,11 @@ import {
     BgColorsOutlined
 } from '@ant-design/icons';
 import { parseCookies, setCookie, destroyCookie } from 'nookies'
-import api from '../api/apiList';
-import filters from '../filters';
-
 const { SubMenu } = Menu;
 const { Header, Sider, Content } = Layout;
-React.$api = api;
-React.$filters = filters;
 moment.locale('zh-cn');
-
+import $filters from '@/filters';
+React.$filters = $filters
 import '../static/css/index.css'
 import '../static/scss/index.scss'
 const menu = (props) => {
@@ -213,7 +209,7 @@ class Container extends React.Component {
                                             !userinfo.avatar && <UserOutlined />
                                         }
                                     />
-                                    <span>{userinfo.username} {!userinfo.visitors && '(管理员)'}</span>
+                                    <span>{userinfo.username} {userinfo.administrator && '(管理员)'}</span>
                                 </div>
                             </Dropdown>
                         </div>

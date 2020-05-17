@@ -17,7 +17,7 @@ export class UsersService {
     //     cipher: '',
     //     password: '',
     //     email: '',
-    //     visitors: true
+    //     administrator: true
     // }
     async getAllUsers(data) {
         // return Promise.resolve(this.users);
@@ -98,15 +98,11 @@ export class UsersService {
         if (query) return query
         else throw new HttpException("用户名不存在！", 404);
     }
-    async addUser(user) {
-        // user.id = this.users.length + 1
-        // this.users.push(user);
-        // return Promise.resolve('操作成功！');
+    async register(user) {
         if (!user) {
             throw new HttpException("参数为空", responseStatus.failed.code);
         }
         const hasUser = await this.usersRepository.findOne({ 'username': user.username })
-        // console.log(hasUser)
         if (hasUser) {
             throw new HttpException("用户名已存在,请重新输入！", responseStatus.failed.code);
         } else {
@@ -116,7 +112,7 @@ export class UsersService {
                 cipher: '123456',
                 password: '',
                 email: '',
-                visitors: true
+                administrator: false
             }
             insertUserData.password = aesDecrypt(user.password, insertUserData.cipher)
             const isRightPwd = await this.usersRepository.findOne({ 'username': user.username, 'password': user.password })

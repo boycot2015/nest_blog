@@ -11,12 +11,12 @@ import { Base64 } from 'js-base64';
 const NormalLoginForm = (props) => {
     const onFinish = values => {
         values.password = aesEncrypt(values.password)
-        userApi.login(values).then(res => {
-            let userinfo = {}
+        $api.user.register(values).then(res => {
             if (res && res.success) {
-                setCookie(props, 'token', res.data)
-                window.localStorage.setItem('userinfo', JSON.stringify(Base64.decode(res.data.split('.')[1])))
-                Router.push('/')
+                message.success(res.message + ',2s后跳转登录页')
+                setTimeout(() => {
+                    Router.push('/login')
+                }, 2000);
             } else {
                 message.error(res.message)
             }
@@ -25,7 +25,7 @@ const NormalLoginForm = (props) => {
 
     return (
         <Form
-            name="normal_login"
+            name="register"
             className="login-form text-center"
             initialValues={{
                 remember: true,
@@ -55,26 +55,30 @@ const NormalLoginForm = (props) => {
                 <Input
                     prefix={<LockOutlined className="site-form-item-icon" />}
                     type="password"
-                    placeholder="密码"
+                    placeholder="请输入密码"
                 />
             </Form.Item>
-            <Form.Item className="text-left">
-                <Form.Item name="remember" valuePropName="checked" noStyle>
-                    <Checkbox>记住我</Checkbox>
-                </Form.Item>
-                <Form.Item name="remember" valuePropName="checked" noStyle>
-                    <a className="login-form-forgot" href="">
-                        忘记密码
-                    </a>
-                </Form.Item>
+            <Form.Item
+                name="password"
+                rules={[
+                    {
+                        required: true,
+                        message: '请再次输入密码!',
+                    },
+                ]}
+            >
+                <Input
+                    prefix={<LockOutlined className="site-form-item-icon" />}
+                    type="password"
+                    placeholder="请再次输入密码"
+                />
             </Form.Item>
-
             <Form.Item>
                 <Button type="primary" htmlType="submit" style={{ width: '100%', height: '40px' }} className="login-form-button">
-                    登录
+                    用户注册
                 </Button>
             </Form.Item>
-            未注册？<a href="/register">注册</a>
+            已注册？<a href="/login">登录</a>
         </Form>
     );
 };

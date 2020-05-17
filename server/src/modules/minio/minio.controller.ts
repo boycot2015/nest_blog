@@ -17,7 +17,7 @@ import { ApiTags, ApiOperation } from '@nestjs/swagger';
 // import { AuthGuard } from '@nestjs/passport';
 import { MinioService } from './minio.service';
 // import { UploadService } from '../upload/upload.service';
-import { responseStatus, decryptByDES } from "../../utils";
+import { responseStatus } from "../../utils";
 import { createWriteStream } from 'fs';
 import { join } from 'path';
 
@@ -32,9 +32,6 @@ export class MinioController {
     @Post('upload-file')
     @UseInterceptors(FileInterceptor('file'))
     async uploadMinio(@UploadedFile() file, @Req() req, @Body() body) {
-        const temp = req.header('authorization').split(' ');
-        const userId = (decryptByDES(temp[temp.length - 1]) as any)
-            .userId;
         const fileHash = `${body.name}-${Date.now()} -${file.originalname}`
         await this.minioService.uploadFile(fileHash, file.buffer, file.mimetype);
         return { fileName: fileHash };

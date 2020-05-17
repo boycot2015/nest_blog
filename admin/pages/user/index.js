@@ -12,14 +12,14 @@ import Head from 'next/head';
 import Router from 'next/router';
 const { Option, OptGroup } = Select;
 const columns = (props) => {
-    const { userinfo } = props.props
+    const { userinfo } = props.state
     return [
         {
             title: '用户头像',
             dataIndex: 'avatar',
             align: 'center',
             key: 'avatar',
-            width: 70,
+            width: 60,
             rowKey: record => record.dataIndex,
             render: avatar => <a><img src={avatar} /></a>,
         },
@@ -30,7 +30,7 @@ const columns = (props) => {
             key: 'username',
             width: 150,
             rowKey: record => record.dataIndex,
-            render: text => <a>{text}</a>,
+            render: (text, record) => <a>{text + (record.administrator && record.id === userinfo.id ? '(管理员)' : '')}</a>,
         },
         {
             title: '账号状态',
@@ -80,8 +80,9 @@ const columns = (props) => {
             render: (text, record) => (
                 <span>
                     <a style={{ marginRight: 16 }} href={`/user/view?id=${record.id}`}>查看</a>
-                    {!userinfo.visitors && <a style={{ marginRight: 16 }} onClick={() => props.handleChangeStatus(record)}>{record.status && record.status === 1002 ? '启用' : '禁用'}</a>}
-                    {!userinfo.visitors && <a style={{ marginRight: 16 }} href={`/user/edit?id=${record.id}`}>编辑</a>}
+                    {userinfo.administrator && userinfo.id !== record.id && <a style={{ marginRight: 16 }} onClick={() => props.handleChangeStatus(record)}>{record.status && record.status === 1002 ? '启用' : '禁用'}</a>}
+                    {userinfo.administrator && <a style={{ marginRight: 16 }} href={`/user/edit?id=${record.id}`}>编辑</a>}
+                    {userinfo.administrator && userinfo.id !== record.id && <a style={{ marginRight: 16 }} onClick={() => props.handleDelete(record)}>删除</a>}
                 </span>
             ),
         },
@@ -210,12 +211,13 @@ class User extends React.Component {
     constructor(props) {
         super(props)
     }
-    static async getInitialProps ({ ctx, router, api, userinfo }) {
+    static async getInitialProps ({ $api, $filters, userinfo }) {
         // 从query参数中回去id
         //通过process的browser属性判断处于何种环境：Node环境下为false,浏览器为true
         // 发送服务器请求
         // let token = Base64.decode(req.headers[''])
-        const res = await api.user.get()
+        console.log($filters, '$filters, userinfo$filters, userinfo')
+        const res = await $api.user.get()
         if (res && res.success) {
             return {
                 loading: false,
@@ -226,6 +228,7 @@ class User extends React.Component {
                     total: res.data[1],
                     pageSizeOptions: [5, 10, 20, 50]
                 },
+                $filters,
                 userinfo
             }
         } else {
@@ -238,16 +241,15 @@ class User extends React.Component {
                     total: 999,
                     pageSizeOptions: [5, 10, 20, 50]
                 },
+                $filters,
                 userinfo
             }
         }
     }
     state = {
-        loading: true,
-        data: this.props.data,
-        pageData: this.props.pageData,
         queryData: {},
-        hasData: true
+        hasData: true,
+        ...this.props
     }
     async handlerFormSubmit (values, isPage) {
         isPage && this.setState({ loading: true, pageData: values })
@@ -290,7 +292,19 @@ class User extends React.Component {
     async handleChangeStatus (item) {
         let { id, status } = item
         status = status === 1001 ? 1002 : 1001
-        const res = await React.$api.user.status({ id, status })
+        console.log(this.props, ' $api')
+        const res = await $api.user.status({ id, status })
+        if (res && res.success) {
+            message.success(res.message)
+            this.handlerFormSubmit({ ...this.state.pageData }, true)
+            return
+        }
+        message.error(res.message)
+    }
+    async handleDelete () {
+        let { id, status } = item
+        status = status === 1001 ? 1002 : 1001
+        const res = await $api.user.delete({ id, status })
         if (res && res.success) {
             message.success(res.message)
             this.handlerFormSubmit({ ...this.state.pageData }, true)
@@ -312,8 +326,8 @@ class User extends React.Component {
                 </Head>
                 <h3 className='text-gray-600 text-lg leading-4 mb-5 divide-x border-solid border-l-4 pl-2 border-orange-f9'>
                     <span>用户列表</span>
-                    {/* process.browser && localStorage.getItem('userinfo') && !JSON.parse(localStorage.getItem('userinfo')).visitors &&  */}
-                    {this.props.userinfo && !this.props.userinfo.visitors && <Button className='float-right' onClick={() => Router.push('/user/add')} icon={<PlusOutlined />} type='primary'>创建用户</Button>}
+                    {/* process.browser && localStorage.getItem('userinfo') && !JSON.parse(localStorage.getItem('userinfo')).administrator &&  */}
+                    {this.props.userinfo && this.props.userinfo.administrator && <Button className='float-right' onClick={() => Router.push('/user/add')} icon={<PlusOutlined />} type='primary'>创建用户</Button>}
                 </h3>
                 <AdvancedSearchForm setParentState={this.handlerFormSubmit.bind(this)} />
                 <Table

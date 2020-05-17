@@ -4,12 +4,14 @@ import {
     PrimaryGeneratedColumn,
     ManyToOne,
     ManyToMany,
+    OneToMany,
     CreateDateColumn,
     UpdateDateColumn,
     JoinTable
 } from 'typeorm';
 import { Users } from './users.entity';
 import { Tag } from './tag.entity';
+import { Comment } from './comment.entity';
 
 @Entity()
 export class Article {
@@ -36,6 +38,10 @@ export class Article {
         enum: [1001, 1002, 1003]
     })
     status: string; // 文章状态
+
+    @Column({ type: 'text', default: null, charset: 'utf8mb4', select: true })
+    visitor: number; // 文章访问记录
+
     @Column({ type: 'text', default: null, charset: 'utf8mb4', select: true })
     category: string; // 分类
 
@@ -57,4 +63,12 @@ export class Article {
     @ManyToOne(() => Users, user => user.article)
     @JoinTable()
     user: Users
+
+    // , { cascade: true }
+    // @ManyToMany(
+    //     () => Comment,
+    //     comment => comment.article
+    // )
+    // @JoinTable()
+    // comment: Array<Comment>
 }

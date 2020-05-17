@@ -29,8 +29,8 @@ export class Users {
     @Column({ type: 'text', default: null, select: true })
     cipher: string;
 
-    @Column({ type: 'boolean', default: true, select: true })
-    visitors: boolean;
+    @Column({ type: 'boolean', default: false, select: true })
+    administrator: boolean;
 
     @Column('enum', {
         enum: [1001, 1002]

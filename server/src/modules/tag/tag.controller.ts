@@ -27,7 +27,7 @@ class TagForm {
         default: false,
         required: false
     })
-    visitors: boolean;
+    administrator: boolean;
 }
 // class QueryForm {
 //     @ApiProperty({

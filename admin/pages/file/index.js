@@ -15,7 +15,6 @@ import { copyCode } from '@/utils'
 const { Option, OptGroup } = Select;
 const columns = (props) => {
     const { userinfo } = props.state
-    console.log(userinfo, 'userinfo')
     return [
         {
             title: '文件名',
@@ -75,7 +74,7 @@ const columns = (props) => {
             render: (text, record) => (
                 <span>
                     <a style={{ marginRight: 16 }} onClick={() => props.handleCopy(text)}>复制路径</a>
-                    {userinfo && !userinfo.visitors && <a style={{ marginRight: 16 }} onClick={() => props.handleDelete(record)}>删除</a>}
+                    {userinfo && userinfo.administrator && <a style={{ marginRight: 16 }} onClick={() => props.handleDelete(record)}>删除</a>}
                 </span>
             ),
         },
@@ -199,12 +198,12 @@ class Article extends React.Component {
     constructor(props) {
         super(props)
     }
-    static async getInitialProps ({ api, userinfo }) {
+    static async getInitialProps ({ $api, userinfo }) {
         // 从query参数中回去id
         //通过process的browser属性判断处于何种环境：Node环境下为false,浏览器为true
         // 发送服务器请求
         let articleListData = []
-        const res = await api.file.get({ current: 1, pageSize: 5 })
+        const res = await $api.file.get({ current: 1, pageSize: 5 })
         if (res && res.success) {
             return {
                 loading: false,
@@ -229,13 +228,6 @@ class Article extends React.Component {
                 },
                 userinfo,
             }
-        }
-        if (!process.browser) {
-        } else {
-            // 没有请求服务器的情况下在此使用缓存
-            articleListData = JSON.parse(sessionStorage.getItem('articleList'));
-            // 对查询的数据进行过滤和返回
-            return { data: articleListData }
         }
     }
 
@@ -304,7 +296,7 @@ class Article extends React.Component {
     }
     // 删除文件
     handleDelete (item) {
-        React.$api.file.delete({ id: item.id }).then(res => {
+        $api.file.delete({ id: item.id }).then(res => {
             if (res && res.success) {
                 message.success(res.data)
                 this.getPageData(this.props.pageData)

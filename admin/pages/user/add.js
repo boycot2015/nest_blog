@@ -169,7 +169,7 @@ class User extends React.Component {
         const { username, password, status, email } = values
         let avatar = this.state.imageUrl
         // console.log({ username, password, status, avatar, email }, 'asdasdasdasdasd')
-        const res = await React.$api.user.add({ username, password, status, avatar, email })
+        const res = await  $api.user.add({ username, password, status, avatar, email })
         if (res && res.success) {
             Router.push('/user')
         } else {

@@ -2,7 +2,6 @@ import React, { Fragment } from 'react';
 import { Editor as BraftEditor } from '@/components/Editor'
 import { Button, Select, Tag, message, Input } from 'antd';
 import Router, { withRouter } from 'next/router'
-import $api from '@/api/apiList';
 function tagRender (props) {
     const { label, value, closable, onClose } = props;
     const colors = ['magenta', 'red', 'volcano', 'orange', 'gold', 'lime',
@@ -32,7 +31,7 @@ class ArticleAdd extends React.Component {
         tagsList: this.props.tagsList,
         total: this.props.total
     }
-    static async getInitialProps ({ query, cookies }) {
+    static async getInitialProps ({ query,  $api }) {
         // 从query参数中回去id
         //通过process的browser属性判断处于何种环境：Node环境下为false,浏览器为true
         // 发送服务器请求

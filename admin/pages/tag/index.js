@@ -6,7 +6,6 @@ import {
     Select, Table, Cascader,
     Badge, message, Modal
 } from 'antd';
-import $api from '../../api/apiList'
 const LabelForm = (props) => {
     const [form] = Form.useForm();
     const [formLayout] = useState('inline');
@@ -81,7 +80,7 @@ class Setting extends React.Component {
         isEdit: false,
         initData: {}
     }
-    static async getInitialProps ({ query, userinfo }) {
+    static async getInitialProps ({ $api, userinfo }) {
         // 从query参数中回去id
         //通过process的browser属性判断处于何种环境：Node环境下为false,浏览器为true
         // 发送服务器请求

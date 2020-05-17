@@ -13,8 +13,8 @@ export class AuthService {
         // In the real-world app you shouldn't expose this method publicly
         // instead, return a token once you verify user credentials
         console.log(user, 'asdasdasdas')
-        const { username, id, visitors, avatar } = user
-        return this.jwtService.sign({ username, id, visitors, avatar });
+        const { username, id, administrator, avatar } = user
+        return this.jwtService.sign({ username, id, administrator, avatar });
     }
 
     async validateUser(payload: any): Promise<any> {

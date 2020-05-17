@@ -35,6 +35,15 @@ const routes = [
         }
     },
     {
+        path: '/register',
+        name: 'register',
+        meta: {
+            title: '注册',
+            hideLayout: true,
+            login: false
+        }
+    },
+    {
         path: '/userCenter',
         name: 'userCenter',
         meta: {
@@ -47,6 +56,20 @@ const routes = [
         name: 'article',
         meta: {
             title: '文章列表',
+            icon: <UnorderedListOutlined style={
+                {
+                    fontSize: '20px'
+                }
+            } />,
+            showInMenu: true,
+            login: false
+        }
+    },
+    {
+        path: '/comment',
+        name: 'comment',
+        meta: {
+            title: '评论列表',
             icon: <UnorderedListOutlined style={
                 {
                     fontSize: '20px'

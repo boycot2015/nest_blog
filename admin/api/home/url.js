@@ -1,7 +1,6 @@
-const prefix = '/user'
+const prefix = '/'
 export default {
-    login: prefix + '/login', // 用户登录
-    register: prefix + '/register', // 用户注册
+    datas: prefix + 'datas', // 首页数据
     get: prefix + '/get', // 获取用户
     getById: prefix + '/get/ById', // 根据id获取用户详情
     add: prefix + '/add', // 新增用户

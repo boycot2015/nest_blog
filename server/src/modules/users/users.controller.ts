@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Body, Query, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { ApiTags, ApiQuery, ApiProperty, ApiOperation } from '@nestjs/swagger';
-import { Users } from '../../entities/users.entity';
 import { AuthGuard } from '@nestjs/passport';
 export class QueryDt {
     @ApiProperty({
@@ -113,11 +112,10 @@ export class UsersController {
     login(@Body() user: UserForm) {
         return this.usersService.login(user)
     }
-    @Post('/add')
+    @Post('/register')
     @ApiOperation({ summary: '创建用户' })
-    @UseGuards(AuthGuard())
-    public addUser(@Body() user: UserForm) {
-        return this.usersService.addUser(user)
+    public register(@Body() user: UserForm) {
+        return this.usersService.register(user)
     }
     @Post('/edit')
     @ApiOperation({ summary: '编辑用户' })

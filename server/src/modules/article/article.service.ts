@@ -5,11 +5,13 @@ import { Article } from "../../entities/article.entity";
 import { responseStatus } from "../../utils";
 import * as dayjs from 'dayjs';
 import { TagService } from '../tag/tag.service';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable()
 export class ArticleService {
     constructor(@InjectRepository(Article)
     private readonly articleRepository: Repository<Article>,
+        private readonly authService: AuthService,
         private readonly tagService: TagService
     ) { }
     async get(data) {
@@ -20,6 +22,8 @@ export class ArticleService {
         // 条件筛选和分页查询代码
         let queryBy = this.articleRepository.createQueryBuilder('article')
             .leftJoinAndSelect('article.tags', 'tag')
+        // .leftJoinAndSelect('article.comment', 'comment')
+
         // 2. 条件筛选查询，如名称、类型等，传入对应字段即可
         // queryBy = queryBy.where(data as Partial<Article>)
         const { current = 1, pageSize = 12, status, ...otherParams } = data;
@@ -49,8 +53,19 @@ export class ArticleService {
         return await queryBy.getManyAndCount()
     }
     /**
+     * 获取所以文章
+     */
+    async getAll() {
+        let queryBy = this.articleRepository.createQueryBuilder('article')
+        queryBy = queryBy
+            .orderBy('article.createTime', 'ASC')
+        // 获取结果及(非分页的)查询结果总数
+        // 或使用 .getMany() 不会返回总数
+        return await queryBy.getManyAndCount()
+    }
+    /**
      * 创建文章
-     * @param data 
+     * @param data
      */
     async create(data: Partial<Article>): Promise<Article> {
         // article.id = this.articles.length + 1
@@ -132,15 +147,19 @@ export class ArticleService {
         // const article = this.articles.find(article => article.id === id)
         // return Promise.resolve(article);
         const res = await this.articleRepository.findOne({ id })
+        if (!res) throw new HttpException(`暂无数据`, 404);
+
+        // 新增访客量
+        const updatedArticle = { ...res, visitor: (+res.visitor) + 1 }
+        await this.articleRepository.save(updatedArticle);
+
         let queryBy = this.articleRepository.createQueryBuilder('article')
             .leftJoinAndSelect('article.tags', 'tag')
-        if (!res) throw new HttpException(`暂无数据`, 404);
         queryBy = queryBy.andWhere(`article.id=${id}`)
         return queryBy.getOne()
-
     }
     // 设置文章状态
-    async setStatus ({id, status}) {
+    async setStatus({ id, status }) {
         if (!id || !status) {
             throw new HttpException("参数为空", responseStatus.failed.code);
         }

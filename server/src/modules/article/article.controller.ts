@@ -58,7 +58,7 @@ class ArticleForm {
         default: false,
         required: false
     })
-    visitors: boolean;
+    administrator: boolean;
 }
 
 class EditArticleForm {
@@ -94,7 +94,7 @@ class EditArticleForm {
         default: false,
         required: false
     })
-    visitors: boolean;
+    administrator: boolean;
 }
 export class ArticleState {
     @ApiProperty({

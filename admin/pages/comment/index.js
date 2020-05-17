@@ -2,99 +2,64 @@ import React, { useState, Fragment } from 'react';
 import {
     Form, Row, Col, Input,
     Select, Table, Tag,
-    notification, Badge,
     message, Modal,
-    Alert,
     Button, Cascader
 } from 'antd';
-import {
-    ExclamationCircleOutlined
-} from '@ant-design/icons';
-
 import Head from 'next/head';
 import Router, { withRouter } from 'next/router'
 import { Editor as BraftEditor } from '@/components/Editor'
+import Base64 from 'js-base64'
+import { copyCode } from '@/utils'
+
 
 const { Option, OptGroup } = Select;
 const columns = (props) => {
+    const { userinfo } = props.state
     return [
         {
-            title: '标题',
-            dataIndex: 'title',
-            key: 'title',
+            title: '用户名',
+            dataIndex: 'name',
+            key: 'name',
             width: 100,
             align: 'center',
             rowKey: record => record.dataIndex,
-            render: text => <a>{text}</a>,
+            render: name => <p className={'ellipsis2'}>{name}</p>,
         },
         {
-            title: '内容概述',
-            dataIndex: 'content',
-            key: 'content',
+            title: '用户浏览器',
+            dataIndex: 'userAgent',
+            key: 'userAgent',
+            width: 80,
+            align: 'center',
+            rowKey: record => record.dataIndex,
+        },
+        {
+            title: '用户IP',
+            dataIndex: 'ip',
+            key: 'ip',
             width: 200,
+            height: 80,
             ellipsis: 2,
-            // colSpan: 6,
-            rowKey: record => record.dataIndex,
-            render: (text, record) => <div
-                onClick={() => props.handleReview(record.id)}
-                style={{ maxHeight: 85, overflow: 'hidden' }}
-                dangerouslySetInnerHTML={{ __html: text }}>
-            </div>,
-        },
-        {
-            title: '状态',
-            dataIndex: 'status',
-            width: 100,
-            align: 'center',
-            key: 'status',
-            rowKey: record => record.dataIndex,
-            render: status => (
-                <span>
-                    <Badge status={status === 1001 ? 'success' : status === 1002 ? 'warning' : 'error'} />
-                    {status === 1001 ? '已发布' : status === 1002 ? '待审核' : '审核不通过'}
-                </span>
-            ),
-        },
-        {
-            title: '标签',
-            key: 'tags',
-            width: 150,
             align: 'center',
             rowKey: record => record.dataIndex,
-            dataIndex: 'tags',
-            render: tags => (
-                <span>
-                    {tags.map((tag, index) => {
-                        let color = index > 1 ? 'geekblue' : 'green';
-                        if (tag.value === '前端') {
-                            color = 'volcano';
-                        }
-                        return (
-                            <Tag color={color} key={tag.id} style={{ marginBottom: 10 }}>
-                                {tag.value[0].toUpperCase() + tag.value.slice(1)}
-                            </Tag>
-                        );
-                    })}
-                </span>
-            ),
+            render: ip =>
+                <div className={'ellipsis'}>
+                    <span>{ip}</span>
+                </div>,
         },
         {
             title: '创建时间',
-            align: 'center',
             dataIndex: 'createTime',
             key: 'createTime',
-            width: 150,
-            rowKey: record => record.dataIndex,
-            render: time => React.$filters.timeFilter(new Date(time).getTime())
-        },
-        {
-            title: '修改时间',
+            width: 100,
+            height: 80,
+            ellipsis: 2,
             align: 'center',
-            dataIndex: 'updateTime',
-            key: 'updateTime',
-            width: 150,
             rowKey: record => record.dataIndex,
-            render: time => React.$filters.timeFilter(new Date(time).getTime())
+            render: createTime =>
+                <div>
+                    <span>{React.$filters.timeFilter(new Date(createTime).getTime())}</span>
+                </div>,
         },
         {
             title: '操作',
@@ -103,10 +68,8 @@ const columns = (props) => {
             align: 'center',
             render: (text, record) => (
                 <span>
-                    <a style={{ marginRight: 16 }} onClick={() => props.handleReview(record.id)}>查看</a>
-                    <a style={{ marginRight: 16 }} onClick={() => Router.push('/article/edit?id=' + record.id)}>编辑</a>
-                    {record.status === 1002 && <a style={{ marginRight: 16 }} onClick={() => props.handleChangeStatus(record)}>发布</a>}
-                    {(record.status === 1002 || record.status === 1003) && <a onClick={() => props.handleDelete(record.id)}> 删除</a>}
+                    <a style={{ marginRight: 16 }} onClick={() => props.handleCopy(text)}>复制路径</a>
+                    {userinfo && userinfo.administrator && <a style={{ marginRight: 16 }} onClick={() => props.handleDelete(record)}>删除</a>}
                 </span>
             ),
         },
@@ -192,7 +155,7 @@ const AdvancedSearchForm = (props) => {
 
     const onFormSubmit = values => {
         props.setParentState(values)
-        // console.log(values, 'onFormSubmit')
+        console.log(values, 'onFormSubmit')
     };
     return (
         <Form
@@ -230,11 +193,12 @@ class Article extends React.Component {
     constructor(props) {
         super(props)
     }
-    static async getInitialProps ({ $api }) {
+    static async getInitialProps ({ $api, userinfo }) {
         // 从query参数中回去id
         //通过process的browser属性判断处于何种环境：Node环境下为false,浏览器为true
         // 发送服务器请求
-        const res = await $api.article.get({ current: 1, pageSize: 5 })
+        let articleListData = []
+        const res = await $api.comment.get({ current: 1, pageSize: 5 })
         if (res && res.success) {
             return {
                 loading: false,
@@ -245,6 +209,7 @@ class Article extends React.Component {
                     total: res.data[1],
                     pageSizeOptions: [5, 10, 20, 50]
                 },
+                userinfo,
             }
         } else {
             return {
@@ -255,22 +220,21 @@ class Article extends React.Component {
                     pageSize: 5,
                     total: 999,
                     pageSizeOptions: [5, 10, 20, 50]
-                }
+                },
+                userinfo,
             }
         }
     }
 
     state = {
+        loading: true,
+        data: this.props.data,
+        pageData: this.props.pageData,
         queryData: {},
         hasData: true,
         modalVisible: false,
         reviewData: {},
-        ...this.props,
-        comment: {
-            name: '',
-            email: '',
-            content: ''
-        }
+        userinfo: this.props.userinfo
     }
     async handlerFormSubmit (values, isPage) {
         isPage && this.setState({ loading: true, pageData: values })
@@ -297,7 +261,7 @@ class Article extends React.Component {
     }
     async getPageData (params = {}) {
         const { current, pageSize } = params
-        const res = await $api.article.get({ params })
+        const res = await $api.comment.get(params)
         if (res && res.success) {
             this.setState({
                 loading: false,
@@ -320,75 +284,29 @@ class Article extends React.Component {
             })
         }
     }
-    handleDelete = (id) => {
-        const { pageData, queryData } = this.state
-        const { pageSize, current } = pageData
-        console.log(this.state, 'asdasdsa')
-        Modal.confirm({
-            title: '温馨提示',
-            icon: <ExclamationCircleOutlined />,
-            content: '确认删除？',
-            okText: '确认',
-            onOk: () => {
-                $api.article.delete({ params: { id } }).then(res => {
-                    if (res && res.success) {
-                        message.success(res.data)
-                        this.getPageData({ pageSize, current, ...queryData })
-                    } else {
-                        message.error(res.message)
-                    }
-                })
-            },
-            cancelText: '取消'
-        })
+    // 复制文件路径
+    handleCopy = (item) => {
+        copyCode(item.url)
+        message.success('复制成功！')
     }
-    handleReview (id) {
-        $api.article.getById({ params: { id } }).then(res => {
+    // 删除文件
+    handleDelete (item) {
+        $api.file.delete({ id: item.id }).then(res => {
             if (res && res.success) {
-                this.setState({ reviewData: res.data, modalVisible: true })
+                message.success(res.data)
+                this.getPageData(this.props.pageData)
             } else {
                 message.error(res.message)
             }
         })
     }
-    async handleChangeStatus (item) {
-        let { id, status } = item
-        status = status === 1001 ? 1002 : 1001
-        const res = await $api.article.status({ data: { id, status } })
-        if (res && res.success) {
-            message.success(res.message)
-            this.handlerFormSubmit({})
-            return
-        }
-        message.error(res.message)
-    }
     setArticle (callback) {
         return callback(this.state.reviewData)
-    }
-    setComment (callback) {
-        return callback(this.state.comment)
-    }
-    // 提交评论
-    handleSubmitComment () {
-        let commentData = { articleId: this.state.reviewData.id, ...this.state.comment }
-        const { name, email, content } = commentData
-        if (!name || !email || !content)
-            return message.error('请填写必要信息')
-        console.log(commentData, 'commentData')
-        $api.comment.add(commentData).then(res => {
-            if (res && res.success) {
-                message.success(res.message)
-                const { pageSize, current } = this.state.pageData
-                this.getPageData({ pageSize, current })
-                return
-            }
-            res && message.error(res.message)
-        })
     }
     componentDidMount () {
         this.setState({ loading: false })
         // 如果没有缓存，通过localStorage在本地缓存数据
-        // sessionStorage.setItem('articleList', JSON.stringify(this.props.data))
+        sessionStorage.setItem('articleList', JSON.stringify(this.props.data))
     }
     setModalVisible (modalVisible) {
         this.setState({ modalVisible });
@@ -398,10 +316,10 @@ class Article extends React.Component {
         return (
             <Fragment>
                 <Head>
-                    <title>文章列表</title>
+                    <title>文件列表</title>
                 </Head>
-                <h3 className='text-gray-600 text-lg leading-4 mb-5 divide-x border-solid border-l-4 pl-2 border-orange-f9'>文章列表</h3>
-                <AdvancedSearchForm setParentState={this.handlerFormSubmit.bind(this)} />
+                <h3 className='text-gray-600 text-lg leading-4 mb-5 divide-x border-solid border-l-4 pl-2 border-orange-f9'>文件列表</h3>
+                {/* <AdvancedSearchForm setParentState={this.handlerFormSubmit.bind(this)} /> */}
                 <Table
                     {...this.state}
                     rowKey={(record, index) => index}
@@ -413,35 +331,32 @@ class Article extends React.Component {
                     pagination={{
                         ...this.state.pageData,
                         showSizeChanger: true,
-                        showTitle: (total, range) => <span>'页'</span>,
-                        showTotal: (total, range) => <span>{`共 ${total} 条`}</span>
+                        showTitle: (total, range) => '页',
+                        showTotal: (total, range) => `共 ${total} 条`
                     }}
                 />
                 <Modal
-                    title="文章详情"
+                    title="文件详情"
                     centered
-                    width={880}
+                    width={800}
                     footer={null}
                     visible={this.state.modalVisible}
+                    onOk={() => this.setModalVisible(false)}
                     onCancel={() => this.setModalVisible(false)}
                 >
-                    <div className="review-content" style={{ height: 780, paddingRight: 20, overflow: 'hidden', overflowY: 'auto' }}>
+                    <div className="review-content">
                         <h3 className="text-xl mb-5">{this.state.reviewData.title}</h3>
                         {/* <div dangerouslySetInnerHTML={{ __html: this.state.reviewData.content }}></div> */}
-                        <div className="review-content-main">
-                            {this.state.modalVisible && <BraftEditor
-                                value={this.state.reviewData.content}
-
-                                onChange={(value) => {
-                                    this.setArticle((article) => {
-                                        article.content = value;
-                                        return article;
-                                    });
-                                }}
-                                readOnly
-                            ></BraftEditor>}
-                        </div>
-                        {this.state.reviewData.tags && this.state.reviewData.tags.length ? <div className="tags">
+                        <BraftEditor
+                            value={this.state.reviewData.content}
+                            onChange={(value) => {
+                                this.setArticle((article) => {
+                                    article.content = value;
+                                    return article;
+                                });
+                            }}
+                        ></BraftEditor>
+                        <p className="tags">
                             <h3 className="text-2 mb-5 mt-5">关联标签</h3>
                             <span>
                                 {this.state.reviewData.tags && this.state.reviewData.tags.map((tag, index) => {
@@ -451,42 +366,12 @@ class Article extends React.Component {
                                     }
                                     return (
                                         <Tag color={color} key={tag.id} className="mb-1">
-                                            {tag.value[0].toUpperCase() + tag.value.slice(1)}
+                                            {tag.value.toUpperCase()}
                                         </Tag>
                                     );
                                 })}
                             </span>
-                        </div> : null}
-                        <div className="comment">
-                            <h3 className="text-xl mb-5">评论</h3>
-                            <BraftEditor
-                                style={{ height: 100 }}
-                                value={this.state.comment.content}
-                                onChange={(value) => {
-                                    this.setComment((comment) => {
-                                        comment.content = value;
-                                        return comment;
-                                    });
-                                }}
-                            ></BraftEditor>
-                            {/* onChange={(e) => {
-                                this.setState({ articleForm: { ...this.state.articleForm, title: e.target.value } })
-                            }} */}
-                            <Input
-                                placeholder="用户名"
-                                onChange={(e) => {
-                                    this.setState({ comment: { ...this.state.comment, name: e.target.value.replace(/[\d]/g, '') } })
-                                }}
-                                value={this.state.comment.name}
-                                style={{ width: "40%", marginRight: 20 }}></Input>
-                            <Input placeholder="邮箱"
-                                onChange={(e) => {
-                                    this.setState({ comment: { ...this.state.comment, email: e.target.value.replace(/[\d]/g, '') } })
-                                }}
-                                value={this.state.comment.email}
-                                style={{ width: "40%", marginRight: 20 }}></Input>
-                            <Button onClick={() => this.handleSubmitComment()}>提交</Button>
-                        </div>
+                        </p>
                     </div>
                 </Modal>
             </Fragment>

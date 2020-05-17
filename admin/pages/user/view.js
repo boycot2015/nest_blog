@@ -133,12 +133,12 @@ class User extends React.Component {
     constructor(props) {
         super(props)
     }
-    static async getInitialProps ({ ctx, api }) {
+    static async getInitialProps ({ ctx, $api }) {
         //通过process的browser属性判断处于何种环境：Node环境下为false,浏览器为true
         // 发送服务器请求
         const { query } = ctx
         if (query.id) {
-            const res = await api.user.getById({ id: query.id })
+            const res = await $api.user.getById({ id: query.id })
             // console.log(res.data.password, 'avatar')
             if (res && res.success) {
                 res.data.password = aesDecrypt(res.data.cipher)
@@ -170,7 +170,7 @@ class User extends React.Component {
         let avatar = this.state.avatar
         password = aesEncrypt(password)
         // console.log({ username, password, status, avatar, email }, this.state.data, 'asdasdasdasdasd')
-        const res = await React.$api.user.edit({ ...this.state.data, username, password, status, avatar, email })
+        const res = await $api.user.edit({ ...this.state.data, username, password, status, avatar, email })
         if (res && res.success) {
             if (this.state.userinfo.id === this.state.data.id) {
                 message.warning('用户信息发生变化，请重新登录！')
