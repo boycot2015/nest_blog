@@ -146,7 +146,7 @@ export class ArticleService {
     async getById(id: number) {
         // const article = this.articles.find(article => article.id === id)
         // return Promise.resolve(article);
-        const res = await this.articleRepository.findOne({ id })
+        const res = await this.articleRepository.findOne({ id }, { relations: ['comment'] })
         if (!res) throw new HttpException(`暂无数据`, 404);
 
         // 新增访客量
@@ -155,6 +155,7 @@ export class ArticleService {
 
         let queryBy = this.articleRepository.createQueryBuilder('article')
             .leftJoinAndSelect('article.tags', 'tag')
+            .leftJoinAndSelect("article.comment", "comment")
         queryBy = queryBy.andWhere(`article.id=${id}`)
         return queryBy.getOne()
     }

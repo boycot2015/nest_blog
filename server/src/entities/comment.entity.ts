@@ -2,7 +2,7 @@ import {
     Entity,
     Column,
     PrimaryGeneratedColumn,
-    ManyToMany,
+    ManyToOne,
     CreateDateColumn,
     UpdateDateColumn,
     JoinTable
@@ -16,15 +16,15 @@ export class Comment {
 
     @Column({ type: 'text', charset: 'utf8mb4', default: null, select: true })
     name: string;
-    
+
+    @Column({ type: 'text', default: null, select: true })
+    parentId: string;
+
     @Column({ type: 'text', charset: 'utf8mb4', default: null, select: true })
     ip: string;
 
     @Column({ type: 'text', charset: 'utf8mb4', default: null, select: true })
     avatar: string;
-
-    @Column({ type: 'text', charset: 'utf8mb4', default: null, select: true })
-    articleId: string;
 
     @Column({ type: 'text', charset: 'utf8mb4', default: null, select: true })
     content: string;
@@ -56,9 +56,9 @@ export class Comment {
     })
     updateTime: Date;
 
-    // @ManyToMany(
-    //     () => Article,
-    //     article => article.comment
-    // )
-    // article: Array<Article>;
+    @ManyToOne(
+        () => Article,
+        article => article.comment
+    )
+    article: Article;
 }

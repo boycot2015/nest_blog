@@ -88,7 +88,7 @@ export class CommentService {
             const article = await this.articleService.getById(comment.articleId)
             const newcCommentData = await this.commentRepository.create({
                 ...insertCommentData,
-                articleId: article.id
+                article
             });
             console.log(newcCommentData, 'insertCommentData')
             await this.commentRepository.save(newcCommentData)

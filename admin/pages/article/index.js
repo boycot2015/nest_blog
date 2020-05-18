@@ -343,13 +343,14 @@ class Article extends React.Component {
         })
     }
     handleReview (id) {
-        $api.article.getById({ params: { id } }).then(res => {
-            if (res && res.success) {
-                this.setState({ reviewData: res.data, modalVisible: true })
-            } else {
-                message.error(res.message)
-            }
-        })
+        // $api.article.getById({ params: { id } }).then(res => {
+        //     if (res && res.success) {
+        //         this.setState({ reviewData: res.data, modalVisible: true })
+        //     } else {
+        //         message.error(res.message)
+        //     }
+        // })
+        Router.push('/article/view?id=' + id)
     }
     async handleChangeStatus (item) {
         let { id, status } = item

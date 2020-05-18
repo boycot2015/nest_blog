@@ -64,11 +64,7 @@ export class Article {
     @JoinTable()
     user: Users
 
-    // , { cascade: true }
-    // @ManyToMany(
-    //     () => Comment,
-    //     comment => comment.article
-    // )
-    // @JoinTable()
-    // comment: Array<Comment>
+    @OneToMany(() => Comment, comment => comment.article)
+    @JoinTable()
+    comment: Array<Comment>
 }
