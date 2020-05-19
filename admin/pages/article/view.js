@@ -22,17 +22,17 @@ function handleChange (value) {
 const CommentTree = (props) => (
     <Fragment>
         {props.data.map(el => (
-        <div className="comment-list-item">
-            <div className="title clearfix">
-                <span className="avatar fl" style={{ backgroundColor: el.avatar }}>{el.name.slice(0, 1).toUpperCase()}</span>
-                <p className="name fl" style={{ color: el.avatar }}>{el.name}</p>
+            <div className="comment-list-item">
+                <div className="title clearfix">
+                    <span className="avatar fl" style={{ backgroundColor: el.avatar }}>{el.name.slice(0, 1).toUpperCase()}</span>
+                    <p className="name fl" style={{ color: el.avatar }}>{el.name}</p>
+                </div>
+                <div className="content">
+                    <div className="content-text" dangerouslySetInnerHTML={{ __html: el.content }}></div>
+                    <div className="comment-icon" onClick={() => props.parent.setState({ comment: { parentId: el.id } })} title="点击进行评论"><CommentOutlined /></div>
+                </div>
+                {el.children && <div style={{ marginLeft: 40, marginTop: 10 }} ><CommentTree data={el.children} parent={props.parent}></CommentTree></div>}
             </div>
-            <div className="content">
-                <div className="content-text" dangerouslySetInnerHTML={{ __html: el.content }}></div>
-                <div className="comment-icon" onClick={() => this.setState({comment: { parentId: el.id }})} title="点击进行评论"><CommentOutlined /></div>
-            </div>
-            {el.children && <div style={{ marginLeft: 40, marginTop: 10 }} ><CommentTree data={el.children}></CommentTree></div>}
-        </div>
         ))}
     </Fragment>
 )
@@ -122,7 +122,7 @@ class ArticleView extends React.Component {
                     <div className="byt-article-view-content-main">
                         <BraftEditor
                             value={this.state.reviewData.content}
-
+                            style={{ width: 1000, margin: '0 auto' }}
                             onChange={(value) => {
                                 this.setArticle((article) => {
                                     article.content = value;
@@ -151,7 +151,7 @@ class ArticleView extends React.Component {
                     <div className="comment">
                         <h3 className='text-gray-600 text-lg leading-4 mb-10 divide-x border-solid border-l-4 pl-2 border-orange-f9'>最新评论</h3>
                         <div className={"comment-list"}>
-                            <CommentTree data={this.state.reviewData.comment}></CommentTree>
+                            <CommentTree data={this.state.reviewData.comment} parent={this}></CommentTree>
                         </div>
                         <h3 className='text-gray-600 text-lg leading-4 mb-5 divide-x border-solid border-l-4 pl-2 border-orange-f9'>添加评论</h3>
                         <div className="comment-form">
