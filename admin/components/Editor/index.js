@@ -219,6 +219,6 @@ export const Editor = ({ value = '', onChange, style, className, readOnly, place
             <BraftEditor {...editorProps} />
         </div>
     ) : (
-            <Spin tip="编辑器努力加载中..." spinning={true}></Spin>
+            <Spin style={{ minHeight: 200, width: '100%', lineHeight: '100px' }} tip="编辑器努力加载中..." spinning={true}></Spin>
         );
 };

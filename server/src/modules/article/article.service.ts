@@ -22,6 +22,7 @@ export class ArticleService {
         // 条件筛选和分页查询代码
         let queryBy = this.articleRepository.createQueryBuilder('article')
             .leftJoinAndSelect('article.tags', 'tag')
+            .andWhere('article.isDelete=:delete').setParameter('delete', false);
         // .leftJoinAndSelect('article.comment', 'comment')
 
         // 2. 条件筛选查询，如名称、类型等，传入对应字段即可
@@ -134,7 +135,7 @@ export class ArticleService {
         console.log(id, 'iddddddd')
         const res = await this.articleRepository.findOne({ id: +id })
         if (res) {
-            await this.articleRepository.remove(res)
+            await this.articleRepository.save({ ...res, isDelete: true })
             return responseStatus.success.message
         }
         else throw new HttpException(`暂无数据`, 404);

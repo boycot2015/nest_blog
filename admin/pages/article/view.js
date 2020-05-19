@@ -85,8 +85,12 @@ class ArticleView extends React.Component {
     handleSubmitComment () {
         let commentData = { articleId: this.state.reviewData.id, ...this.state.comment }
         const { name, email, content } = commentData
-        if (!name || !email || !content)
+        if (!name || !email || !content) {
+            if (!/^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/.test(email)) {
+                return message.error('请输入正确的邮箱地址！')
+            }
             return message.error('请填写必要信息')
+        }
         console.log(commentData, 'commentData')
         $api.comment.add(commentData).then(res => {
             if (res && res.success) {
@@ -116,8 +120,8 @@ class ArticleView extends React.Component {
                     <title>文章详情</title>
                 </Head>
                 <h3 className='text-gray-600 text-lg leading-4 mb-5 divide-x border-solid border-l-4 pl-2 border-orange-f9'>文章详情</h3>
-                <div className="byt-article-view-content scroll-design" style={{ height: 680, paddingRight: 20, overflow: 'hidden', overflowY: 'auto' }}>
-                    <h3 className="text-xl mb-5 text-center">{this.state.reviewData.title}</h3>
+                <div className="byt-article-view-content scroll-design" style={{ height: 700, paddingRight: 20, overflow: 'hidden', overflowY: 'auto' }}>
+                    <h3 className="text-xl mb-5 text-center font-bold">{this.state.reviewData.title}</h3>
                     {/* <div dangerouslySetInnerHTML={{ __html: this.state.reviewData.content }}></div> */}
                     <div className="byt-article-view-content-main">
                         <BraftEditor
