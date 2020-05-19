@@ -31,17 +31,17 @@ import $filters from '@/filters';
 React.$filters = $filters
 import '../static/css/index.css'
 import '../static/scss/index.scss'
-const menu = (props) => {
+const menu = (props, that) => {
     const handlerHeader = (e) => {
         if (e.key === 'item_1') {
-            destroyCookie({}, 'token')
+            destroyCookie(that.props.ctx, 'token')
             Router.push('/login')
         }
     }
     return (
         <Menu onClick={handlerHeader} className="text-center">
             {props.username ? <Menu.Item>
-                <a rel="noopener noreferrer" href={`/user/view?id=${props.id}`}>
+                <a onClick={() => Router.push(`/user/view?id=${props.id}`)}>
                     个人中心
             </a>
             </Menu.Item> : null}
@@ -196,7 +196,7 @@ class Container extends React.Component {
                             <Avatar className={'mr-5  text-orange-f9 bg-gray-200 cursor-pointer'}
                                 onClick={() => window.open('https://github.com/boycot2015/nest_blog')}
                                 icon={<GithubOutlined />} />
-                            <Dropdown overlay={menu(userinfo)} placement="bottomCenter">
+                            <Dropdown overlay={menu(userinfo, this)} placement="bottomCenter">
                                 <div className='login-cont cursor-pointer'
                                     onClick={() => userinfo.username ?
                                         Router.push(`/user/view?id=${userinfo.id}`)

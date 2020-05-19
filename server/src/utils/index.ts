@@ -86,3 +86,24 @@ export const parseUserAgent = (userAgent) => {
     return msg;
 };
 
+/**
+ * 递归实现树形结构
+ * @param {*} data 需要递归的数组
+ * @param {*} parentViewCode 递归条件
+ */
+export function filterTreeData (data, parentId = null) {
+    let tree = []
+    let temp
+    for (let i = 0; i < data.length; i++) {
+        if (data[i].parentId === parentId) {
+            let obj = data[i]
+            temp = filterTreeData(data, data[i].id)
+            if (temp.length > 0) {
+                obj.children = temp
+            }
+            tree.push(obj)
+        }
+    }
+    return tree
+}
+

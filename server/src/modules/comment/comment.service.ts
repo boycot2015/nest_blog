@@ -79,12 +79,14 @@ export class CommentService {
         }
         const hasComment = await this.commentRepository.findOne({ 'name': comment.name, 'content': comment.content })
         if (hasComment) {
-            throw new HttpException("评论已存在,请重新输入！", responseStatus.failed.code);
+            throw new HttpException("评论已存在,请勿重复评论！", responseStatus.failed.code);
         } else {
             let insertCommentData = {
-                avatar: colors[Math.floor(Math.random() * (colors.length - 1))],
                 ...comment
             }
+            const commenter = await this.commentRepository.findOne({ 'name': comment.name, 'email': comment.email })
+            insertCommentData.avatar = commenter && commenter.avatar ? commenter.avatar : colors[Math.floor(Math.random() * (colors.length - 1))]
+
             const article = await this.articleService.getById(comment.articleId)
             const newcCommentData = await this.commentRepository.create({
                 ...insertCommentData,

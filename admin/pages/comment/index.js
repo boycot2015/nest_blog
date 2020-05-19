@@ -68,7 +68,7 @@ const columns = (props) => {
             align: 'center',
             render: (text, record) => (
                 <span>
-                    <a style={{ marginRight: 16 }} onClick={() => props.handleCopy(text)}>复制路径</a>
+                    <a style={{ marginRight: 16 }} onClick={() => props.handleView(text)}>查看</a>
                     {userinfo && userinfo.administrator && <a style={{ marginRight: 16 }} onClick={() => props.handleDelete(record)}>删除</a>}
                 </span>
             ),
@@ -284,17 +284,19 @@ class Article extends React.Component {
             })
         }
     }
-    // 复制文件路径
-    handleCopy = (item) => {
-        copyCode(item.url)
-        message.success('复制成功！')
+    // 查看评论
+    handleView = (item) => {
+        this.setState({
+            reviewData: item
+        })
+        this.setModalVisible(true)
     }
-    // 删除文件
+    // 删除评论
     handleDelete (item) {
-        $api.file.delete({ id: item.id }).then(res => {
+        $api.comment.delete({ id: item.id }).then(res => {
             if (res && res.success) {
                 message.success(res.data)
-                this.getPageData(this.props.pageData)
+                this.getPageData({pageSize: 10, current: 1})
             } else {
                 message.error(res.message)
             }
@@ -305,8 +307,6 @@ class Article extends React.Component {
     }
     componentDidMount () {
         this.setState({ loading: false })
-        // 如果没有缓存，通过localStorage在本地缓存数据
-        sessionStorage.setItem('articleList', JSON.stringify(this.props.data))
     }
     setModalVisible (modalVisible) {
         this.setState({ modalVisible });
@@ -336,42 +336,16 @@ class Article extends React.Component {
                     }}
                 />
                 <Modal
-                    title="文件详情"
-                    centered
-                    width={800}
+                    title="评论详情"
+                    width={600}
                     footer={null}
                     visible={this.state.modalVisible}
                     onOk={() => this.setModalVisible(false)}
                     onCancel={() => this.setModalVisible(false)}
                 >
                     <div className="review-content">
-                        <h3 className="text-xl mb-5">{this.state.reviewData.title}</h3>
-                        {/* <div dangerouslySetInnerHTML={{ __html: this.state.reviewData.content }}></div> */}
-                        <BraftEditor
-                            value={this.state.reviewData.content}
-                            onChange={(value) => {
-                                this.setArticle((article) => {
-                                    article.content = value;
-                                    return article;
-                                });
-                            }}
-                        ></BraftEditor>
-                        <p className="tags">
-                            <h3 className="text-2 mb-5 mt-5">关联标签</h3>
-                            <span>
-                                {this.state.reviewData.tags && this.state.reviewData.tags.map((tag, index) => {
-                                    let color = index > 1 ? 'geekblue' : 'green';
-                                    if (tag.value === '前端') {
-                                        color = 'volcano';
-                                    }
-                                    return (
-                                        <Tag color={color} key={tag.id} className="mb-1">
-                                            {tag.value.toUpperCase()}
-                                        </Tag>
-                                    );
-                                })}
-                            </span>
-                        </p>
+                        <h3 className="text-xl mb-5">{this.state.reviewData.name}</h3>
+                        <div dangerouslySetInnerHTML={{ __html: this.state.reviewData.content }}></div>
                     </div>
                 </Modal>
             </Fragment>

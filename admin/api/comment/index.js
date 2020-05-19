@@ -10,6 +10,13 @@ export default {
     edit (data) {
         return axios.post(url.edit, data)
     },
+    delete (data) {
+        return axios({
+            method: 'post',
+            url: url.delete,
+            params: data
+        })
+    },
     getById (params) {
         return axios.get(url.getById, { params })
     },

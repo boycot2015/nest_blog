@@ -2,7 +2,7 @@ import { Injectable, HttpException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Article } from "../../entities/article.entity";
-import { responseStatus } from "../../utils";
+import { responseStatus, filterTreeData } from "../../utils";
 import * as dayjs from 'dayjs';
 import { TagService } from '../tag/tag.service';
 import { AuthService } from '../auth/auth.service';
@@ -156,8 +156,12 @@ export class ArticleService {
         let queryBy = this.articleRepository.createQueryBuilder('article')
             .leftJoinAndSelect('article.tags', 'tag')
             .leftJoinAndSelect("article.comment", "comment")
+            .orderBy('comment.create_time', 'DESC')
         queryBy = queryBy.andWhere(`article.id=${id}`)
-        return queryBy.getOne()
+        console.log(await queryBy.getOne(), 'queryBy.getOne()')
+        let data = await queryBy.getOne()
+        data.comment = filterTreeData(data.comment, null)
+        return Promise.resolve(data)
     }
     // 设置文章状态
     async setStatus({ id, status }) {

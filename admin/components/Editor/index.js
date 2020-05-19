@@ -18,7 +18,7 @@ import style from './index.module.scss';
 
 let BraftEditor;
 
-export const Editor = ({ value = '', onChange, readOnly, placeholder = '请输入内容', styles }) => {
+export const Editor = ({ value = '', onChange, style, className, readOnly, placeholder = '请输入内容', styles }) => {
     const ref = useRef(null);
     const [editorState, setEditorState] = useState();
     const [mounted, setMounted] = useState(false);
@@ -215,7 +215,7 @@ export const Editor = ({ value = '', onChange, readOnly, placeholder = '请输�
         // onRawChange: this.handleRawChange
     }
     return mounted ? (
-        <div className={cls(style.wrapper, '')} ref={ref}>
+        <div style={style} className={className} ref={ref}>
             <BraftEditor {...editorProps} />
         </div>
     ) : (
