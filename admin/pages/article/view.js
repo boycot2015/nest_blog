@@ -22,17 +22,17 @@ function handleChange (value) {
 const CommentTree = (props) => (
     <Fragment>
         {props.data.map(el => (
-        <div className="comment-list-item">
-            <div className="title clearfix">
-                <span className="avatar fl" style={{ backgroundColor: el.avatar }}>{el.name.slice(0, 1).toUpperCase()}</span>
-                <p className="name fl" style={{ color: el.avatar }}>{el.name}</p>
+            <div className="comment-list-item">
+                <div className="title clearfix">
+                    <span className="avatar fl" style={{ backgroundColor: el.avatar }}>{el.name.slice(0, 1).toUpperCase()}</span>
+                    <p className="name fl" style={{ color: el.avatar }}>{el.name}</p>
+                </div>
+                <div className="content">
+                    <div className="content-text" dangerouslySetInnerHTML={{ __html: el.content }}></div>
+                    <div className="comment-icon" onClick={() => props.parent.setState({ comment: { parentId: el.id } })} title="点击进行评论"><CommentOutlined /></div>
+                </div>
+                {el.children && <div style={{ marginLeft: 40, marginTop: 10 }} ><CommentTree data={el.children} parent={props.parent}></CommentTree></div>}
             </div>
-            <div className="content">
-                <div className="content-text" dangerouslySetInnerHTML={{ __html: el.content }}></div>
-                <div className="comment-icon" onClick={() => this.setState({comment: { parentId: el.id }})} title="点击进行评论"><CommentOutlined /></div>
-            </div>
-            {el.children && <div style={{ marginLeft: 40, marginTop: 10 }} ><CommentTree data={el.children}></CommentTree></div>}
-        </div>
         ))}
     </Fragment>
 )
@@ -85,8 +85,12 @@ class ArticleView extends React.Component {
     handleSubmitComment () {
         let commentData = { articleId: this.state.reviewData.id, ...this.state.comment }
         const { name, email, content } = commentData
-        if (!name || !email || !content)
+        if (!name || !email || !content) {
+            if (!/^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/.test(email)) {
+                return message.error('请输入正确的邮箱地址！')
+            }
             return message.error('请填写必要信息')
+        }
         console.log(commentData, 'commentData')
         $api.comment.add(commentData).then(res => {
             if (res && res.success) {
@@ -116,13 +120,13 @@ class ArticleView extends React.Component {
                     <title>文章详情</title>
                 </Head>
                 <h3 className='text-gray-600 text-lg leading-4 mb-5 divide-x border-solid border-l-4 pl-2 border-orange-f9'>文章详情</h3>
-                <div className="byt-article-view-content scroll-design" style={{ height: 680, paddingRight: 20, overflow: 'hidden', overflowY: 'auto' }}>
-                    <h3 className="text-xl mb-5 text-center">{this.state.reviewData.title}</h3>
+                <div className="byt-article-view-content scroll-design" style={{ height: 700, paddingRight: 20, overflow: 'hidden', overflowY: 'auto' }}>
+                    <h3 className="text-xl mb-5 text-center font-bold">{this.state.reviewData.title}</h3>
                     {/* <div dangerouslySetInnerHTML={{ __html: this.state.reviewData.content }}></div> */}
                     <div className="byt-article-view-content-main">
                         <BraftEditor
                             value={this.state.reviewData.content}
-
+                            style={{ width: 1000, margin: '0 auto' }}
                             onChange={(value) => {
                                 this.setArticle((article) => {
                                     article.content = value;
@@ -151,7 +155,7 @@ class ArticleView extends React.Component {
                     <div className="comment">
                         <h3 className='text-gray-600 text-lg leading-4 mb-10 divide-x border-solid border-l-4 pl-2 border-orange-f9'>最新评论</h3>
                         <div className={"comment-list"}>
-                            <CommentTree data={this.state.reviewData.comment}></CommentTree>
+                            <CommentTree data={this.state.reviewData.comment} parent={this}></CommentTree>
                         </div>
                         <h3 className='text-gray-600 text-lg leading-4 mb-5 divide-x border-solid border-l-4 pl-2 border-orange-f9'>添加评论</h3>
                         <div className="comment-form">

@@ -1,7 +1,11 @@
 .#{$perfix}-article {
     &-view-content {
+        .bf-content {
+            height: auto;
+        }
         .comment {
             &-list {
+                width: 800px;
                 margin-bottom: 50px;
                 &-item{
                     margin-bottom: 20px;
@@ -41,9 +45,12 @@
                 cursor: pointer;
             }
             &-form {
-                width: 600px;
+                width: 800px;
                 // margin: 0 auto;
                 border: 1px solid $gray;
+                .bf-content {
+                    height: 300px;
+                }
             }
             &-userinfo {
                 padding: 10px;
