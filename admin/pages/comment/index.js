@@ -296,7 +296,7 @@ class Article extends React.Component {
         $api.comment.delete({ id: item.id }).then(res => {
             if (res && res.success) {
                 message.success(res.data)
-                this.getPageData({pageSize: 10, current: 1})
+                this.getPageData({ pageSize: 5, current: 1 })
             } else {
                 message.error(res.message)
             }

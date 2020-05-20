@@ -38,6 +38,7 @@ export class UploadController {
         return await this.minioService.getFileUrl(res.fileName)
     }
     @Get('/get')
+    @UseGuards(AuthGuard())
     @ApiOperation({ summary: '获取文件', description: "获取文件" })
     async GetFileList (@Query() query) {
         const res = await this.fileService.get(query)

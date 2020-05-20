@@ -125,8 +125,10 @@ export function filterTreeData (data, parentId = null) {
 const smtpTransport = nodemailer.createTransport({
     service: '163',
     auth: {
-        user: 'boycot2017@163.com',
-        pass: 'zch17184'//注：此处为授权码，并非邮箱密码
+        // user: 'boycot2017@163.com',
+        // pass: 'GIZNBKXISKNIQJSE'//注：此处为授权码，并非邮箱密码
+        user: 'boycot001@163.com',
+        pass: 'IAKKRWWTCZCOPYON'
     }
 });
 

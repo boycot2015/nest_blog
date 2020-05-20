@@ -87,7 +87,7 @@ class Login extends React.Component {
         return (
             <div className='login-container flexbox-v align-c'>
                 <Head>
-                    <title>用户注册</title>
+                    <title>用户登录</title>
                 </Head>
                 <div className='login-box pad20'>
                     <NormalLoginForm props={this.props}></NormalLoginForm>

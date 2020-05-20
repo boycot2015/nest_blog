@@ -36,6 +36,105 @@ const CommentTree = (props) => (
         ))}
     </Fragment>
 )
+
+const CommentForm = (data) => {
+    let props = data.data
+    // 提交评论
+    const handleSubmitComment = values => {
+        let commentData = {
+            articleId: props.state.reviewData.id,
+            name: values.name,
+            email: values.email,
+            content: props.state.comment.content
+        }
+        props.state.comment.parentId !== null && (commentData.parentId = props.state.comment.parentId)
+        const { name, email, content } = commentData
+        if (!name || !email || content === '<p></p>') {
+            console.log(commentData, 'commentData')
+            if (!(/^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/.test(email))) {
+                return message.error('请输入正确的邮箱地址！')
+            }
+            return message.error('请填写必要信息')
+        }
+        $api.comment.add(commentData).then(res => {
+            if (res && res.success) {
+                message.success(res.message)
+                props.handleReview(props.state.reviewData.id)
+                props.setState({
+                    comment: {
+                        parentId: null,
+                        name: '',
+                        email: '',
+                        content: ''
+                    }
+                })
+                return
+            }
+            res && message.error(res.message)
+        })
+    };
+    return (
+        <Form
+            layout='inline'
+            initialValues={{
+                remember: true,
+                name: '',
+                content: '',
+                email: ''
+            }}
+            onFinish={handleSubmitComment}
+            className="comment-form"
+        >
+            <BraftEditor
+                style={{ borderBottom: '1px solid #ccc', marginBottom: 10 }}
+                value={props.state.comment.content}
+                onChange={(value) => {
+                    props.setComment((comment) => {
+                        comment.content = value;
+                        return comment;
+                    });
+                }}
+            ></BraftEditor>
+            <Form.Item
+                name="name"
+                rules={[
+                    {
+                        required: true,
+                        message: '请输入用户名!',
+                    },
+                ]}
+            >
+                <Input
+                    placeholder="用户名"
+                    onChange={(e) => {
+                        props.setState({ comment: { ...props.state.comment, name: e.target.value.replace(/[\d]/g, '') } })
+                    }}
+                    value={props.state.comment.name}
+                    style={{ marginRight: 20, marginLeft: 10, width: '300px' }}></Input>
+            </Form.Item>
+            <Form.Item
+                name="email"
+                rules={[
+                    {
+                        required: true,
+                        message: '请输入邮箱!',
+                    },
+                ]}
+            >
+                <Input placeholder="邮箱"
+                    onChange={(e) => {
+                        props.setState({ comment: { ...props.state.comment, email: e.target.value } })
+                    }}
+                    value={props.state.comment.email}
+                    style={{ marginRight: 20, width: '300px' }}></Input>
+            </Form.Item>
+            <Form.Item>
+                <Button htmlType="submit">提交</Button>
+            </Form.Item>
+        </Form>
+    )
+}
+
 class ArticleView extends React.Component {
     constructor(props) {
         super(props)
@@ -61,6 +160,7 @@ class ArticleView extends React.Component {
     state = {
         ...this.props,
         comment: {
+            parentId: null,
             name: '',
             email: '',
             content: ''
@@ -80,34 +180,6 @@ class ArticleView extends React.Component {
     }
     setComment (callback) {
         return callback(this.state.comment)
-    }
-    // 提交评论
-    handleSubmitComment () {
-        let commentData = { articleId: this.state.reviewData.id, ...this.state.comment }
-        const { name, email, content } = commentData
-        if (!name || !email || !content) {
-            if (!/^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/.test(email)) {
-                return message.error('请输入正确的邮箱地址！')
-            }
-            return message.error('请填写必要信息')
-        }
-        console.log(commentData, 'commentData')
-        $api.comment.add(commentData).then(res => {
-            if (res && res.success) {
-                message.success(res.message)
-                this.handleReview(this.state.reviewData.id)
-                this.setState({
-                    comment: {
-                        parentId: null,
-                        name: '',
-                        email: '',
-                        content: ''
-                    }
-                })
-                return
-            }
-            res && message.error(res.message)
-        })
     }
     componentDidMount () {
         this.setState({ loading: false })
@@ -135,57 +207,30 @@ class ArticleView extends React.Component {
                             }}
                             readOnly
                         ></BraftEditor>
+                        {this.state.reviewData.tags && this.state.reviewData.tags.length ? <div style={{ width: 1000, margin: '0 auto 30px' }} className="tags">
+                            <h3 className="text-2 mb-5 mt-5">关联标签</h3>
+                            <span>
+                                {this.state.reviewData.tags && this.state.reviewData.tags.map((tag, index) => {
+                                    let color = index > 1 ? 'geekblue' : 'green';
+                                    if (tag.value === '前端') {
+                                        color = 'volcano';
+                                    }
+                                    return (
+                                        <Tag color={color} key={tag.id} className="mb-1">
+                                            {tag.value[0].toUpperCase() + tag.value.slice(1)}
+                                        </Tag>
+                                    );
+                                })}
+                            </span>
+                        </div> : null}
                     </div>
-                    {this.state.reviewData.tags && this.state.reviewData.tags.length ? <div className="tags">
-                        <h3 className="text-2 mb-5 mt-5">关联标签</h3>
-                        <span>
-                            {this.state.reviewData.tags && this.state.reviewData.tags.map((tag, index) => {
-                                let color = index > 1 ? 'geekblue' : 'green';
-                                if (tag.value === '前端') {
-                                    color = 'volcano';
-                                }
-                                return (
-                                    <Tag color={color} key={tag.id} className="mb-1">
-                                        {tag.value[0].toUpperCase() + tag.value.slice(1)}
-                                    </Tag>
-                                );
-                            })}
-                        </span>
-                    </div> : null}
                     <div className="comment">
                         <h3 className='text-gray-600 text-lg leading-4 mb-10 divide-x border-solid border-l-4 pl-2 border-orange-f9'>最新评论</h3>
                         <div className={"comment-list"}>
                             <CommentTree data={this.state.reviewData.comment} parent={this}></CommentTree>
                         </div>
                         <h3 className='text-gray-600 text-lg leading-4 mb-5 divide-x border-solid border-l-4 pl-2 border-orange-f9'>添加评论</h3>
-                        <div className="comment-form">
-                            <BraftEditor
-                                style={{ borderBottom: '1px solid #ccc' }}
-                                value={this.state.comment.content}
-                                onChange={(value) => {
-                                    this.setComment((comment) => {
-                                        comment.content = value;
-                                        return comment;
-                                    });
-                                }}
-                            ></BraftEditor>
-                            <div className="comment-userinfo" >
-                                <Input
-                                    placeholder="用户名"
-                                    onChange={(e) => {
-                                        this.setState({ comment: { ...this.state.comment, name: e.target.value.replace(/[\d]/g, '') } })
-                                    }}
-                                    value={this.state.comment.name}
-                                    style={{ width: "40%", marginRight: 20 }}></Input>
-                                <Input placeholder="邮箱"
-                                    onChange={(e) => {
-                                        this.setState({ comment: { ...this.state.comment, email: e.target.value } })
-                                    }}
-                                    value={this.state.comment.email}
-                                    style={{ width: "40%", marginRight: 20 }}></Input>
-                                <Button onClick={() => this.handleSubmitComment()}>提交</Button>
-                            </div>
-                        </div>
+                        <CommentForm data={this} />
                     </div>
                 </div>
             </Fragment>

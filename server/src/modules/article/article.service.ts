@@ -17,7 +17,7 @@ export class ArticleService {
     async get(data) {
         data.current = data.current || 1
         data.pageSize = data.pageSize || 10
-        console.log(data, 'asdada')
+        // console.log(data, 'asdada')
         // 1. 准备工作：注入Repository，创建queryBuilder
         // 条件筛选和分页查询代码
         let queryBy = this.articleRepository.createQueryBuilder('article')
@@ -159,7 +159,7 @@ export class ArticleService {
             .leftJoinAndSelect("article.comment", "comment")
             .orderBy('comment.create_time', 'DESC')
         queryBy = queryBy.andWhere(`article.id=${id}`)
-        console.log(await queryBy.getOne(), 'queryBy.getOne()')
+        // console.log(await queryBy.getOne(), 'queryBy.getOne()')
         let data = await queryBy.getOne()
         data.comment = filterTreeData(data.comment, null)
         return Promise.resolve(data)

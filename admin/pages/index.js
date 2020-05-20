@@ -192,7 +192,7 @@ class Home extends React.Component {
                         <List.Item>
                             <Skeleton loading={loading} buttonActive>
                                 <Card title={item.title} bodyStyle={{ height: 150, overflow: 'hidden' }}>
-                                    <div style={{ maxHeight: 100, maxWidth: 350, margin: '0 auto', overflow: 'hidden' }} dangerouslySetInnerHTML={{ __html: item.content }}>
+                                    <div onClick={() => Router.push('/article/view?id='+item.id)} style={{ maxHeight: 100, maxWidth: 350, margin: '0 auto', overflow: 'hidden' }} dangerouslySetInnerHTML={{ __html: item.content }}>
                                     </div>
                                 </Card>
                             </Skeleton>

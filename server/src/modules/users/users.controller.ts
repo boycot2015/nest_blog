@@ -95,6 +95,7 @@ export class UsersController {
     constructor(private usersService: UsersService) { }
 
     @Get('/get')
+    @UseGuards(AuthGuard())
     @ApiOperation({ summary: '获取用户列表' })
     getAllUsers(@Query() data: QueryDt) {
         return this.usersService.getAllUsers(data)

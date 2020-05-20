@@ -94,18 +94,17 @@ export class CommentService {
                 ...insertCommentData,
                 article
             });
-            console.log(newcCommentData, 'insertCommentData')
+            console.log(newcCommentData, 'comment')
             await this.commentRepository.save(newcCommentData)
             sendMail({
-                from: 'boycot2017@163.com',
-                to: '',
-                subject: '',
-                text: `<div style="font-size: 16px;color: #333; text-align:center">
+                ...WebConfig.emailOption(),
+                from: comment.email,
+                html: `<div style="font-size: 16px;color: #333; text-align:center">
                 你收到一条新的评论，
                 <a
                 target="_blank"
                 style="font-size: 18px;color: red"
-                href="${WebConfig.clientHostName}/article/view?id=${comment.articleId}">
+                href="${WebConfig.clientHostName()}/article/view?id=${comment.articleId}">
                 点击进行回复</a></div>`
             }, (err, res) => {
                 if (res) {
