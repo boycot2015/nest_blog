@@ -3,8 +3,10 @@ import { Injectable, HttpException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Comment } from "../../entities/comment.entity";
-import { aesDecrypt, responseStatus } from "../../utils";
+import { sendMail, responseStatus } from "../../utils";
 import { ArticleService } from '../article/article.service';
+import { WebConfig } from '../../../config/inex';
+
 @Injectable()
 export class CommentService {
     constructor(@InjectRepository(Comment)
@@ -94,6 +96,24 @@ export class CommentService {
             });
             console.log(newcCommentData, 'insertCommentData')
             await this.commentRepository.save(newcCommentData)
+            sendMail({
+                from: 'boycot2017@163.com',
+                to: '',
+                subject: '',
+                text: `<div style="font-size: 16px;color: #333; text-align:center">
+                你收到一条新的评论，
+                <a
+                target="_blank"
+                style="font-size: 18px;color: red"
+                href="${WebConfig.clientHostName}/article/view?id=${comment.articleId}">
+                点击进行回复</a></div>`
+            }, (err, res) => {
+                if (res) {
+                    console.log('发送成功！')
+                } else {
+                    console.log(err, '发送失败！')
+                }
+            })
             return responseStatus.success.message
         }
     }

@@ -179,7 +179,7 @@ class ArticleView extends React.Component {
                                     style={{ width: "40%", marginRight: 20 }}></Input>
                                 <Input placeholder="邮箱"
                                     onChange={(e) => {
-                                        this.setState({ comment: { ...this.state.comment, email: e.target.value.replace(/[\d]/g, '') } })
+                                        this.setState({ comment: { ...this.state.comment, email: e.target.value } })
                                     }}
                                     value={this.state.comment.email}
                                     style={{ width: "40%", marginRight: 20 }}></Input>
