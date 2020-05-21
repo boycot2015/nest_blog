@@ -118,6 +118,11 @@ export class UsersController {
     public register(@Body() user: UserForm) {
         return this.usersService.register(user)
     }
+    @Post('/add')
+    @ApiOperation({ summary: '创建用户' })
+    public add(@Body() user: UserForm) {
+        return this.usersService.register(user)
+    }
     @Post('/edit')
     @ApiOperation({ summary: '编辑用户' })
     @UseGuards(AuthGuard())

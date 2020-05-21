@@ -93,7 +93,7 @@ export const parseUserAgent = (userAgent) => {
  * @param {*} data 需要递归的数组
  * @param {*} parentViewCode 递归条件
  */
-export function filterTreeData (data, parentId = null) {
+export function filterTreeData(data, parentId = null) {
     let tree = []
     let temp
     for (let i = 0; i < data.length; i++) {
@@ -136,3 +136,47 @@ export const sendMail = (sendOption, callback) => {
     smtpTransport.sendMail(sendOption, callback);
 }
 
+export const getOneMonthDateList = () => {
+    let daysInMonth = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    let currentDate = new Date()
+    currentDate.setMonth(currentDate.getMonth() + 1)
+    let strYear = currentDate.getFullYear()
+    let strDay = currentDate.getDate()
+    let strMonth = currentDate.getMonth() + 1
+    if (((strYear % 4) === 0) && ((strYear % 100) !== 0) || ((strYear % 400) === 0)) {
+        daysInMonth[2] = 29
+    }
+    if (strMonth - 1 === 0) {
+        strYear -= 1
+        strMonth = 12
+    } else {
+        strMonth -= 1
+    }
+    strDay = Math.min(strDay, daysInMonth[strMonth])
+    // if (strMonth < 10) {
+    //     strMonth = '0' + strMonth
+    // }
+    // if (strDay < 10) {
+    //     strDay = '0' + strDay
+    // }
+    let dateStr = strYear + '-' + strMonth + '-' + strDay
+    const dateList = []
+    let startDate = new Date(dateStr)
+    while (true) {
+        startDate.setDate(startDate.getDate() + 1)
+        let year = startDate.getFullYear()
+        let month = startDate.getMonth() < 10 ? '0' + startDate.getMonth() : startDate.getMonth()
+        let day = startDate.getDate() < 10 ? '0' + startDate.getDate() : startDate.getDate()
+        if (startDate.getTime() < currentDate.getTime()) {
+            if (startDate.getDate() < 10) {
+                // startDate.getFullYear() 获取年，此处没加上年份
+                dateList.push(year + '-' + month + '-' + day)
+            } else {
+                dateList.push(year + '-' + month + '-' + day)
+            }
+        } else {
+            break
+        }
+    }
+    return dateList
+}

@@ -261,6 +261,9 @@ class Article extends React.Component {
     }
     async getPageData (params = {}) {
         const { current, pageSize } = params
+        this.setState({
+            loading: true
+        })
         const res = await $api.comment.get(params)
         if (res && res.success) {
             this.setState({

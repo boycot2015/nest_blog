@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ArticleService } from "./modules/article/article.service";
-import { timeFormat } from "./utils";
+import { timeFormat, getOneMonthDateList } from "./utils";
 
 @Injectable()
 export class AppService {
@@ -21,7 +21,6 @@ export class AppService {
             }
         }
         res[0].map(el => {
-            console.log(el.status + '' === '1001');
             if (el.status + '' === '1001') {
                 if (data.publicData.data.length) {
                     let canAdd = true
@@ -68,6 +67,42 @@ export class AppService {
                 }
             }
         })
+        data.publicData.data = getOneMonthDateList().map(date => {
+            let dateItem = {
+                time: timeFormat(new Date(date).getTime(), 'YYYY-MM-DD'),
+                value: 0
+            }
+            let existArr = data.publicData.data.map((el) => {
+                if (date === el.time) {
+                    console.log(el, 'getOneMonthDateList()');
+                    return el
+                }
+            })
+            existArr && existArr.map(val => {
+                if (val && val.time === date) {
+                    dateItem = val
+                }
+            })
+            return dateItem
+        })
+        data.visitorData.data = getOneMonthDateList().map(date => {
+            let dateItem = {
+                time: timeFormat(new Date(date).getTime(), 'YYYY-MM-DD'),
+                value: 0
+            }
+            let existArr = data.visitorData.data.map((el) => {
+                if (date === el.time) {
+                    return el
+                }
+            })
+            existArr && existArr.map(val => {
+                if (val && val.time === date) {
+                    dateItem = val
+                }
+            })
+            return dateItem
+        })
+        // console.log(data.publicData.data, 'getOneMonthDateList()');
         return Promise.resolve(data)
     }
 }

@@ -15,7 +15,8 @@ const NormalLoginForm = (props) => {
             if (res && res.success) {
                 setCookie(props, 'token', res.data)
                 window.localStorage.setItem('userinfo', JSON.stringify(Base64.decode(res.data.split('.')[1])))
-                Router.push('/')
+                console.log(Router, 'Router');
+                Router.back()
             } else {
                 message.error(res.message)
             }
