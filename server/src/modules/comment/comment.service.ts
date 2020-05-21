@@ -12,15 +12,7 @@ export class CommentService {
     constructor(@InjectRepository(Comment)
     private readonly commentRepository: Repository<Comment>,
         private readonly articleService: ArticleService) { }
-    // private insertCommentData = {
-    //     id: '',
-    //     avatar: '',
-    //     Commentname: '',
-    //     cipher: '',
-    //     email: '',
-    //     email: '',
-    //     administrator: true
-    // }
+
     async getAllComment(data) {
         // return Promise.resolve(this.Comment);
         data.current = data.current || 1

@@ -3,8 +3,6 @@ import { Form, Button, Checkbox, Input, message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import Head from 'next/head';
 import Router from 'next/router';
-import userApi from '../api/user';
-import { setCookie } from 'nookies'
 import { aesEncrypt } from '../utils'
 import { Base64 } from 'js-base64';
 

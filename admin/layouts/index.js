@@ -34,7 +34,8 @@ import '../static/scss/index.scss'
 const menu = (props) => {
     const handlerHeader = (e) => {
         if (e.key === 'item_1') {
-            destroyCookie({}, 'token')
+            destroyCookie(null, 'token')
+            Cookies.removeItem('token')
             Router.push('/login')
         }
     }

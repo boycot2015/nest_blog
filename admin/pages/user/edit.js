@@ -195,7 +195,7 @@ class User extends React.Component {
         const res = await  $api.user.edit({ ...this.state.data, username, password, status, avatar, email })
         if (res && res.success) {
             if (this.state.userinfo.id === this.state.data.id) {
-                destroyCookie(this.props.ctx, 'token')
+                destroyCookie(null, 'token')
                 message.warning('用户信息发生变化，请重新登录！')
                 Router.push('/login')
                 return

@@ -2,7 +2,7 @@ import App, { Container } from 'next/app'
 import 'antd/dist/antd.css'
 import Layout from '@/layouts';
 import axios from '@/api/axios'
-import SetCookie from '@/middleware/header'
+import SetHeaderCookie from '@/middleware/header'
 import $api from '@/api/apiList'
 import routes from '@/config/router'
 import { Base64 } from 'js-base64'
@@ -13,11 +13,11 @@ class AntApp extends App {
         if (Component.getInitialProps) {
             let cookies = {}
             let userinfo = { administrator: false }
+            SetHeaderCookie(ctx)
             cookies = parseCookies(ctx);
-            SetCookie(ctx)
             cookies.token && (userinfo = JSON.parse(Base64.decode(cookies.token.split('.')[1])))
-            let pageProps = await Component.getInitialProps({ ctx, router, $api, cookies, userinfo })
-            pageProps = { cookies, userinfo, $api, ...pageProps }
+            let pageProps = await Component.getInitialProps({ ctx, router, $api, userinfo })
+            pageProps = { userinfo, $api, ...pageProps }
             return { pageProps }
         } else return {}
     }

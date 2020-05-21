@@ -50,6 +50,9 @@ service.interceptors.request.use(
 service.interceptors.response.use(
     (response) => {
         let { data } = response;
+        if (response.code === 403) {
+            message.error(info.message)
+        }
         return data
     },
     (error) => {
@@ -64,7 +67,7 @@ service.interceptors.response.use(
             // 此处整理错误信息格式
             info = data
             if (info.code === 403) {
-                destroyCookie({}, 'token')
+                destroyCookie(null, 'token')
                 if (process.browser) {
                     message.error('用户信息认证失败，请重新登录！')
                     Router.push('/login')
@@ -74,16 +77,16 @@ service.interceptors.response.use(
             if (info.code === 401) {
                 if (process.browser) {
                     info.message = '无权限进行此操作！'
-                    if (process.browser) {
-                        const userinfo = JSON.parse(JSON.parse(localStorage.getItem('userinfo')))
-                        if (userinfo && userinfo.administrator) {
-                            info.message = '用户信息认证失败，请重新登录！'
-                            localStorage.removeItem('userinfo')
-                            Router.push('/login?redirect=' + Router.pathname)
-                        }
+                    const userinfo = JSON.parse(JSON.parse(localStorage.getItem('userinfo')))
+                    if (userinfo && userinfo.administrator) {
+                        info.message = '用户信息认证失败，请重新登录！'
+                        localStorage.removeItem('userinfo')
+                        Router.push('/login?redirect=' + Router.pathname)
                     }
-                    return info
                 }
+                return info
+            } else {
+                message.error(data.message)
             }
         }
         return info

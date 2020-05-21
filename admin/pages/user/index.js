@@ -216,7 +216,6 @@ class User extends React.Component {
         //通过process的browser属性判断处于何种环境：Node环境下为false,浏览器为true
         // 发送服务器请求
         // let token = Base64.decode(req.headers[''])
-        console.log($filters, '$filters, userinfo$filters, userinfo')
         const res = await $api.user.get()
         if (res && res.success) {
             return {
