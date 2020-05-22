@@ -22,7 +22,7 @@ export class ArticleService {
         // 条件筛选和分页查询代码
         let queryBy = this.articleRepository.createQueryBuilder('article')
             .leftJoinAndSelect('article.tags', 'tag')
-            .andWhere('article.isDelete=:delete').setParameter('delete', false);
+            .andWhere('article.isDelete=:delete').setParameter('delete', false)
         // .leftJoinAndSelect('article.comment', 'comment')
 
         // 2. 条件筛选查询，如名称、类型等，传入对应字段即可
@@ -158,6 +158,8 @@ export class ArticleService {
             .leftJoinAndSelect('article.tags', 'tag')
             .leftJoinAndSelect("article.comment", "comment")
             .orderBy('comment.create_time', 'DESC')
+            queryBy.leftJoinAndSelect('article.category', 'category')
+            .orderBy('category.create_time', 'DESC')
         queryBy = queryBy.andWhere(`article.id=${id}`)
         // console.log(await queryBy.getOne(), 'queryBy.getOne()')
         let data = await queryBy.getOne()

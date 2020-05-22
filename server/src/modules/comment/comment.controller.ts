@@ -86,7 +86,7 @@ export class CommentController {
     constructor(private commentService: CommentService) { }
 
     @Get('/get')
-    @UseGuards(AuthGuard())
+    // @UseGuards(AuthGuard())
     @ApiOperation({ summary: '获取评论列表' })
     getAllComment(@Query() data: QueryDt) {
         return this.commentService.getAllComment(data)

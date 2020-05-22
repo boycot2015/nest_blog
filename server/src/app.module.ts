@@ -9,6 +9,7 @@ import { UsersModule } from './modules/users/users.module';
 import { MinioModule } from './modules/minio/minio.module';
 import { UploadModule } from './modules/file/file.module';
 import { CommentModule } from './modules/comment/comment.module';
+import { CategoryModule } from './modules/category/category.module';
 
 import { TagModule } from './modules/tag/tag.module';
 import { PassportModule } from '@nestjs/passport';
@@ -26,6 +27,7 @@ import { JwtStrategy } from './modules/auth/jwt.strategy';
         UploadModule,
         MinioModule,
         CommentModule,
+        CategoryModule,
         PassportModule.register({ defaultStrategy: 'jwt' }),
         JwtModule.register({
             secretOrPrivateKey: 'secretKey',

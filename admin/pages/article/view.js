@@ -53,7 +53,7 @@ class ArticleView extends React.Component {
             if (res && res.success) {
                 this.setState({ reviewData: res.data })
             } else {
-                message.error(res.message)
+                res && message.error(res.message)
             }
         })
     }

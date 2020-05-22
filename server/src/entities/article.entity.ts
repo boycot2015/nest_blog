@@ -12,6 +12,7 @@ import {
 import { Users } from './users.entity';
 import { Tag } from './tag.entity';
 import { Comment } from './comment.entity';
+import { Category } from './category.entity';
 
 @Entity()
 export class Article {
@@ -42,9 +43,6 @@ export class Article {
     @Column({ type: 'text', default: null, charset: 'utf8mb4', select: true })
     visitor: number; // 文章访问记录
 
-    @Column({ type: 'text', default: null, charset: 'utf8mb4', select: true })
-    category: string; // 分类
-
     @CreateDateColumn({
         type: 'datetime',
         comment: '创建时间',
@@ -67,4 +65,8 @@ export class Article {
     @OneToMany(() => Comment, comment => comment.article)
     @JoinTable()
     comment: Array<Comment>
+
+    @ManyToOne(() => Category, category => category.article)
+    @JoinTable()
+    category: Category
 }

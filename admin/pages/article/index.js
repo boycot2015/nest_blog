@@ -335,7 +335,7 @@ class Article extends React.Component {
                         message.success(res.data)
                         this.getPageData({ pageSize, current, ...queryData })
                     } else {
-                        message.error(res.message)
+                        res && message.error(res.message)
                     }
                 })
             },
@@ -361,7 +361,7 @@ class Article extends React.Component {
             this.handlerFormSubmit({})
             return
         }
-        message.error(res.message)
+        res && message.error(res.message)
     }
     setArticle (callback) {
         return callback(this.state.reviewData)

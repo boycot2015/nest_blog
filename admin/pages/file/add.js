@@ -74,7 +74,7 @@ class ArticleAdd extends React.Component {
             if (res && res.success) {
                 Router.push('/article')
             } else {
-                message.error(res.message)
+                res && message.error(res.message)
             }
         })
     }

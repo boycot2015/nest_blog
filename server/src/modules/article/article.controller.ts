@@ -4,6 +4,7 @@ import { ApiTags, ApiQuery, ApiProperty, ApiOperation } from '@nestjs/swagger';
 import { Article } from '../../entities/article.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { Tag } from '../../entities/tag.entity';
+import { Category } from '../../entities/category.entity';
 
 class GetArticle {
     @ApiProperty({
@@ -49,9 +50,9 @@ class ArticleForm {
 
     @ApiProperty({
         description: '分类',
-        required: false
+        required: true
     })
-    category: string;
+    category: Category;
 
     @ApiProperty({
         description: '访客可见',
@@ -115,7 +116,7 @@ export class ArticleState {
 export class ArticleController {
     constructor(private articleService: ArticleService) { }
     @Get()
-    @UseGuards(AuthGuard())
+    // @UseGuards(AuthGuard())
     @ApiOperation({ summary: '获取文章列表', description: "获取文章列表" })
     get(@Query() data: GetArticle) {
         return this.articleService.get(data)

@@ -18,7 +18,7 @@ const NormalLoginForm = (props) => {
                 console.log(Router, 'Router');
                 Router.back()
             } else {
-                message.error(res.message)
+                res && message.error(res.message)
             }
         })
     };

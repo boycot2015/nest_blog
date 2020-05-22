@@ -108,6 +108,20 @@ const routes = [
         }
     },
     {
+        path: '/category',
+        name: 'category',
+        meta: {
+            title: '分类管理',
+            icon: <TagsOutlined style={
+                {
+                    fontSize: '20px'
+                }
+            } />,
+            showInMenu: true,
+            login: false
+        }
+    },
+    {
         path: '/file',
         name: 'file',
         meta: {

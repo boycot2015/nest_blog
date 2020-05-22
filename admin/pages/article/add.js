@@ -29,6 +29,7 @@ class ArticleAdd extends React.Component {
             tags: ''
         },
         tagsList: this.props.tagsList,
+        categoryList: this.props.categoryList,
         total: this.props.total
     }
     static async getInitialProps ({ query,  $api }) {
@@ -36,11 +37,17 @@ class ArticleAdd extends React.Component {
         //通过process的browser属性判断处于何种环境：Node环境下为false,浏览器为true
         // 发送服务器请求
         const res = await $api.tag.get()
+        const cateRes = await $api.category.get()
         // console.log(res.data, cookies, 'data')
-        if (res && res.success) {
+        if (res && res.success && cateRes && cateRes.success) {
             return {
                 loading: false,
                 tagsList: res.data[0].map(el => ({
+                    value: el.id,
+                    label: el.value,
+                    id: el.id
+                })),
+                categoryList: cateRes.data[0].map(el => ({
                     value: el.id,
                     label: el.value,
                     id: el.id
@@ -79,7 +86,7 @@ class ArticleAdd extends React.Component {
             if (res && res.success) {
                 Router.push('/article')
             } else {
-                message.error(res.message)
+                res && message.error(res.message)
             }
         })
     }
@@ -126,6 +133,18 @@ class ArticleAdd extends React.Component {
                             onChange={(value, arr) => this.handleTagSelect(value, arr)}
                             style={{ width: '500px' }}
                             options={this.state.tagsList}
+                        />
+                    </div>
+                    <div className="tag-list">
+                        <div className="text-gray-600 text-sm leading-4 mt-5 mb-5 border-solid border-b-2 pb-4 border-orange-f9">三、关联分类</div>
+                        <Select
+                            mode="multiple"
+                            tagRender={tagRender}
+                            placeholder="选择或搜索分类"
+                            defaultValue={[]}
+                            onChange={(value, arr) => this.handleTagSelect(value, arr)}
+                            style={{ width: '500px' }}
+                            options={this.state.categoryList}
                         />
                     </div>
                 </div>

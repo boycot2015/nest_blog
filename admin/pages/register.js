@@ -16,7 +16,7 @@ const NormalLoginForm = (props) => {
                     Router.push('/login')
                 }, 2000);
             } else {
-                message.error(res.message)
+                res && message.error(res.message)
             }
         })
     };

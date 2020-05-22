@@ -89,7 +89,7 @@ service.interceptors.response.use(
                 message.error(data.message)
             }
         }
-        return info
+        // return info
     }
 )
 

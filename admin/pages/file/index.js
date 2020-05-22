@@ -301,7 +301,7 @@ class Article extends React.Component {
                 message.success(res.data)
                 this.getPageData(this.props.pageData)
             } else {
-                message.error(res.message)
+                res && message.error(res.message)
             }
         })
     }

@@ -5,6 +5,7 @@ import setting from './setting'
 import file from './file'
 import home from './home'
 import comment from './comment'
+import category from './category'
 export default {
     user,
     tag,
@@ -12,5 +13,6 @@ export default {
     setting,
     file,
     home,
-    comment
+    comment,
+    category
 }

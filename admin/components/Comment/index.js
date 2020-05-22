@@ -4,7 +4,7 @@ import {
     Select, Table, Tag,
     notification, Badge,
     message, Modal,
-    Alert,
+    Alert,Empty,
     Button, Cascader
 } from 'antd';
 import {
@@ -133,5 +133,6 @@ export const CommentTree = (props) => (
                 {el.children && <div style={{ marginLeft: 40, marginTop: 10 }} ><CommentTree data={el.children} parent={props.parent}></CommentTree></div>}
             </div>
         ))}
+        {props.data.length === 0 && <Empty description={'暂无评论，快来抢沙发~'} />}
     </Fragment>
 )

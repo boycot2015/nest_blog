@@ -1,21 +1,20 @@
 import { Injectable, HttpException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Tag } from "../../entities/tag.entity";
+import { Category } from "../../entities/category.entity";
 import { responseStatus } from "../../utils";
 @Injectable()
-export class TagService {
-    constructor(@InjectRepository(Tag)
-    private readonly tagRepository: Repository<Tag>) { }
+export class CategoryService {
+    constructor(@InjectRepository(Category)
+    private readonly categoryRepository: Repository<Category>) { }
     async get(data) {
         data.currentPage = data.currentPage || 1
         data.pageSize = data.pageSize || 10
-        console.log(data, 'asdada')
         // 1. 准备工作：注入Repository，创建queryBuilder
         // 条件筛选和分页查询代码
-        let queryBy = this.tagRepository.createQueryBuilder()
+        let queryBy = this.categoryRepository.createQueryBuilder()
         // 2. 条件筛选查询，如名称、类型等，传入对应字段即可
-        queryBy = queryBy.where(data as Partial<Tag>)
+        queryBy = queryBy.where(data as Partial<Category>)
 
         // 3. 时间范围筛选
         if (data && data['update_time.start'] && data['update_time.end']) {
@@ -36,31 +35,31 @@ export class TagService {
         // article.id = this.articles.length + 1
         // this.articles.push(article)
         // return Promise.resolve('操作成功');
-        const res = await this.tagRepository.findOne({ value: data.value });
+        const res = await this.categoryRepository.findOne({ parentId: data.parentId, value: data.value });
         if (!res) {
-            await this.tagRepository.save(data);
+            await this.categoryRepository.save(data);
             return responseStatus.success.message
         }
-        else throw new HttpException(`标签已存在，请重新输入！`, 400);
+        else throw new HttpException(`分类已存在，请重新输入！`, 400);
     }
     async edit(data) {
         // article.id = this.articles.length + 1
         // this.articles.push(article)
         // return Promise.resolve('操作成功');
-        const res = await this.tagRepository.findOne({ id: data.id });
-        const value = await this.tagRepository.findOne({ value: data.value });
-        if (value) throw new HttpException(`标签已存在，请重新输入！`, 400);
-        const updatedTag = await this.tagRepository.merge(
+        const res = await this.categoryRepository.findOne({ id: data.id });
+        const value = await this.categoryRepository.findOne({ value: data.value });
+        if (value) throw new HttpException(`分类已存在，请重新输入！`, 400);
+        const updatedcategory = await this.categoryRepository.merge(
             res,
             {
                 value: data.value
             }
         );
         if (res) {
-            await this.tagRepository.save(updatedTag);
+            await this.categoryRepository.save(updatedcategory);
             return responseStatus.success.message
         }
-        throw new HttpException(`标签不存在！`, 404);
+        throw new HttpException(`分类不存在！`, 404);
     }
     async delete(id: number) {
         // const article = this.articles.find(_ => _.id === id)
@@ -68,21 +67,22 @@ export class TagService {
         // this.articles = this.articles.filter(_ => _.id !== id)
         // return Promise.resolve('操作成功');
 
-        const res = await this.tagRepository.findOne({ id })
+        const res = await this.categoryRepository.findOne({ id })
         if (res) {
-            await this.tagRepository.remove(res)
+            await this.categoryRepository.remove(res)
             return responseStatus.success.message
-        } else throw new HttpException(`标签不存在！`, 404);
+        } else throw new HttpException(`分类不存在！`, 404);
     }
-    async getById(id: number): Promise<Tag> {
+    async getById(id: number): Promise<Category> {
         // const article = this.articles.find(article => article.id === id)
-        if (!id) throw new HttpException(`标签不存在！`, 404);
+        if (!id) throw new HttpException(`分类不存在！`, 404);
         // return Promise.resolve(article);
-        const res = await this.tagRepository.findOne({ id })
+        const res = await this.categoryRepository.findOne({ id })
         if (res) return res
-        else throw new HttpException(`标签不存在！`, 404);
+        else throw new HttpException(`分类不存在！`, 404);
     }
-    async findByIds(ids): Promise<Array<Tag>> {
-        return this.tagRepository.findByIds(ids);
+    
+    async findByIds(ids): Promise<Array<Category>> {
+        return this.categoryRepository.findByIds(ids);
     }
 }

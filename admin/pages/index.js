@@ -25,7 +25,7 @@ class Home extends React.Component {
         if (datas && datas.success) {
             return {
                 loading: true,
-                deadline: new Date('2020-10-01 00:00:00').getTime(),
+                deadline: new Date('2020-06-25 00:00:00').getTime(),
                 homeData: res.data[0].slice(0, 4),
                 datas: datas.data,
                 pageData: {
@@ -40,7 +40,7 @@ class Home extends React.Component {
                 loading: true,
                 data: [],
                 datas: {},
-                deadline: new Date('2020-10-01 00:00:00').getTime(),
+                deadline: new Date('2020-06-25 00:00:00').getTime(),
                 pageData: {
                     current: 1,
                     pageSize: 10,
@@ -181,7 +181,7 @@ class Home extends React.Component {
                         <span className=' text-gray-600'>当前时间</span>
                         <p className='text-2xl text-gray-900 font-normal'>{this.state.currentTime}</p>
                     </div>
-                    <Countdown className='flex-1 text-2xl text-gray-900 font-normal' title="国庆节倒计时" value={deadline} format="D 天 H 时 m 分 s 秒" />
+                    <Countdown className='flex-1 text-2xl text-gray-900 font-normal' title="端午节倒计时" value={deadline} format="D 天 H 时 m 分 s 秒" />
                 </div>
                 <h3 className='text-gray-600 text-lg leading-4 mb-5 divide-x border-solid border-l-4 pl-2 border-orange-f9'>最新动态</h3>
                 <List

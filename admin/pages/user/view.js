@@ -179,7 +179,7 @@ class User extends React.Component {
             }
             Router.push('/user')
         } else {
-            message.error(res.message)
+            res && message.error(res.message)
             this.setState({ loading: false, data: {} })
         }
     }

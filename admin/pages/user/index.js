@@ -309,7 +309,7 @@ class User extends React.Component {
             this.handlerFormSubmit({ ...this.state.pageData }, true)
             return
         }
-        message.error(res.message)
+        res && message.error(res.message)
     }
     componentDidMount () {
         this.setState({ loading: false })
