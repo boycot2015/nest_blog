@@ -14,6 +14,7 @@ import {
 import Head from 'next/head';
 import Router, { withRouter } from 'next/router'
 import { Editor as BraftEditor } from '@/components/Editor'
+import { filterTreeData } from '@/utils'
 
 const { Option, OptGroup } = Select;
 const columns = (props) => {
@@ -28,6 +29,15 @@ const columns = (props) => {
             render: text => <a>{text}</a>,
         },
         {
+            title: '分类',
+            dataIndex: 'categoryName',
+            key: 'categoryName',
+            width: 100,
+            align: 'center',
+            rowKey: record => record.dataIndex,
+            render: text => <a style={{ color: 'orange' }}>{text}</a>,
+        },
+        {
             title: '内容概述',
             dataIndex: 'content',
             key: 'content',
@@ -40,20 +50,6 @@ const columns = (props) => {
                 style={{ maxHeight: 85, overflow: 'hidden' }}
                 dangerouslySetInnerHTML={{ __html: text }}>
             </div>,
-        },
-        {
-            title: '状态',
-            dataIndex: 'status',
-            width: 100,
-            align: 'center',
-            key: 'status',
-            rowKey: record => record.dataIndex,
-            render: status => (
-                <span>
-                    <Badge status={status === 1001 ? 'success' : status === 1002 ? 'warning' : 'error'} />
-                    {status === 1001 ? '已发布' : status === 1002 ? '待审核' : '审核不通过'}
-                </span>
-            ),
         },
         {
             title: '标签',
@@ -75,6 +71,20 @@ const columns = (props) => {
                             </Tag>
                         );
                     })}
+                </span>
+            ),
+        },
+        {
+            title: '状态',
+            dataIndex: 'status',
+            width: 100,
+            align: 'center',
+            key: 'status',
+            rowKey: record => record.dataIndex,
+            render: status => (
+                <span>
+                    <Badge status={status === 1001 ? 'success' : status === 1002 ? 'warning' : 'error'} />
+                    {status === 1001 ? '已发布' : status === 1002 ? '待审核' : '审核不通过'}
                 </span>
             ),
         },
@@ -101,6 +111,7 @@ const columns = (props) => {
             key: 'action',
             width: 150,
             align: 'center',
+            fixed: 'right',
             render: (text, record) => (
                 <span>
                     <a style={{ marginRight: 16 }} onClick={() => props.handleReview(record.id)}>查看</a>
@@ -117,6 +128,9 @@ function handleChange (value) {
 }
 const AdvancedSearchForm = (props) => {
     const [form] = Form.useForm();
+    setTimeout(() => {
+        props.state.reset && form.resetFields()
+    }, 100);
     const getFields = () => {
         const children = [
             {
@@ -146,22 +160,10 @@ const AdvancedSearchForm = (props) => {
             },
             {
                 label: '分类',
-                type: 2,
+                type: 3,
                 name: 'category',
                 placeholder: '分类',
-                options: [{
-                    code: '',
-                    description: '全部'
-                }, {
-                    code: 1001,
-                    description: '前端'
-                }, {
-                    code: 1002,
-                    description: '后台'
-                }, {
-                    code: 10010,
-                    description: 'linux'
-                }]
+                options: props.state.categoryList
             }];
         let node = []
         children.map((el, indx) => {
@@ -182,7 +184,12 @@ const AdvancedSearchForm = (props) => {
                                 <Select placeholder="请选择" onChange={handleChange}>
                                     {el.options.map(val => (<Option key={val.code} value={val.code}>{val.description}</Option>))}
                                 </Select> :
-                                el.type === 3 ? <Cascader placeholder="请选择" options={options} onChange={handleChange} changeOnSelect /> : null}
+                                el.type === 3 ? <Cascader
+                                    fieldNames={{ label: 'value', value: 'id' }}
+                                    placeholder="请选择"
+                                    options={el.options}
+                                    onChange={handleChange}
+                                    changeOnSelect /> : null}
                     </Form.Item>
                 </Col>
             )
@@ -206,9 +213,9 @@ const AdvancedSearchForm = (props) => {
             }}
             onFinish={onFormSubmit}
         >
-            <Row gutter={18}>
+            <Row gutter={24}>
                 {getFields()}
-                <Col span={6} style={{ textAlign: 'right' }}>
+                <Col span={4} style={{ textAlign: 'right' }}>
                     <Button type="primary" htmlType="submit">
                         查询
                 </Button>
@@ -234,8 +241,10 @@ class Article extends React.Component {
         // 从query参数中回去id
         //通过process的browser属性判断处于何种环境：Node环境下为false,浏览器为true
         // 发送服务器请求
-        const res = await $api.article.get({ current: 1, pageSize: 5 })
-        if (res && res.success) {
+        const [res, cateRes] = await Promise.all([
+            await $api.article.get({ current: 1, pageSize: 5 }),
+            await $api.category.get()])
+        if (res && res.success && cateRes && cateRes.success) {
             return {
                 loading: false,
                 data: res.data[0],
@@ -245,6 +254,7 @@ class Article extends React.Component {
                     total: res.data[1],
                     pageSizeOptions: [5, 10, 20, 50]
                 },
+                categoryList: filterTreeData((cateRes.data[0]), null)
             }
         } else {
             return {
@@ -255,7 +265,8 @@ class Article extends React.Component {
                     pageSize: 5,
                     total: 999,
                     pageSizeOptions: [5, 10, 20, 50]
-                }
+                },
+                categoryList: []
             }
         }
     }
@@ -273,7 +284,7 @@ class Article extends React.Component {
         }
     }
     async handlerFormSubmit (values, isPage) {
-        isPage && this.setState({ loading: true, pageData: values })
+        isPage && this.setState({ loading: true, pageData: values, reset: false })
         !isPage && this.setState({
             loading: true,
             queryData: values,
@@ -282,7 +293,8 @@ class Article extends React.Component {
                 pageSize: 5,
                 total: this.state.pageData.total,
                 pageSizeOptions: [5, 10, 20, 50]
-            }
+            },
+            reset: false
         })
         // 发送服务器请求
         const { current, pageSize } = isPage ? values : this.state.pageData
@@ -297,8 +309,10 @@ class Article extends React.Component {
     }
     async getPageData (params = {}) {
         const { current, pageSize } = params
-        const res = await $api.article.get({ params })
-        if (res && res.success) {
+        const [res, cateRes] = await Promise.all([
+            await $api.article.get({ params }),
+            await $api.category.get()])
+        if (res && res.success && cateRes && cateRes.success) {
             this.setState({
                 loading: false,
                 data: res.data[0],
@@ -306,7 +320,10 @@ class Article extends React.Component {
                     current,
                     pageSize,
                     total: res.data[1]
-                }
+                },
+
+                categoryList: filterTreeData((cateRes.data[0]), null)
+
             })
         } else {
             this.setState({
@@ -316,7 +333,8 @@ class Article extends React.Component {
                     current,
                     pageSize,
                     total: 0,
-                }
+                },
+                categoryList: []
             })
         }
     }
@@ -333,6 +351,7 @@ class Article extends React.Component {
                 $api.article.delete({ params: { id } }).then(res => {
                     if (res && res.success) {
                         message.success(res.data)
+                        this.setState({ reset: true })
                         this.getPageData({ pageSize, current, ...queryData })
                     } else {
                         res && message.error(res.message)
@@ -358,6 +377,7 @@ class Article extends React.Component {
         const res = await $api.article.status({ data: { id, status } })
         if (res && res.success) {
             message.success(res.message)
+            this.setState({ reset: true })
             this.handlerFormSubmit({})
             return
         }
@@ -380,7 +400,7 @@ class Article extends React.Component {
             if (res && res.success) {
                 message.success(res.message)
                 const { pageSize, current } = this.state.pageData
-                this.getPageData({ pageSize, current })
+                this.getPageData({ pageSize, current, status: '' })
                 return
             }
             res && message.error(res.message)
@@ -402,9 +422,10 @@ class Article extends React.Component {
                     <title>文章列表</title>
                 </Head>
                 <h3 className='text-gray-600 text-lg leading-4 mb-5 divide-x border-solid border-l-4 pl-2 border-orange-f9'>文章列表</h3>
-                <AdvancedSearchForm setParentState={this.handlerFormSubmit.bind(this)} />
+                <AdvancedSearchForm setParentState={this.handlerFormSubmit.bind(this)} state={this.state} />
                 <Table
                     {...this.state}
+                    width={1200}
                     rowKey={(record, index) => index}
                     dataSource={state.hasData ? this.state.data : null}
                     columns={columns(this)}
@@ -413,6 +434,7 @@ class Article extends React.Component {
                     onChange={(pageData) => this.handlerFormSubmit(pageData, true)}
                     pagination={{
                         ...this.state.pageData,
+                        position: ['bottomRight'],
                         showSizeChanger: true,
                         showTitle: (total, range) => <span>'页'</span>,
                         showTotal: (total, range) => <span>{`共 ${total} 条`}</span>

@@ -20,41 +20,28 @@ class Home extends React.Component {
         // 从query参数中回去id
         //通过process的browser属性判断处于何种环境：Node环境下为false,浏览器为true
         // 发送服务器请求
-        const res = await $api.article.get({ current: 1, pageSize: 10 })
-        const datas = await $api.home.datas()
-        if (datas && datas.success) {
+        const res = await $api.home.datas()
+        if (res && res.success) {
             return {
                 loading: true,
-                deadline: new Date('2020-06-25 00:00:00').getTime(),
-                homeData: res.data[0].slice(0, 4),
-                datas: datas.data,
-                pageData: {
-                    current: 1,
-                    pageSize: 10,
-                    total: res.data[1],
-                    pageSizeOptions: [5, 10, 20, 50]
-                },
+                currentTime: timeFilter(res.data.currentTime),
+                deadline: timeFilter(res.data.deadline),
+                homeData: res.data.newLeast,
+                datas: res.data,
+                total: res.data.total,
             }
         } else {
             return {
                 loading: true,
+                currentTime: timeFilter(Date.now()),
                 data: [],
                 datas: {},
                 deadline: new Date('2020-06-25 00:00:00').getTime(),
-                pageData: {
-                    current: 1,
-                    pageSize: 10,
-                    total: 999,
-                    pageSizeOptions: [5, 10, 20, 50]
-                }
+                total: 999
             }
         }
     }
     state = {
-        // new Date().getFullYear() + '年' + (new Date().getMonth() + 1) + '月' + new Date().getDate() + '日 ' + new Date().toLocaleTimeString()
-        currentTime: timeFilter(Date.now()),
-        queryData: {},
-        hasData: true,
         ...this.props
     }
     getOption () {
@@ -89,7 +76,6 @@ class Home extends React.Component {
                     // rotate: "30"
                 },
                 data: this.state.datas.publicData.data.map(el => el.time),
-                // ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29']
             },
             yAxis: {
                 type: 'value',
@@ -120,7 +106,6 @@ class Home extends React.Component {
                     name: '访问',
                     type: 'line',
                     smooth: true,
-                    // data: [0, 2, 2, 5, 3, 2, 0],
                     data: this.state.datas.visitorData.data.map(el => el.value),
                     markPoint: {
                         data: [

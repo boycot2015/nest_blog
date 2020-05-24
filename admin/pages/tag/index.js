@@ -51,6 +51,10 @@ const LabelForm = (props) => {
                     </Form.Item>
                     <Form.Item style={{ marginTop: 20 }}>
                         <Button type="primary" htmlType="submit">{props.isEdit ? '编辑' : '新增'}</Button>
+                        {<Button style={{ marginLeft: 20 }} ghost type="primary" onClick={async () => {
+                            props.setTagStatus(false)
+                            form.resetFields()
+                        }}>{'重置'}</Button>}
                     </Form.Item>
                 </Col>}
                 <Col span={10} >

@@ -10,7 +10,12 @@ export class AppService {
     }
     async getDatas(): Promise<object> {
         const res = await this.articleService.getAll()
+        let newLeast = res[0].filter(el => el.status + '' === '1001')
+        newLeast = newLeast.length > 4 ? newLeast.slice(-4) : newLeast
         let data = {
+            currentTime: Date.now(),
+            deadline: new Date('2020-06-25 00:00:00').getTime(),
+            newLeast: newLeast,
             publicData: {
                 total: res[1],
                 data: []
@@ -18,7 +23,8 @@ export class AppService {
             visitorData: {
                 total: 0,
                 data: []
-            }
+            },
+            total: res[1]
         }
         res[0].map(el => {
             if (el.status + '' === '1001') {
@@ -47,7 +53,7 @@ export class AppService {
                     data.visitorData.data.map((val, index) => {
                         let elDay = new Date(el.createTime).getDate()
                         let valDay = new Date(val.time).getDate()
-                        console.log(elDay, valDay, 'elDay')
+                        // console.log(elDay, valDay, 'elDay')
                         if (elDay === valDay) {
                             canAdd = false
                             data.visitorData.data[index].value += +(el.visitor === null ? 0 : +el.visitor)
@@ -74,7 +80,6 @@ export class AppService {
             }
             let existArr = data.publicData.data.map((el) => {
                 if (date === el.time) {
-                    console.log(el, 'getOneMonthDateList()');
                     return el
                 }
             })

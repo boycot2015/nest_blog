@@ -91,42 +91,9 @@ const columns = (props) => {
 function handleChange (value) {
     console.log(`selected ${value}`);
 }
-const options = [
-    {
-        value: 'web',
-        label: '前端',
-        children: [
-            {
-                value: 'js',
-                label: 'js',
-                children: [
-                    {
-                        value: 'ts',
-                        label: 'ts',
-                    },
-                ],
-            },
-        ],
-    },
-    {
-        value: 'server',
-        label: '后端',
-        children: [
-            {
-                value: 'springBoot',
-                label: 'springBoot',
-                children: [
-                    {
-                        value: 'Redis',
-                        label: 'Redis',
-                    },
-                ],
-            },
-        ],
-    }
-]
 const AdvancedSearchForm = (props) => {
     const [form] = Form.useForm();
+    props.state.reset && form.resetFields()
     const getFields = () => {
         const children = [
             {
@@ -189,7 +156,7 @@ const AdvancedSearchForm = (props) => {
         >
             <Row gutter={18}>
                 {getFields()}
-                <Col span={6} style={{ textAlign: 'right' }}>
+                <Col span={4} style={{ textAlign: 'right' }}>
                     <Button type="primary" htmlType="submit">
                         查询
                 </Button>
@@ -295,7 +262,8 @@ class User extends React.Component {
         const res = await $api.user.status({ id, status })
         if (res && res.success) {
             message.success(res.message)
-            this.handlerFormSubmit({ ...this.state.pageData }, true)
+            this.setState({ reset: true })
+            this.handlerFormSubmit({ ...this.state.pageData, status: '' }, true)
             return
         }
         message.error(res.message)
@@ -306,7 +274,8 @@ class User extends React.Component {
         const res = await $api.user.delete({ id, status })
         if (res && res.success) {
             message.success(res.message)
-            this.handlerFormSubmit({ ...this.state.pageData }, true)
+            this.setState({ reset: true })
+            this.handlerFormSubmit({ ...this.state.pageData, status: '' }, true)
             return
         }
         res && message.error(res.message)
@@ -328,7 +297,7 @@ class User extends React.Component {
                     {/* process.browser && localStorage.getItem('userinfo') && !JSON.parse(localStorage.getItem('userinfo')).administrator &&  */}
                     {this.props.userinfo && this.props.userinfo.administrator && <Button className='float-right' onClick={() => Router.push('/user/add')} icon={<PlusOutlined />} type='primary'>创建用户</Button>}
                 </h3>
-                <AdvancedSearchForm setParentState={this.handlerFormSubmit.bind(this)} />
+                <AdvancedSearchForm setParentState={this.handlerFormSubmit.bind(this)} state={this.state} />
                 <Table
                     {...this.state}
                     rowKey={(record, index) => index}

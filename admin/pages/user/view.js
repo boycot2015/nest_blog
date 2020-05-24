@@ -69,7 +69,7 @@ const AdvancedSearchForm = (props) => {
                     ]}
                 >
                     {el.type === 1 ? <Input type={el.inputType || 'text'} disabled style={{ border: 0, background: 'white' }} placeholder={el.placeholder} /> :
-                        el.type === 2 ? <span className="ml-3 text-gray-ccc">{props.state.status === 1001 ? '启用' : '禁用'}</span> :
+                        el.type === 2 ? <span className="ml-3 text-gray-ccc">{props.state.data.status === 1001 ? '启用' : '禁用'}</span> :
                             el.type === 3 ? <Cascader placeholder="请选择" disabled style={{ border: 0, background: 'white' }} options={options} onChange={handleChange} changeOnSelect /> :
                                 el.type === 4 ?
                                     <Upload

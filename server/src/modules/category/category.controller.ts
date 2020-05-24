@@ -62,7 +62,7 @@ export class CategoryController {
 
     @Post('/add')
     @ApiOperation({ summary: '新增分类', description: "新增分类" })
-    @UseGuards(AuthGuard())
+    // @UseGuards(AuthGuard())
     addTag(@Body() data: TagForm) {
         return this.categoryService.create(data)
     }

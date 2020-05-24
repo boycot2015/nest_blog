@@ -4,38 +4,107 @@ import {
     Form, Tag, notification,
     Button, Row, Col, Input,
     Select, Table, Cascader,
-    Badge, message, Modal
+    Badge, message, Modal,
+    Tree
 } from 'antd';
-const LabelForm = (props) => {
+import {
+    filterTreeData
+} from '@/utils';
+let selectedCategory = {}
+// const { Option } = Select
+const CategoryForm = (props) => {
     const [form] = Form.useForm();
     const [formLayout] = useState('inline');
     let colors = ['magenta', 'red', 'volcano', 'orange', 'gold', 'lime',
         'green', 'cyan', 'blue', 'geekblue', 'blue', 'purple'];
-    const handleAddTag = (value) => {
+    const handleSubmitForm = (value) => {
         props.setCategoryData(value)
     }
-    const handleTagClick = (tag) => {
-        form.setFieldsValue(tag);
+    setTimeout(() => {
+        !props.isEdit && form.resetFields()
+    }, 200)
+    const handleTagClick = (category, e) => {
+        let {
+            parentId = null,
+            value,
+            id,
+            label
+        } = e.node
+        parentId = (parentId && [parentId]) || null
+        props.categories.map(el => {
+            if (el.id === e.node.parentId) {
+                if (el.parentId !== null) {
+                    parentId.unshift(el.parentId)
+                }
+            }
+        })
+        form.setFieldsValue({
+            parentId,
+            value,
+            id,
+            label
+        });
+        selectedCategory = {
+            parentId,
+            value,
+            id,
+            label
+        }
         props.setCategoryStatus(true)
     }
-    const handleCloseCategory = async (e, tag) => {
-        e.preventDefault();
-        await props.setCategoryStatus(false)
-        form.setFieldsValue({
-            value: ''
-        });
-        props.setCategoryData(tag)
+    const resetField = () => {
+        form.resetFields()
+        selectedCategory = {
+            parentId: null,
+            value: '',
+            id: '',
+            label: ''
+        }
+        props.setCategoryStatus(false)
     }
+    const handleCloseCategory = async () => {
+        await props.handleDelete(selectedCategory)
+    }
+
+    categoryOptions = props.categories
+    let categoryOptions = filterTreeData(JSON.parse(JSON.stringify(categoryOptions)), null)
+    let defaultOption = {
+        id: '',
+        parentId: null,
+        value: '作为顶级分类'
+    }
+    categoryOptions.unshift(defaultOption)
     return (
         <Form
             layout={formLayout}
-            onFinish={handleAddTag}
+            name="basic"
+            onFinish={handleSubmitForm}
             style={{ width: 1200 }}
+            initialValues={props.state.initData}
             form={form}>
             <Row>
                 {<Col span={10}
                     style={{ borderRight: '1px solid #e8e8e8', paddingRight: 20, marginRight: 40 }}>
-                    <Form.Item name='value'
+                    <Form.Item
+                        name='parentId'
+                        style={{ marginBottom: 20 }}
+                        label="选择上级分类"
+                        rules={[
+                            {
+                                required: true,
+                                message: '请选择上级分类',
+                            }
+                        ]}>
+                        <Cascader
+                            options={categoryOptions}
+                            // showSearch={{ filter }}
+                            // defaultValue={[]}
+                            fieldNames={{ label: 'value', value: 'id' }}
+                            placeholder={'选择上级分类'}
+                            changeOnSelect={true} />
+                    </Form.Item>
+                    <Form.Item
+                        name='value'
                         rules={[
                             {
                                 required: true,
@@ -50,20 +119,19 @@ const LabelForm = (props) => {
                             value={props.categories[0] && props.categories[0].value}></Input>
                     </Form.Item>
                     <Form.Item style={{ marginTop: 20 }}>
-                        <Button type="primary" htmlType="submit">{props.isEdit ? '编辑' : '新增'}</Button>
+                        <Button htmlType="submit">{props.isEdit ? '编辑' : '新增'}</Button>
+                        {props.isEdit ? <Button style={{ marginLeft: 20 }} type="primary" onClick={() => { handleCloseCategory() }}>{'删除'}</Button> : null}
+                        {<Button style={{ marginLeft: 20 }} ghost type="primary" onClick={resetField}>{'重置'}</Button>}
                     </Form.Item>
                 </Col>}
                 <Col span={10} >
                     <Form.Item style={{ minWidth: 500, maxWidth: 800 }}>
-                        {props.categories && props.categories.map((category, index) => (
-                            <Tag style={{ marginBottom: 10 }}
-                                onClose={(e) => handleCloseCategory(e, category)}
-                                closable
-                                color={colors[index] || colors[0]}
-                                onClick={() => handleTagClick(category)} key={category.id}>
-                                {category.value[0].toUpperCase() + category.value.slice(1)}
-                            </Tag>
-                        ))}
+                        <Tree
+                            showLine={true}
+                            onSelect={handleTagClick}
+                            defaultExpandedKeys={[categoryOptions[1] && categoryOptions[1].id]}
+                            treeData={categoryOptions.slice(1)}
+                        />
                     </Form.Item>
                 </Col>
             </Row>
@@ -103,41 +171,46 @@ class Category extends React.Component {
         }
 
     }
-    handleSetCategory (value) {
-        let api = value.id && this.state.isEdit ? 'edit' : 'add';
+    handleDelete (data) {
         let params = {}
-        if (value.id && !this.state.isEdit) {
-            api = 'delete'
-            params.params = { id: parseInt(value.id) }
-            Modal.confirm({
-                title: '温馨提示',
-                content: '确认删除？',
-                okText: '确认',
-                onOk: () => {
-                    $api.category[api](params).then(res => {
-                        res && !res.success && message.error(res.message)
-                        res && res.success && message.success(res.data)
-                        res && res.success && $api.tag.get().then(res => {
-                            this.setState({
-                                data: res.data[0]
-                            })
+        params.params = { id: data.id }
+        Modal.confirm({
+            title: '温馨提示',
+            content: '确认删除？',
+            okText: '确认',
+            onOk: () => {
+                $api.category.delete(params).then(res => {
+                    res && !res.success && message.error(res.message)
+                    res && res.success && message.success(res.data)
+                    res && res.success && $api.category.get().then(res => {
+                        this.setState({
+                            isEdit: false,
+                            data: res.data[0]
                         })
                     })
-                },
-                cancelText: '取消'
-            })
-        } else {
-            params.data = value
-            $api.tag[api](params).then(res => {
-                res && !res.success && message.error(res.message)
-                res && res.success && message.success(res.data)
-                res && res.success && $api.tag.get().then(res => {
-                    this.setState({
-                        data: res.data[0]
-                    })
+                })
+            },
+            cancelText: '取消'
+        })
+    }
+    handleSetCategory (data) {
+        let api = data.id && this.state.isEdit ? 'edit' : 'add';
+        let params = {}
+        params.data = {}
+        const { parentId, value, id } = data
+        let len = parentId.length - 1
+        params.data.value = value
+        api === 'edit' && (params.data.id = id)
+        params.data.parentId = parentId[len] || null
+        $api.category[api](params).then(res => {
+            res && !res.success && message.error(res.message)
+            res && res.success && message.success(res.data)
+            res && res.success && $api.category.get().then(res => {
+                this.setState({
+                    data: res.data[0]
                 })
             })
-        }
+        })
     }
     render () {
         return (
@@ -148,9 +221,10 @@ class Category extends React.Component {
                 <h3 className='text-gray-600 text-lg leading-4 mb-5 divide-x border-solid border-l-4 pl-2 border-orange-f9'>分类管理</h3>
                 <Row>
                     <Col span={16} >
-                        <LabelForm
+                        <CategoryForm
                             isEdit={this.state.isEdit}
                             state={this.props}
+                            handleDelete={(value) => this.handleDelete(value)}
                             setCategoryStatus={(value) => this.setState({ isEdit: value })}
                             setCategoryData={(value) => this.handleSetCategory(value)}
                             categories={this.state.data} />

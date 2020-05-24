@@ -1,5 +1,5 @@
 import App, { Container } from 'next/app'
-import 'antd/dist/antd.css'
+// import 'antd/dist/antd.css'
 import Layout from '@/layouts';
 import axios from '@/api/axios'
 import SetHeaderCookie from '@/middleware/header'

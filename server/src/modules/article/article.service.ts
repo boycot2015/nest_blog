@@ -59,7 +59,7 @@ export class ArticleService {
     async getAll() {
         let queryBy = this.articleRepository.createQueryBuilder('article')
         queryBy = queryBy
-            .orderBy('article.createTime', 'ASC')
+            .orderBy('article.updateTime', 'ASC')
         // 获取结果及(非分页的)查询结果总数
         // 或使用 .getMany() 不会返回总数
         return await queryBy.getManyAndCount()
@@ -158,8 +158,8 @@ export class ArticleService {
             .leftJoinAndSelect('article.tags', 'tag')
             .leftJoinAndSelect("article.comment", "comment")
             .orderBy('comment.create_time', 'DESC')
-            queryBy.leftJoinAndSelect('article.category', 'category')
-            .orderBy('category.create_time', 'DESC')
+        // queryBy.leftJoinAndSelect('article.category', 'category')
+        //     .orderBy('category.create_time', 'DESC')
         queryBy = queryBy.andWhere(`article.id=${id}`)
         // console.log(await queryBy.getOne(), 'queryBy.getOne()')
         let data = await queryBy.getOne()

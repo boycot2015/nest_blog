@@ -100,7 +100,7 @@ export class CommentController {
     }
     @Post('/add')
     @ApiOperation({ summary: '新增评论' })
-    @UseGuards(AuthGuard())
+    // @UseGuards(AuthGuard())
     public addComment(@Request() req, @Body() Comment: CommentForm) {
         let userAgent = req.headers['user-agent'];
         userAgent = parseUserAgent(userAgent)

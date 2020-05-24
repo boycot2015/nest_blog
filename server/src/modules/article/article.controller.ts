@@ -52,7 +52,7 @@ class ArticleForm {
         description: '分类',
         required: true
     })
-    category: Category;
+    category: string;
 
     @ApiProperty({
         description: '访客可见',
@@ -78,6 +78,12 @@ class EditArticleForm {
         required: false
     })
     content: string;
+
+    @ApiProperty({
+        description: '文章分类',
+        required: false
+    })
+    category: string;
 
     @ApiProperty({
         description: '标签',

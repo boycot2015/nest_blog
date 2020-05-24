@@ -1,3 +1,6 @@
+import 'babel-polyfill';
+// import 'core-js/es/map';
+// import 'core-js/es/set';
 import Routes from '../config/router.js'
 import Router, { withRouter } from 'next/router'
 import Link from 'next/link'
@@ -159,7 +162,6 @@ class Container extends React.Component {
                                     <SubMenu key={el.path}
                                         icon={el.meta.icon}
                                         title={<span>
-                                            {el.meta.icon}
                                             <span>{el.meta.title}</span>
                                         </span>}>
                                         {el.children.map(child => (

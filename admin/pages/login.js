@@ -15,8 +15,9 @@ const NormalLoginForm = (props) => {
             if (res && res.success) {
                 setCookie(props, 'token', res.data)
                 window.localStorage.setItem('userinfo', JSON.stringify(Base64.decode(res.data.split('.')[1])))
-                console.log(Router, 'Router');
-                Router.back()
+                !Router.query.redirect && Router.push('/')
+                // console.log(Router.query, 'Router');
+                Router.query.redirect && Router.push({ pathname: Router.query.redirect, query: { id: Router.query.id } })
             } else {
                 res && message.error(res.message)
             }

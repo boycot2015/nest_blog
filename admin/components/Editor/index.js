@@ -5,10 +5,12 @@ import {
     PictureOutlined
 } from '@ant-design/icons';
 import uploader from '@/api/file';
-import { ContentUtils } from 'braft-utils';
 import 'braft-editor/dist/index.css';
 import 'braft-extensions/dist/table.css';
+import 'braft-extensions/dist/color-picker.css'
 import style from './index.module.scss';
+
+import { ContentUtils } from 'braft-utils';
 
 // interface IProps {
 //     value: string;
@@ -36,10 +38,14 @@ export const Editor = ({ value = '', onChange, style, className, readOnly, place
             import('braft-editor'),
             import('braft-extensions/dist/table'),
             import('braft-extensions/dist/markdown'),
+            import('braft-extensions/dist/color-picker'),
+            
         ]).then(res => {
             BraftEditor = res[0].default;
             const Table = res[1].default;
             const Markdown = res[2].default;
+            const ColorPicker = res[3].default;
+            
             const options = {
                 defaultColumns: 3, // 默认列数
                 defaultRows: 3, // 默认行数
@@ -49,6 +55,10 @@ export const Editor = ({ value = '', onChange, style, className, readOnly, place
             };
             BraftEditor.use(Table(options));
             BraftEditor.use(Markdown({}));
+            BraftEditor.use(ColorPicker({
+                includeEditors: ['braft-editor'],
+                theme: 'light' // 支持dark和light两种主题，默认为dark
+            }))
             setMounted(true);
         });
 
@@ -216,7 +226,7 @@ export const Editor = ({ value = '', onChange, style, className, readOnly, place
     }
     return mounted ? (
         <div style={style} className={className} ref={ref}>
-            <BraftEditor {...editorProps} />
+            <BraftEditor id="braft-editor" {...editorProps} />
         </div>
     ) : (
             <Spin style={{ minHeight: 200, width: '100%', lineHeight: '100px' }} tip="编辑器努力加载中..." spinning={true}></Spin>

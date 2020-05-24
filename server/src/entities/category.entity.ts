@@ -10,8 +10,9 @@ import { Article } from './article.entity';
 
 @Entity()
 export class Category {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn('uuid')
     id: number
+
     @Column({ type: 'text', default: null, charset: 'utf8mb4', select: true })
     label: string;
 
@@ -27,11 +28,11 @@ export class Category {
     })
     status: string; // 标签状态
 
-    @OneToMany(
-        () => Article,
-        article => article.category
-    )
-    article: Array<Article>;
+    // @OneToMany(
+    //     () => Article,
+    //     article => article.category
+    // )
+    // article: Array<Article>;
 
     @CreateDateColumn({
         type: 'datetime',

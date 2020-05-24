@@ -35,8 +35,14 @@ export class CategoryService {
         // article.id = this.articles.length + 1
         // this.articles.push(article)
         // return Promise.resolve('操作成功');
+        !data.parentId && (data.parentId = null)
         const res = await this.categoryRepository.findOne({ parentId: data.parentId, value: data.value });
         if (!res) {
+            let parent = await this.categoryRepository.findOne({ id: data.parentId })
+            if (parent && parent.parentId !== null) {
+                parent = await this.categoryRepository.findOne({ id: parent.parentId })
+                if (parent && parent.parentId !== null) throw new HttpException(`最多可添加三级分类`, 400)
+            }
             await this.categoryRepository.save(data);
             return responseStatus.success.message
         }
@@ -47,8 +53,9 @@ export class CategoryService {
         // this.articles.push(article)
         // return Promise.resolve('操作成功');
         const res = await this.categoryRepository.findOne({ id: data.id });
-        const value = await this.categoryRepository.findOne({ value: data.value });
-        if (value) throw new HttpException(`分类已存在，请重新输入！`, 400);
+        !data.parentId && (data.parentId = null)
+        const value = await this.categoryRepository.findOne({ value: data.value, parentId: data.parentId });
+        // if (value) throw new HttpException(`分类已存在，请重新输入！`, 400);
         const updatedcategory = await this.categoryRepository.merge(
             res,
             {
@@ -81,7 +88,7 @@ export class CategoryService {
         if (res) return res
         else throw new HttpException(`分类不存在！`, 404);
     }
-    
+
     async findByIds(ids): Promise<Array<Category>> {
         return this.categoryRepository.findByIds(ids);
     }

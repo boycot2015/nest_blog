@@ -81,7 +81,10 @@ service.interceptors.response.use(
                     if (userinfo && userinfo.administrator) {
                         info.message = '用户信息认证失败，请重新登录！'
                         localStorage.removeItem('userinfo')
-                        Router.push('/login?redirect=' + Router.pathname)
+                        Router.push({
+                            pathname: '/login',
+                            query: { ...Router.query, redirect: Router.pathname }
+                        })
                     }
                 }
                 return info

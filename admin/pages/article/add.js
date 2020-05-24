@@ -1,7 +1,8 @@
 import React, { Fragment } from 'react';
 import { Editor as BraftEditor } from '@/components/Editor'
-import { Button, Select, Tag, message, Input } from 'antd';
+import { Button, Select, Tag, message, Input, Cascader } from 'antd';
 import Router, { withRouter } from 'next/router'
+import { filterTreeData } from '@/utils'
 function tagRender (props) {
     const { label, value, closable, onClose } = props;
     const colors = ['magenta', 'red', 'volcano', 'orange', 'gold', 'lime',
@@ -22,17 +23,7 @@ class ArticleAdd extends React.Component {
     constructor(props) {
         super(props)
     }
-    state = {
-        articleForm: {
-            title: '',
-            content: '',
-            tags: ''
-        },
-        tagsList: this.props.tagsList,
-        categoryList: this.props.categoryList,
-        total: this.props.total
-    }
-    static async getInitialProps ({ query,  $api }) {
+    static async getInitialProps ({ query, $api }) {
         // 从query参数中回去id
         //通过process的browser属性判断处于何种环境：Node环境下为false,浏览器为true
         // 发送服务器请求
@@ -40,6 +31,7 @@ class ArticleAdd extends React.Component {
         const cateRes = await $api.category.get()
         // console.log(res.data, cookies, 'data')
         if (res && res.success && cateRes && cateRes.success) {
+            let categoryOptions = filterTreeData((cateRes.data[0]), null)
             return {
                 loading: false,
                 tagsList: res.data[0].map(el => ({
@@ -47,11 +39,7 @@ class ArticleAdd extends React.Component {
                     label: el.value,
                     id: el.id
                 })),
-                categoryList: cateRes.data[0].map(el => ({
-                    value: el.id,
-                    label: el.value,
-                    id: el.id
-                })),
+                categoryList: categoryOptions,
                 total: res.data[1]
             }
         } else {
@@ -63,6 +51,16 @@ class ArticleAdd extends React.Component {
         }
 
     }
+    state = {
+        articleForm: {
+            title: '',
+            content: '',
+            tags: ''
+        },
+        tagsList: this.props.tagsList,
+        categoryList: this.props.categoryList,
+        total: this.props.total
+    }
     setArticle (callback) {
         return callback(this.state.articleForm)
     }
@@ -71,9 +69,12 @@ class ArticleAdd extends React.Component {
         arr = arr.map(el => el.id) || []
         this.setState({ articleForm: { ...this.state.articleForm, tags: arr } })
     }
+    categorySelect (value, arr) {
+        let categoryName = arr.map(el => el.value).join('>')
+        this.setState({ articleForm: { ...this.state.articleForm, category: value.join(','), categoryName } })
+    }
     submit (status) {
         let data = { ...this.state.articleForm, status }
-        console.log(data, 'tag')
         if (!data.title) {
             message.error('文章标题不能为空！')
             return true
@@ -137,7 +138,7 @@ class ArticleAdd extends React.Component {
                     </div>
                     <div className="tag-list">
                         <div className="text-gray-600 text-sm leading-4 mt-5 mb-5 border-solid border-b-2 pb-4 border-orange-f9">三、关联分类</div>
-                        <Select
+                        {/* <Select
                             mode="multiple"
                             tagRender={tagRender}
                             placeholder="选择或搜索分类"
@@ -145,7 +146,15 @@ class ArticleAdd extends React.Component {
                             onChange={(value, arr) => this.handleTagSelect(value, arr)}
                             style={{ width: '500px' }}
                             options={this.state.categoryList}
-                        />
+                        /> */}
+                        <Cascader
+                            options={this.state.categoryList}
+                            // showSearch={{ filter }}
+                            // defaultValue={[]}
+                            fieldNames={{ label: 'value', value: 'id' }}
+                            placeholder={'选择上级分类'}
+                            onChange={(value, selectedOptions) => this.categorySelect(value, selectedOptions)}
+                            changeOnSelect={true} />
                     </div>
                 </div>
             </Fragment>

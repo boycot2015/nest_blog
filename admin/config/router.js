@@ -1,10 +1,10 @@
 import {
     MenuUnfoldOutlined,
-    MenuFoldOutlined,
+    SisternodeOutlined,
     RobotOutlined,
     UnorderedListOutlined,
     SettingOutlined,
-    GithubOutlined,
+    CommentOutlined,
     UserOutlined,
     TagsOutlined,
     SkinOutlined,
@@ -70,7 +70,7 @@ const routes = [
         name: 'comment',
         meta: {
             title: '评论列表',
-            icon: <UnorderedListOutlined style={
+            icon: <CommentOutlined style={
                 {
                     fontSize: '20px'
                 }
@@ -112,7 +112,7 @@ const routes = [
         name: 'category',
         meta: {
             title: '分类管理',
-            icon: <TagsOutlined style={
+            icon: <SisternodeOutlined style={
                 {
                     fontSize: '20px'
                 }

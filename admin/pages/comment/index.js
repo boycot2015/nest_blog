@@ -29,8 +29,8 @@ const columns = (props) => {
             title: '用户浏览器',
             dataIndex: 'userAgent',
             key: 'userAgent',
-            width: 80,
-            align: 'center',
+            width: 150,
+            align: 'left',
             rowKey: record => record.dataIndex,
         },
         {
@@ -198,16 +198,16 @@ class Article extends React.Component {
         //通过process的browser属性判断处于何种环境：Node环境下为false,浏览器为true
         // 发送服务器请求
         let articleListData = []
-        const res = await $api.comment.get({ current: 1, pageSize: 5 })
+        const res = await $api.comment.get({ current: 1, pageSize: 10 })
         if (res && res.success) {
             return {
                 loading: false,
                 data: res.data[0],
                 pageData: {
                     current: 1,
-                    pageSize: 5,
+                    pageSize: 10,
                     total: res.data[1],
-                    pageSizeOptions: [5, 10, 20, 50]
+                    pageSizeOptions: [10, 20, 30, 50]
                 },
                 userinfo,
             }
@@ -217,9 +217,9 @@ class Article extends React.Component {
                 data: [],
                 pageData: {
                     current: 1,
-                    pageSize: 5,
+                    pageSize: 10,
                     total: 999,
-                    pageSizeOptions: [5, 10, 20, 50]
+                    pageSizeOptions: [10, 20, 30, 50]
                 },
                 userinfo,
             }
@@ -243,9 +243,9 @@ class Article extends React.Component {
             queryData: values,
             pageData: {
                 current: 1,
-                pageSize: 5,
+                pageSize: 10,
                 total: this.state.pageData.total,
-                pageSizeOptions: [5, 10, 20, 50]
+                pageSizeOptions: [10, 20, 30, 50]
             }
         })
         // 发送服务器请求
@@ -299,7 +299,7 @@ class Article extends React.Component {
         $api.comment.delete({ id: item.id }).then(res => {
             if (res && res.success) {
                 message.success(res.data)
-                this.getPageData({ pageSize: 5, current: 1 })
+                this.getPageData({ pageSize: 10, current: 1 })
             } else {
                 res && message.error(res.message)
             }

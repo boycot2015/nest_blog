@@ -35,6 +35,12 @@ export class Article {
     @Column({ type: 'text', default: null, charset: 'utf8mb4', select: true })
     content: string
 
+    @Column({ type: 'text', default: null, charset: 'utf8mb4', select: true })
+    category: string
+
+    @Column({ type: 'text', default: null, charset: 'utf8mb4', select: true })
+    categoryName: string
+    
     @Column('enum', {
         enum: [1001, 1002, 1003]
     })
@@ -66,7 +72,7 @@ export class Article {
     @JoinTable()
     comment: Array<Comment>
 
-    @ManyToOne(() => Category, category => category.article)
-    @JoinTable()
-    category: Category
+    // @ManyToOne(() => Category, category => category.article)
+    // @JoinTable()
+    // category: Category
 }
