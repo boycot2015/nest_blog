@@ -1,5 +1,5 @@
-import App, { Container } from 'next/app'
-// import 'antd/dist/antd.css'
+import App from 'next/app'
+import 'antd/dist/antd.css'
 import Layout from '@/layouts';
 import axios from '@/api/axios'
 import SetHeaderCookie from '@/middleware/header'
@@ -7,7 +7,9 @@ import $api from '@/api/apiList'
 import routes from '@/config/router'
 import { Base64 } from 'js-base64'
 import { parseCookies, setCookie, destroyCookie } from 'nookies'
-import * as sysTool from '@/static/js/systemTool'
+// import * as sysTool from '@/static/js/systemTool'
+import '../static/css/index.css'
+import '../static/scss/index.scss'
 class AntApp extends App {
     static async getInitialProps ({ Component, ctx, router, redirect }) {
         if (Component.getInitialProps) {
@@ -38,11 +40,9 @@ class AntApp extends App {
         const currentRouter = routes.filter(el => el.path === router.pathname && el.meta && el.meta.hideLayout)[0]
         const hideLayout = currentRouter && currentRouter.meta && currentRouter.meta.hideLayout
         return (
-            <Container>
-                {!hideLayout ? <Layout {...pageProps}>
-                    <Component {...pageProps} />
-                </Layout> : <Component {...pageProps} />}
-            </Container>
+            !hideLayout ? <Layout {...pageProps}>
+                <Component {...pageProps} />
+            </Layout> : <Component {...pageProps} />
         )
     }
 }

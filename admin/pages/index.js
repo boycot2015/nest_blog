@@ -164,7 +164,7 @@ class Home extends React.Component {
                 <div span={24} className='flex mb-4'>
                     <div className='flex-1 flex flex-col'>
                         <span className=' text-gray-600'>当前时间</span>
-                        <p className='text-2xl text-gray-900 font-normal'>{this.state.currentTime}</p>
+                        <p className='text-2xl text-gray-900 mb-0 font-normal'>{this.state.currentTime}</p>
                     </div>
                     <Countdown className='flex-1 text-2xl text-gray-900 font-normal' title="端午节倒计时" value={deadline} format="D 天 H 时 m 分 s 秒" />
                 </div>
@@ -177,7 +177,7 @@ class Home extends React.Component {
                         <List.Item>
                             <Skeleton loading={loading} buttonActive>
                                 <Card title={item.title} bodyStyle={{ height: 150, overflow: 'hidden' }}>
-                                    <div onClick={() => Router.push('/article/view?id='+item.id)} style={{ maxHeight: 100, maxWidth: 350, margin: '0 auto', overflow: 'hidden' }} dangerouslySetInnerHTML={{ __html: item.content }}>
+                                    <div onClick={() => Router.push('/article/view?id=' + item.id)} style={{ maxHeight: 100, maxWidth: 350, margin: '0 auto', overflow: 'hidden' }} dangerouslySetInnerHTML={{ __html: item.content }}>
                                     </div>
                                 </Card>
                             </Skeleton>

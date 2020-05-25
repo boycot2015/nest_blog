@@ -32,8 +32,6 @@ const { Header, Sider, Content } = Layout;
 moment.locale('zh-cn');
 import $filters from '@/filters';
 React.$filters = $filters
-import '../static/css/index.css'
-import '../static/scss/index.scss'
 const menu = (props) => {
     const handlerHeader = (e) => {
         if (e.key === 'item_1') {
@@ -104,7 +102,7 @@ class Container extends React.Component {
                     currentRoute: el,
                     selectedKeys: [key],
                     defaultSelectedKeys: [key]
-                });
+                })
             }
             if (key === '/') Router.push('/')
         })
@@ -201,11 +199,11 @@ class Container extends React.Component {
                             <Button type="primary" icon={<PlusOutlined />} onClick={() => Router.push('/article/add')}>发表文章</Button>
                         </div>
                         <div className={'userinfo text-right flex flex-3 flex-row items-center'}>
-                            <Avatar className={'mr-5  text-orange-f9 bg-gray-200 cursor-pointer'}
+                            <Avatar className={'text-orange-f9 bg-gray-200 cursor-pointer'}
                                 onClick={() => window.open('https://github.com/boycot2015/nest_blog')}
                                 icon={<GithubOutlined />} />
                             <Dropdown overlay={menu(userinfo)} placement="bottomCenter">
-                                <div className='login-cont cursor-pointer'
+                                <div className='login-cont ml-5  cursor-pointer'
                                     onClick={() => userinfo.username ?
                                         Router.push(`/user/view?id=${userinfo.id}`)
                                         : Router.push('/login?redirect=' + this.props.router.pathname)}
@@ -222,26 +220,28 @@ class Container extends React.Component {
                             </Dropdown>
                         </div>
                     </Header>
-                    <Breadcrumb className="h-5 leading-5 mt-20 ml-5">
-                        <Breadcrumb.Item href="/">
-                            <RobotOutlined />
-                        </Breadcrumb.Item>
-                        <Breadcrumb.Item href={this.state.currentRoute.path}>
-                            <span>{this.state.currentRoute.meta.title}</span>
-                        </Breadcrumb.Item>
-                    </Breadcrumb>
-                    <Content
-                        className="site-layout-background bg-white"
-                        style={{
-                            margin: '24px 16px',
-                            padding: 24,
-                            minHeight: 'calc(100vh - 148px)',
-                        }}
-                    >
-                        <ConfigProvider locale={zhCN} renderEmpty={customizeRenderEmpty}>
-                            {this.props.children}
-                        </ConfigProvider>
-                    </Content>
+                    <div className="main mt-20 ml-5">
+                        <Breadcrumb className="h-5 leading-5">
+                            <Breadcrumb.Item href="/">
+                                <RobotOutlined />
+                            </Breadcrumb.Item>
+                            <Breadcrumb.Item href={this.state.currentRoute.path}>
+                                <span>{this.state.currentRoute.meta.title}</span>
+                            </Breadcrumb.Item>
+                        </Breadcrumb>
+                        <Content
+                            className="site-layout-background bg-white"
+                            style={{
+                                margin: '24px 16px 24px 0',
+                                padding: 24,
+                                minHeight: 'calc(100vh - 148px)',
+                            }}
+                        >
+                            <ConfigProvider locale={zhCN} renderEmpty={customizeRenderEmpty}>
+                                {this.props.children}
+                            </ConfigProvider>
+                        </Content>
+                    </div>
                 </Layout>
             </Layout >
         );

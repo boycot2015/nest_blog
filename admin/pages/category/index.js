@@ -66,8 +66,8 @@ const CategoryForm = (props) => {
         await props.handleDelete(selectedCategory)
     }
 
-    categoryOptions = props.categories
-    let categoryOptions = filterTreeData(JSON.parse(JSON.stringify(categoryOptions)), null)
+    let categoryOptions = props.categories
+    categoryOptions = filterTreeData(JSON.parse(JSON.stringify(categoryOptions)), null)
     let defaultOption = {
         id: '',
         parentId: null,

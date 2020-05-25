@@ -2,6 +2,12 @@ module.exports = {
     prefix: '',
     important: false,
     separator: ':',
+    purge: false,
+    // purge: [
+    //     './src/**/*.html',
+    //     './src/**/*.vue',
+    //     './src/**/*.jsx',
+    // ],
     theme: {
         screens: {
             sm: '640px',
