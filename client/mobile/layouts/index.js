@@ -41,7 +41,7 @@ class Layout extends React.Component {
                 <div className='g-flexview'>
                     {currentRoute.meta && currentRoute.meta.showTitle && <Header></Header>}
                     {currentRoute.meta && currentRoute.meta.showNav && <Nav setActiveRouter={(el) => this.setActiveRouter(el)}></Nav>}
-                    <h1 className={'bg-gray-200 font-size-22 hover:bg-white hover:border-gray-300'}>123123123123132</h1>
+                    {/* <h1 className={'bg-gray-200 font-size-22 hover:bg-white hover:border-gray-300'}>123123123123132</h1> */}
                     <div className='g-scrollview'>{this.props.children}</div>
                     {currentRoute.meta && currentRoute.meta.showMenu && <Footer activeIndex={currentRoute.path}></Footer>}
                 </div>
