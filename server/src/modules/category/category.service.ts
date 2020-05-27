@@ -32,9 +32,6 @@ export class CategoryService {
         // return await this.articleRepository.query(data);
     }
     async create(data) {
-        // article.id = this.articles.length + 1
-        // this.articles.push(article)
-        // return Promise.resolve('操作成功');
         !data.parentId && (data.parentId = null)
         const res = await this.categoryRepository.findOne({ parentId: data.parentId, value: data.value });
         if (!res) {
@@ -49,9 +46,6 @@ export class CategoryService {
         else throw new HttpException(`分类已存在，请重新输入！`, 400);
     }
     async edit(data) {
-        // article.id = this.articles.length + 1
-        // this.articles.push(article)
-        // return Promise.resolve('操作成功');
         const res = await this.categoryRepository.findOne({ id: data.id });
         !data.parentId && (data.parentId = null)
         const value = await this.categoryRepository.findOne({ value: data.value, parentId: data.parentId });
@@ -59,7 +53,8 @@ export class CategoryService {
         const updatedcategory = await this.categoryRepository.merge(
             res,
             {
-                value: data.value
+                value: data.value,
+                parentId: data.parentId ? data.parentId : null
             }
         );
         if (res) {
@@ -69,11 +64,6 @@ export class CategoryService {
         throw new HttpException(`分类不存在！`, 404);
     }
     async delete(id: number) {
-        // const article = this.articles.find(_ => _.id === id)
-        // if (!article) throw new HttpException("article not found", 404);
-        // this.articles = this.articles.filter(_ => _.id !== id)
-        // return Promise.resolve('操作成功');
-
         const res = await this.categoryRepository.findOne({ id })
         if (res) {
             await this.categoryRepository.remove(res)
@@ -81,9 +71,7 @@ export class CategoryService {
         } else throw new HttpException(`分类不存在！`, 404);
     }
     async getById(id: number): Promise<Category> {
-        // const article = this.articles.find(article => article.id === id)
         if (!id) throw new HttpException(`分类不存在！`, 404);
-        // return Promise.resolve(article);
         const res = await this.categoryRepository.findOne({ id })
         if (res) return res
         else throw new HttpException(`分类不存在！`, 404);

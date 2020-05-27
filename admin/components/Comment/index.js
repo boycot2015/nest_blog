@@ -129,7 +129,7 @@ export const CommentTree = (props) => (
                 <div className="content">
                     <div className="content-text" dangerouslySetInnerHTML={{ __html: el.content }}></div>
                     <div className="comment-icon" onClick={() => props.parent.setState({ comment: { parentId: el.id } })} title="点击进行评论"><CommentOutlined /></div>
-                    <div className="client-info gray text-gray-400 mt-3">终端： {el.userAgent}</div>
+        <div className="client-info gray text-gray-400 mt-3">{React.$filters.timeFilter(new Date(el.createTime).getTime())} &nbsp;·&nbsp; 终端： {el.userAgent}</div>
                 </div>
                 {el.children && <div style={{ marginLeft: 40, marginTop: 10 }} ><CommentTree data={el.children} parent={props.parent}></CommentTree></div>}
             </div>

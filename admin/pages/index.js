@@ -21,6 +21,7 @@ class Home extends React.Component {
         //通过process的browser属性判断处于何种环境：Node环境下为false,浏览器为true
         // 发送服务器请求
         const res = await $api.home.datas()
+        console.log(res,'res.data')
         if (res && res.success) {
             return {
                 loading: true,
@@ -75,7 +76,7 @@ class Home extends React.Component {
                     // interval: 1,
                     // rotate: "30"
                 },
-                data: this.state.datas.publicData.data.map(el => el.time),
+                data: (this.state.datas.publicData && this.state.datas.publicData.data.map(el => el.time)) || [],
             },
             yAxis: {
                 type: 'value',
@@ -89,7 +90,7 @@ class Home extends React.Component {
                     type: 'line',
                     smooth: true,
                     // data: [11, 11, 15, 13, 12, 13, 10],
-                    data: this.state.datas.publicData.data.map(el => el.value),
+                    data: (this.state.datas.publicData && this.state.datas.publicData.data.map(el => el.value)) || [],
                     markPoint: {
                         data: [
                             { type: 'max', name: '最大值' },
@@ -106,7 +107,7 @@ class Home extends React.Component {
                     name: '访问',
                     type: 'line',
                     smooth: true,
-                    data: this.state.datas.visitorData.data.map(el => el.value),
+                    data: (this.state.datas.visitorData && this.state.datas.visitorData.data.map(el => el.value)) || [],
                     markPoint: {
                         data: [
                             { name: '周最低', value: -2, xAxis: 1, yAxis: -1.5 }
@@ -177,8 +178,9 @@ class Home extends React.Component {
                         <List.Item>
                             <Skeleton loading={loading} buttonActive>
                                 <Card title={item.title} bodyStyle={{ height: 150, overflow: 'hidden' }}>
-                                    <div onClick={() => Router.push('/article/view?id=' + item.id)} style={{ maxHeight: 100, maxWidth: 350, margin: '0 auto', overflow: 'hidden' }} dangerouslySetInnerHTML={{ __html: item.content }}>
+                                    <div style={{ height: 100, overflow: 'hidden' }} onClick={() => Router.push('/article/view?id=' + item.id)} style={{ maxHeight: 100, maxWidth: 350, margin: '0 auto', overflow: 'hidden' }} dangerouslySetInnerHTML={{ __html: item.content }}>
                                     </div>
+                                    <p className="time">发布于 · <span className="text-orange-400">{React.$filters.timeFilter(new Date(item.createTime).getTime())}</span></p>
                                 </Card>
                             </Skeleton>
                         </List.Item>
