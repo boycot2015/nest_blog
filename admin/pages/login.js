@@ -84,6 +84,9 @@ class Login extends React.Component {
     constructor(props) {
         super(props);
     }
+    componentDidMount () {
+        destroyCookie(null, 'token')
+    }
     render () {
         return (
             <div className='login-container flexbox-v align-c'>

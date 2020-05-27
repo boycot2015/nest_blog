@@ -76,7 +76,7 @@ service.interceptors.response.use(
             }
             if (info.code === 401) {
                 if (process.browser) {
-                    info.message = '无权限进行此操作！'
+                    info.message = '访客模式暂无操作权限！'
                     const userinfo = JSON.parse(JSON.parse(localStorage.getItem('userinfo')))
                     if (userinfo && userinfo.administrator) {
                         info.message = '用户信息认证失败，请重新登录！'
