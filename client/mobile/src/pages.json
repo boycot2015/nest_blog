@@ -1,0 +1,50 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "博客首页"
+			}
+		}
+	    ,{
+            "path" : "pages/userCenter/userCenter",
+            "style" : {
+				"navigationBarTitleText": "个人中心"
+			}
+        }
+        ,{
+            "path" : "pages/category/category",
+            "style" : {
+				"navigationBarTitleText": "分类"
+			}
+        }
+    ],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8"
+	},
+	"tabBar": {
+	    "color": "#7A7E83",
+	    "selectedColor": "#FFA7C5",
+	    "borderStyle": "black",
+	    "backgroundColor": "#ffffff",
+	    "list": [{
+	        "pagePath": "pages/index/index",
+	        "iconPath": "/static/index-0.png",
+	        "selectedIconPath": "/static/index-1.png",
+	        "text": "首页"
+	    }, {
+	        "pagePath": "pages/category/category",
+	        "iconPath": "/static/tag-0.png",
+	        "selectedIconPath": "/static/tag-1.png",
+	        "text": "分类"
+	    }, {
+	        "pagePath": "pages/userCenter/userCenter",
+	        "iconPath": "/static/center-0.png",
+	        "selectedIconPath": "/static/center-1.png",
+	        "text": "个人中心"
+	    }]
+	}
+}
