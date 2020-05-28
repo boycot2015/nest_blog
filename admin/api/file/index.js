@@ -1,4 +1,5 @@
 import axios from '@/api/axios'
+import { baseUrl } from '@/api/baseUrl'
 import url from './url'
 const headers = {
     "Content-Type": "multipart/form-data"
