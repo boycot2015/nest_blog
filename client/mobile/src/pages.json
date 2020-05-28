@@ -46,5 +46,8 @@
 	        "selectedIconPath": "/static/center-1.png",
 	        "text": "个人中心"
 	    }]
+	},
+	"easycom": {
+		"^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
 	}
 }

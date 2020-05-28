@@ -40,6 +40,7 @@ const menu = (props) => {
             Router.push('/login')
         }
     }
+    props = props || {}
     return (
         <Menu onClick={handlerHeader} className="text-center">
             {props.username ? <Menu.Item>
@@ -113,7 +114,7 @@ class Container extends React.Component {
         router.prefetch('/dynamic')
     }
     render () {
-        const { userinfo } = this.state
+        const { userinfo = {} } = this.state
         return (
             <Layout className="flex-row">
                 <Sider

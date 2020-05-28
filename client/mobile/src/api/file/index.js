@@ -25,6 +25,5 @@ export default {
             method: 'post',
             params: params
         })
-    },
-    url
+    }
 }

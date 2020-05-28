@@ -8,6 +8,7 @@ import {
     UserOutlined,
     TagsOutlined,
     SkinOutlined,
+    FormatPainterOutlined,
     FileSearchOutlined
 } from '@ant-design/icons';
 const routes = [
@@ -154,6 +155,19 @@ const routes = [
             meta: {
                 title: '主题设置',
                 icon: <SkinOutlined style={
+                    {
+                        fontSize: '20px'
+                    }
+                } />,
+                showInMenu: true,
+                login: false
+            }
+        }, {
+            path: '/setting',
+            name: 'setting',
+            meta: {
+                title: '自定义装修',
+                icon: <FormatPainterOutlined style={
                     {
                         fontSize: '20px'
                     }
