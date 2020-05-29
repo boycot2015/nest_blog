@@ -1,15 +1,15 @@
 .ant-carousel .slick-slide {
     text-align: center;
-    height: 260px;
-    line-height: 260px;
-    background: #364d79;
+    height: 250px;
+    line-height: 250px;
+    // background: #364d79;
     overflow: hidden;
   }
 .container {
     .ant-carousel .slick-slide {
         a {
             display: block;
-            height: 260px;
+            height: 250px;
             img {
                 margin: 0 auto;
                 max-width: 1200px;
@@ -17,7 +17,12 @@
             }
         }
         .upload-text {
-            color: #fff;
+            color: #364d79;
+        }
+        .ant-upload.ant-upload-drag {
+            width: 400px !important;
+            background-color:transparent;
+            margin: 0 auto;
         }
     }
     .section {

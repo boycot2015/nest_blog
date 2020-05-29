@@ -6,6 +6,7 @@ import ReactEcharts from 'echarts-for-react';
 import {
     List, Card, Progress,
     Skeleton, Avatar,
+    Calendar,
     Statistic, Row, Col
 } from 'antd';
 const { Meta } = Card;
@@ -21,7 +22,7 @@ class Home extends React.Component {
         //通过process的browser属性判断处于何种环境：Node环境下为false,浏览器为true
         // 发送服务器请求
         const res = await $api.home.datas()
-        console.log(res,'res.data')
+        console.log(res, 'res.data')
         if (res && res.success) {
             return {
                 loading: true,
@@ -163,29 +164,37 @@ class Home extends React.Component {
                 {/* <Link href="/userList" passHref>
                 </Link> */}
                 <div span={24} className='flex mb-4'>
+                    <Calendar className='mr-10' style={{ width: 300, height: 325, border: '1px solid #e8e8e8' }} fullscreen={false} />
                     <div className='flex-1 flex flex-col'>
-                        <span className=' text-gray-600'>当前时间</span>
-                        <p className='text-2xl text-gray-900 mb-0 font-normal'>{this.state.currentTime}</p>
+                        <div className='flex flex-row'>
+                            <div className='flex flex-1 flex-col'>
+                                <span className=' text-gray-600'>当前时间</span>
+                                <p className='text-2xl text-gray-900 mb-0 font-normal'>{this.state.currentTime}</p>
+                            </div>
+                            <div className='flex-1 flex flex-col'>
+                                <Countdown className='flex-1 text-2xl text-gray-900 font-normal' title="端午节倒计时" value={deadline} format="D 天 H 时 m 分 s 秒" />
+                            </div>
+                        </div>
+                        <div className='flex-1 flex flex-col'>
+                            <h3 className='text-gray-600 text-lg leading-4 mt-3 mb-5 divide-x border-solid border-l-4 pl-2 border-orange-f9'>最新动态</h3>
+                            <List
+                                grid={{ gutter: 16, column: 4 }}
+                                dataSource={this.state.homeData}
+                                renderItem={item => (
+                                    <List.Item>
+                                        <Skeleton loading={loading} buttonActive>
+                                            <Card title={item.title} bodyStyle={{ height: 155, overflow: 'hidden' }}>
+                                                <div style={{ height: 100, overflow: 'hidden' }} onClick={() => Router.push('/article/view?id=' + item.id)} style={{ maxHeight: 100, maxWidth: 350, margin: '0 auto', overflow: 'hidden' }} dangerouslySetInnerHTML={{ __html: item.content }}>
+                                                </div>
+                                                <p className="time">发布于 · <span className="text-orange-400">{React.$filters.timeFilter(new Date(item.createTime).getTime())}</span></p>
+                                            </Card>
+                                        </Skeleton>
+                                    </List.Item>
+                                )}
+                            />
+                        </div>
                     </div>
-                    <Countdown className='flex-1 text-2xl text-gray-900 font-normal' title="端午节倒计时" value={deadline} format="D 天 H 时 m 分 s 秒" />
                 </div>
-                <h3 className='text-gray-600 text-lg leading-4 mb-5 divide-x border-solid border-l-4 pl-2 border-orange-f9'>最新动态</h3>
-                <List
-                    className='mb-5'
-                    grid={{ gutter: 16, column: 4 }}
-                    dataSource={this.state.homeData}
-                    renderItem={item => (
-                        <List.Item>
-                            <Skeleton loading={loading} buttonActive>
-                                <Card title={item.title} bodyStyle={{ height: 150, overflow: 'hidden' }}>
-                                    <div style={{ height: 100, overflow: 'hidden' }} onClick={() => Router.push('/article/view?id=' + item.id)} style={{ maxHeight: 100, maxWidth: 350, margin: '0 auto', overflow: 'hidden' }} dangerouslySetInnerHTML={{ __html: item.content }}>
-                                    </div>
-                                    <p className="time">发布于 · <span className="text-orange-400">{React.$filters.timeFilter(new Date(item.createTime).getTime())}</span></p>
-                                </Card>
-                            </Skeleton>
-                        </List.Item>
-                    )}
-                />
                 <h3 className='text-gray-600 text-lg leading-4 mb-6 mt-5 divide-x border-solid border-l-4 pl-2 border-orange-f9'>文章发布记录统计</h3>
                 <Row gutter={16}>
                     <Col span={24}>
