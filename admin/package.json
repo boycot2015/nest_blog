@@ -11,6 +11,7 @@
         "github": "rm -rf node_modules/.cache && next build && next export && touch out/.nojekyll && git add out/ && git commit -m \"Deploy Next.js to gh-pages\" && git subtree push --prefix out origin gh-pages"
     },
     "dependencies": {
+        "@ant-design/colors": "^4.0.0",
         "@babel/plugin-proposal-decorators": "^7.8.3",
         "@zeit/next-css": "^1.0.1",
         "@zeit/next-less": "^1.0.1",

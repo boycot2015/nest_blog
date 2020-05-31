@@ -24,7 +24,7 @@ const columns = (props) => {
             render: avatar => <a><img src={avatar} /></a>,
         },
         {
-            title: '用户名',
+            title: '会员名称',
             dataIndex: 'username',
             align: 'center',
             key: 'username',
@@ -97,10 +97,10 @@ const AdvancedSearchForm = (props) => {
     const getFields = () => {
         const children = [
             {
-                label: '用户名',
+                label: '会员名称',
                 type: 1,
                 name: 'username',
-                placeholder: '用户名'
+                placeholder: '会员名称'
             },
             {
                 label: '状态',
@@ -290,12 +290,12 @@ class User extends React.Component {
         return (
             <Fragment>
                 <Head>
-                    <title>用户列表</title>
+                    <title>会员列表</title>
                 </Head>
                 <h3 className='text-gray-600 text-lg leading-4 mb-5 divide-x border-solid border-l-4 pl-2 border-orange-f9'>
-                    <span>用户列表</span>
+                    <span>会员列表</span>
                     {/* process.browser && localStorage.getItem('userinfo') && !JSON.parse(localStorage.getItem('userinfo')).administrator &&  */}
-                    {this.props.userinfo && this.props.userinfo.administrator && <Button className='float-right' onClick={() => Router.push('/user/add')} icon={<PlusOutlined />} type='primary'>创建用户</Button>}
+                    {this.props.userinfo && this.props.userinfo.administrator && <Button className='float-right' onClick={() => Router.push('/user/add')} icon={<PlusOutlined />} type='primary'>创建会员</Button>}
                 </h3>
                 <AdvancedSearchForm setParentState={this.handlerFormSubmit.bind(this)} state={this.state} />
                 <Table

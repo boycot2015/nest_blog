@@ -84,7 +84,7 @@ const routes = [
         path: '/user',
         name: 'user',
         meta: {
-            title: '用户列表',
+            title: '会员列表',
             icon: <UserOutlined style={
                 {
                     fontSize: '20px'
@@ -149,33 +149,33 @@ const routes = [
             showInMenu: true,
             login: false
         },
-        children: [{
-            path: '/setting/theme',
-            name: 'theme',
-            meta: {
-                title: '主题设置',
-                icon: <SkinOutlined style={
-                    {
-                        fontSize: '20px'
-                    }
-                } />,
-                showInMenu: true,
-                login: false
-            }
-        }, {
-            path: '/setting',
-            name: 'setting',
-            meta: {
-                title: '自定义装修',
-                icon: <FormatPainterOutlined style={
-                    {
-                        fontSize: '20px'
-                    }
-                } />,
-                showInMenu: true,
-                login: false
-            }
-        }]
+        // children: [{
+        //     path: '/setting/theme',
+        //     name: 'theme',
+        //     meta: {
+        //         title: '主题设置',
+        //         icon: <SkinOutlined style={
+        //             {
+        //                 fontSize: '20px'
+        //             }
+        //         } />,
+        //         showInMenu: true,
+        //         login: false
+        //     }
+        // }, {
+        //     path: '/setting',
+        //     name: 'setting',
+        //     meta: {
+        //         title: '自定义装修',
+        //         icon: <FormatPainterOutlined style={
+        //             {
+        //                 fontSize: '20px'
+        //             }
+        //         } />,
+        //         showInMenu: true,
+        //         login: false
+        //     }
+        // }]
     }
 ]
 export default routes

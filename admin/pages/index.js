@@ -164,7 +164,7 @@ class Home extends React.Component {
                 {/* <Link href="/userList" passHref>
                 </Link> */}
                 <div span={24} className='flex mb-4'>
-                    <Calendar className='mr-10' style={{ width: 300, height: 325, border: '1px solid #e8e8e8' }} fullscreen={false} />
+                    <Calendar className='mr-10' style={{ width: 300, height: 325, border: '1px solid #e8e8e8', borderRadius: 5, boxShadow: '0 0 15px #e8e8e8' }} fullscreen={false} />
                     <div className='flex-1 flex flex-col'>
                         <div className='flex flex-row'>
                             <div className='flex flex-1 flex-col'>
@@ -183,7 +183,7 @@ class Home extends React.Component {
                                 renderItem={item => (
                                     <List.Item>
                                         <Skeleton loading={loading} buttonActive>
-                                            <Card title={item.title} bodyStyle={{ height: 155, overflow: 'hidden' }}>
+                                            <Card title={item.title} bodyStyle={{ height: 155, overflow: 'hidden', borderRadius: 5, boxShadow: '0 0 15px #e8e8e8' }}>
                                                 <div style={{ height: 100, overflow: 'hidden' }} onClick={() => Router.push('/article/view?id=' + item.id)} style={{ maxHeight: 100, maxWidth: 350, margin: '0 auto', overflow: 'hidden' }} dangerouslySetInnerHTML={{ __html: item.content }}>
                                                 </div>
                                                 <p className="time">发布于 · <span className="text-orange-400">{React.$filters.timeFilter(new Date(item.createTime).getTime())}</span></p>

@@ -20,7 +20,7 @@ import {
     MenuUnfoldOutlined,
     MenuFoldOutlined,
     RobotOutlined,
-    SmileOutlined,
+    SkinFilled,
     PlusOutlined,
     GithubOutlined,
     UserOutlined,
@@ -196,7 +196,7 @@ class Container extends React.Component {
                                 className: 'trigger text-lg tl',
                                 onClick: this.toggle,
                             })}
-                            <BgColorsOutlined title="主题颜色" className='trigger tl flex-1' />
+                            <SkinFilled title="主题颜色" className='trigger tl' />
                             <Button type="primary" icon={<PlusOutlined />} onClick={() => Router.push('/article/add')}>发表文章</Button>
                         </div>
                         <div className={'userinfo text-right flex flex-3 flex-row items-center'}>

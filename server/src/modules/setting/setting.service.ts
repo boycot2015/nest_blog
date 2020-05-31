@@ -38,12 +38,7 @@ export class SettingService {
         if (!banner || !notice) {
             throw new HttpException(`参数为空！`, 400);
         }
-        await this.settingRepository.save({
-            banner: JSON.stringify(banner),
-            notice: JSON.stringify(notice),
-            siteConfig: JSON.stringify(siteConfig),
-            theme: JSON.stringify(theme),
-        });
+        await this.settingRepository.save({ banner, notice, siteConfig, theme });
         return responseStatus.success.message
     }
     async edit(data) {
@@ -51,13 +46,7 @@ export class SettingService {
         if (id && banner && notice) {
             const res = await this.settingRepository.findOne({ id });
             const updatedcategory = await this.settingRepository.merge(
-                res,
-                {
-                    banner: JSON.stringify(banner),
-                    notice: JSON.stringify(notice),
-                    siteConfig: JSON.stringify(siteConfig),
-                    theme: JSON.stringify(theme),
-                }
+                res, { banner, notice, siteConfig, theme }
             );
             if (res) {
                 await this.settingRepository.save(updatedcategory);
