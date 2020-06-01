@@ -76,7 +76,7 @@ const BannerOptionsForm = ({ visible, initProps, onSubmit, handleUpload, onCance
             <Form
                 form={form}
                 layout="vertical"
-                name="form_in_modal"
+                name="form_in_modal_1"
                 initialValues={{
                     playWay, title, link
                 }}
@@ -126,9 +126,11 @@ const ThemeForm = ({ visible, onSubmit, onCancel, handleColorChange, handleBgCol
     const { showNight = 0, background = '#fff', color = yellow.primary } = initProps
     // console.log(initProps, 'props')
     const [form] = Form.useForm();
-    form.setFieldsValue({
-        showNight, background, color
-    });
+    setTimeout(() => {
+        form.setFieldsValue({
+            showNight, background, color
+        });
+    }, 100);
     return (
         <Modal
             visible={visible}
@@ -158,7 +160,7 @@ const ThemeForm = ({ visible, onSubmit, onCancel, handleColorChange, handleBgCol
             <Form
                 form={form}
                 layout="inline"
-                name="form_in_modal"
+                name="form_in_modal_2"
                 initialValues={{ showNight: false }}
             >
                 <Form.Item
@@ -341,7 +343,20 @@ class Setting extends React.Component {
                 theme: { ...values, ...selectedTheme }
             }
         })
-        // console.log(values, this.state.data.theme, 'themebackground')
+        const { theme } = this.state.data
+        window.less.modifyVars(//更换主题颜色
+            {
+                '@primary-color': theme.color,
+                '@btn-primary-bg': theme.color,
+                '@border-color-base': theme.color,
+                '@layout-body-background': theme.background,
+                '@layout-header-background': theme.background,
+            }
+        ).then(() => { console.log('success') })
+            .catch(error => {
+                console.log(error);
+            })
+        console.log(theme.background, 'themebackground')
     }
     //主题弹框关闭
     onThemeDialogClose () {

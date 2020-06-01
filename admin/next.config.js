@@ -1,13 +1,18 @@
 const WithLess = require('@zeit/next-less');
 const WithCss = require('@zeit/next-css');
 const WithSass = require('@zeit/next-sass');
-const withPlugins = require('next-compose-plugins');
+// const withPlugins = require('next-compose-plugins');
+//顶部引入
+const AntDesignThemePlugin = require('antd-theme-webpack-plugin');
 const FilterWarningsPlugin = require('webpack-filter-warnings-plugin');
+const path = require('path')
 // fix: prevents error when .less files are required by node
 if (typeof require !== 'undefined') {
     require.extensions['.less'] = file => { };
 }
-
+if (typeof require !== 'undefined') {
+    require.extensions['.css'] = file => { }
+}
 // 配置说明
 const nextConfig = {
     // 编译文件的输出目录
@@ -62,6 +67,27 @@ const nextConfig = {
                 exclude: /mini-css-extract-plugin[^]*Conflicting order between:/,
             })
         )
+        config.plugins.push(
+            new AntDesignThemePlugin({
+                antDir: path.join(__dirname, './node_modules/antd'),//antd包位置
+                stylesDir: path.join(__dirname, './static/less/theme'),//指定皮肤文件夹
+                varFile: path.join(__dirname, './static/less/theme/variables.less'),//自己设置默认的主题色
+                indexFileName: './pages/_document.js',
+                mainLessFile: path.join(__dirname, './static/less/theme/index.less'),
+                outputFilePath: path.join(__dirname, './static/css/color.less'),//输出到什么地方
+                themeVariables: [//这里写要改变的主题变量
+                    '@primary-color',
+                    '@btn-primary-bg',
+                    '@text-color',
+                    '@secondary-color',
+                    '@text-color-secondary',
+                    '@heading-color',
+                    '@layout-body-background',
+                    '@layout-header-background'
+                ],
+                generateOnce: false
+            })
+        )
         return config
     },
     // （重要配置）修改webpackDevMiddleware配置
@@ -85,17 +111,9 @@ const nextConfig = {
     // 上面这两个配置在组件里使用方式如下：
     // import getCofnig from 'next/config'
     // const { serverRuntimeConfig,publicRuntimeConfig } = getCofnig()
-    // console.log( serverRuntimeConfig,publicRuntimeConfig )
+    // console.log(serverRuntimeConfig, publicRuntimeConfig)
     router: {
         middleware: 'headers'
-    }
-}
-
-if (typeof require !== 'undefined') {
-    require.extensions['.css'] = file => { }
-}
-if (typeof require !== 'undefined') {
-    require.extensions['.less'] = file => {
     }
 }
 module.exports = WithLess(

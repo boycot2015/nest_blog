@@ -78,12 +78,12 @@ const columns = (props) => {
             width: 150,
             rowKey: record => record.dataIndex,
             render: (text, record) => (
-                <span>
-                    <a style={{ marginRight: 16 }} href={`/user/view?id=${record.id}`}>查看</a>
+                <div>
+                    <a style={{ marginRight: 16 }} onClick={() => Router.push(`/user/view?id=${record.id}`)}>查看</a>
                     {userinfo.administrator && userinfo.id !== record.id && <a style={{ marginRight: 16 }} onClick={() => props.handleChangeStatus(record)}>{record.status && record.status === 1002 ? '启用' : '禁用'}</a>}
-                    {userinfo.administrator && <a style={{ marginRight: 16 }} href={`/user/edit?id=${record.id}`}>编辑</a>}
+                    {userinfo.administrator && <a style={{ marginRight: 16 }} onClick={() => Router.push(`/user/edit?id=${record.id}`)}>编辑</a>}
                     {userinfo.administrator && userinfo.id !== record.id && <a style={{ marginRight: 16 }} onClick={() => props.handleDelete(record)}>删除</a>}
-                </span>
+                </div>
             ),
         },
     ];
