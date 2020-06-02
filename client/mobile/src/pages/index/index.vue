@@ -10,6 +10,7 @@
 		 :duration="duration">
 			<swiper-item
 			v-for="item in bannerlist"
+			@click="handleBannerClick(item)"
 			:key="item.index">
 				<view class="swiper-item">
 					<image :src="item.url" mode=""></image>
@@ -130,8 +131,11 @@
             },
             handleView (item) {
                 this.$router.push('/pages/article/view?id='+ item.id)
-            }
-        },
+            },
+			handleBannerClick (item) {
+				window.location.href = item.link
+			}
+        }
     }
 </script>
 
