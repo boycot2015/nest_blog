@@ -1,16 +1,6 @@
 import React, { Fragment } from 'react';
 import {
-    red,
-    volcano,
-    gold,
     yellow,
-    lime,
-    green,
-    cyan,
-    blue,
-    geekblue,
-    purple,
-    magenta,
     grey
 } from '@ant-design/colors';
 import { ColorPicker } from '@/components/ColorPicker';
@@ -123,7 +113,7 @@ const BannerOptionsForm = ({ visible, initProps, onSubmit, handleUpload, onCance
 
 // 主题颜色配置弹框
 const ThemeForm = ({ visible, onSubmit, onCancel, handleColorChange, handleBgColorChange, initProps }) => {
-    const { showNight = 0, background = '#fff', color = yellow.primary } = initProps
+    const { showNight = 0, background = grey.primary, color = yellow.primary } = initProps
     // console.log(initProps, 'props')
     const [form] = Form.useForm();
     setTimeout(() => {
@@ -164,7 +154,7 @@ const ThemeForm = ({ visible, onSubmit, onCancel, handleColorChange, handleBgCol
                 initialValues={{ showNight: false }}
             >
                 <Form.Item
-                    name="color"
+                    // name="color"
                     label="主题颜色"
                     rules={[
                         {
@@ -176,7 +166,9 @@ const ThemeForm = ({ visible, onSubmit, onCancel, handleColorChange, handleBgCol
                     <Input placeholder="请输入标题名称" hidden />
                     <ColorPicker color={color} onChange={handleColorChange} />
                 </Form.Item>
-                <Form.Item name="background" label="背景颜色">
+                <Form.Item
+                    // name="background"
+                    label="背景颜色">
                     <Input placeholder="请输入标题名称" hidden />
                     <ColorPicker color={background} onChange={handleBgColorChange} />
                 </Form.Item>
@@ -213,6 +205,7 @@ class Setting extends React.Component {
                 data.siteConfig = res.data[0][0].siteConfig !== null ? JSON.parse(res.data[0][0].siteConfig) : {}
                 data.theme = res.data[0][0].theme !== null ? JSON.parse(res.data[0][0].theme) : {}
                 data.id = res.data[0][0].id
+                selectedTheme = data.theme
             }
             return {
                 data
@@ -236,7 +229,7 @@ class Setting extends React.Component {
 
     // 上传/修改轮播图
     handleUpload (option) {
-        if (this.state.data.banner.length >= 5) {
+        if (this.state.data.banner.length >= 5 && !selectedBanner.url) {
             message.error('最多可上传5张图片')
             return true
         }
@@ -340,7 +333,7 @@ class Setting extends React.Component {
             showThemeModal: false,
             data: {
                 ...this.state.data,
-                theme: { ...values, ...selectedTheme }
+                theme: { ...this.props.data.theme, ...values, ...selectedTheme }
             }
         })
         const { theme } = this.state.data
@@ -356,7 +349,7 @@ class Setting extends React.Component {
             .catch(error => {
                 console.log(error);
             })
-        console.log(theme.background, 'themebackground')
+        // console.log(this.state.data.theme, this.props.data.theme, 'themebackground')
     }
     //主题弹框关闭
     onThemeDialogClose () {

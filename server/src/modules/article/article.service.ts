@@ -58,7 +58,7 @@ export class ArticleService {
      */
     async getAll() {
         let queryBy = this.articleRepository.createQueryBuilder('article')
-        queryBy = queryBy
+        queryBy = queryBy.leftJoinAndSelect('article.comment', 'comment')
             .orderBy('article.updateTime', 'ASC')
         // 获取结果及(非分页的)查询结果总数
         // 或使用 .getMany() 不会返回总数

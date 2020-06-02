@@ -22,7 +22,7 @@ class Home extends React.Component {
         //通过process的browser属性判断处于何种环境：Node环境下为false,浏览器为true
         // 发送服务器请求
         const res = await $api.home.datas()
-        console.log(res, 'res.data')
+        // console.log(res, 'res.data')
         if (res && res.success) {
             return {
                 loading: true,

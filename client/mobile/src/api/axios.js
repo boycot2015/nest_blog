@@ -1,7 +1,8 @@
 import {
     baseUrl, //引入baseUrl
 } from './baseUrl';
-import axios from 'axios';
+// import axios from 'axios';
+import axios from '@/js_sdk/gangdiedao-uni-axios'
 import qs from 'qs';
 import Cookies from 'js-cookie';
 // 创建 axios 实例
@@ -62,7 +63,7 @@ service.interceptors.response.use(
 			info = data
             // 此处整理错误信息格式
         }
-		console.log(error, 'adat')
+		console.log(error, 'data')
         return info
     }
 )

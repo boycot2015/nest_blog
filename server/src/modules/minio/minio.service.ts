@@ -23,7 +23,8 @@ export class MinioService {
     initial() {
         this.minioClient = new Minio.Client({
             ...this.options,
-            endPoint: '127.0.0.1',
+            endPoint: '192.168.1.175',
+            // endPoint: '192.168.0.111',
             port: 9000,
             useSSL: false,
             accessKey: 'minioadmin',

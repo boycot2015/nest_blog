@@ -2,6 +2,10 @@ import Vue from 'vue'
 import App from './App'
 import uView from "uview-ui";
 import api from "./api";
+import * as filters from "./api";
+Object.keys(filters).forEach(key => {
+  Vue.filter(key, filters[key])
+})
 Vue.use(uView);
 Vue.use(api)
 Vue.config.productionTip = false

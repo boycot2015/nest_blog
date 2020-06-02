@@ -1,7 +1,7 @@
 import App from 'next/app'
-import 'antd/dist/antd.css'
+// import 'antd/dist/antd.css'
 import Layout from '@/layouts';
-import axios from '@/api/axios'
+// import axios from '@/api/axios'
 import SetHeaderCookie from '@/middleware/header'
 import $api from '@/api/apiList'
 import routes from '@/config/router'
@@ -45,13 +45,10 @@ class AntApp extends App {
                 '@layout-header-background': themeColor.background,
             }
             // if (themeColor.showNight) {
-            //     options = {
-            //         ...options,
-            //         ...getThemeVariables({
-            //             dark: themeColor.showNight, // 开启暗黑模式
-            //             compact: true, // 开启紧凑模式
-            //         })
-            //     }
+            //     options = getThemeVariables({
+            //         dark: themeColor.showNight, // 开启暗黑模式
+            //         compact: true, // 开启紧凑模式
+            //     })
             // }
             process.browser && window.less.modifyVars(options).then(() => {
                 console.log(themeColor, 'success')
