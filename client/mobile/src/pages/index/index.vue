@@ -25,10 +25,11 @@
         :thumb="item.thumb">
             <view class="u-text-left" slot="body">
                 <view
-                    v-for="val in homeData.newLeast"
+                    v-for="(val, index) in homeData.newLeast"
                     :key="val.id"
                     @click="handleView(val)"
-                    class="u-body-item u-flex u-border-bottom u-col-between u-p-t-0"
+					:class="{'u-p-t-0': index === 0 }"
+                    class="u-body-item u-flex u-border-bottom u-col-between"
                 >
                     <view class="u-body-item-title u-flex-1 u-text-left u-line-2" v-html="val.title"></view>
                     <image src="https://img11.360buyimg.com/n7/jfs/t1/94448/29/2734/524808/5dd4cc16E990dfb6b/59c256f85a8c3757.jpg" mode="aspectFill" />
@@ -52,17 +53,17 @@
     }
 
     .u-body-item {
-        font-size: 32rpx;
+        font-size: 32upx;
         color: #333;
-        padding: 20rpx 10rpx;
+        padding: 20upx 0;
     }
         
     .u-body-item image {
-        width: 120rpx;
-        flex: 0 0 120rpx;
-        height: 120rpx;
-        border-radius: 8rpx;
-        margin-left: 12rpx;
+        width: 120upx;
+        flex: 0 0 120upx;
+        height: 120upx;
+        border-radius: 8upx;
+        margin-left: 12upx;
     }
 </style>
 <script>
@@ -130,29 +131,17 @@
                 !path.includes('http') && this.$router.push(path)
             },
             handleView (item) {
-                this.$router.push('/pages/article/view?id='+ item.id)
+				uni.navigateTo({
+					url: '/pages/article/view?id='+ item.id
+				})
             },
 			handleBannerClick (item) {
-				window.location.href = item.link
+				// debugger
+				uni.navigateTo({
+					url: '/pages/webview?url='+ item.link
+				})
+				// this.$router.push('/pages/webview?url='+ item.link)
 			}
         }
     }
 </script>
-
-<style>
-    .content {
-        text-align: center;
-        height: 400upx;
-    }
-
-    .logo {
-        height: 200upx;
-        width: 200upx;
-        margin-top: 200upx;
-    }
-
-    .title {
-        font-size: 36upx;
-        color: #8f8f94;
-    }
-</style>
