@@ -32,7 +32,7 @@
         },{
             "path" : "pages/webview",
             "style" : {
-				"navigationBarTitleText": ""
+				"navigationBarTitleText": "web-view"
 			}
         }
     ],

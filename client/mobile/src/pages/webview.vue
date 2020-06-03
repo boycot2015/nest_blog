@@ -1,6 +1,6 @@
 <template>
-	<!-- <web-view :src="link"></web-view> -->
-	<web-view src="http://192.168.1.175:2020/"></web-view>
+	<web-view :src="link"></web-view>
+	<!-- <web-view src="http://192.168.1.175:2020/"></web-view> -->
 </template>
 
 <script>
