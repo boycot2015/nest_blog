@@ -19,10 +19,8 @@
 		</swiper>
         <u-card
         :title="'最新发布'"
-        :sub-title="item.updateTime | timeFilter"
-        v-for="item in [homeData.newLeast[0]]"
-        :key="item.id"
-        :thumb="item.thumb">
+        :sub-title="homeData.newLeast[0] && homeData.newLeast[0].updateTime"
+		>
             <view class="u-text-left" slot="body">
                 <view
                     v-for="(val, index) in homeData.newLeast"
@@ -35,7 +33,7 @@
                     <image src="https://img11.360buyimg.com/n7/jfs/t1/94448/29/2734/524808/5dd4cc16E990dfb6b/59c256f85a8c3757.jpg" mode="aspectFill" />
                 </view>
             </view>
-            <view class="" slot="foot"><u-icon name="chat-fill" size="34" color="" :label="item.comment.length + '评论'"></u-icon></view>
+            <view class="" slot="foot"><u-icon name="chat-fill" size="34" color="" :label="homeData.newLeast[0] && homeData.newLeast[0].comment.length + '评论'"></u-icon></view>
         </u-card>
     </view>
 </template>
