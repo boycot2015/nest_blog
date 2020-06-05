@@ -3,10 +3,12 @@
 		<view class="title">
 			{{viewData.title}}
 		</view>
-		<view class="main u-flex u-border-bottom u-col-between">
-			<!-- <view class="desc" v-html="viewData.content"></view> -->
-			 <rich-text :nodes="viewData.content"></rich-text>
-			<!-- <web-view v-html="viewData.content"></web-view> -->
+		<view class="main u-flex u-flex-col u-border-bottom u-col-between">
+			<view class="desc" v-if="viewData.content" v-html="$options.filters.formatRichText(viewData.content)"></view>
+			<view class="comment u-flex u-flex-col">
+				<view class="comment-title u-text-left">评论</view>
+				<view v-for="item in viewData.comment" :key="item.id"></view>
+			</view>
 		</view>
 	</view>
 </template>
@@ -45,7 +47,11 @@
 			width: 100%;
 			overflow: hidden;
 			line-height: 32upx;
-			margin: 20upx 30upx;
+			margin: 20upx 0;
+			padding: 0 30upx;
+		}
+		.comment {
+			width: 100%;
 		}
 	}
 }

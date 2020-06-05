@@ -119,11 +119,39 @@ const realFormatSecond = (second) => {
     }
 }
 
+/**
+ * 处理富文本里的图片宽度自适应
+ * 1.去掉img标签里的style、width、height属性
+ * 2.img标签添加style属性：max-width:100%;height:auto
+ * 3.修改所有style里的width属性为max-width:100%
+ * 4.去掉<br/>标签
+ * @param html
+ * @returns {void|string|*}
+ */
+const formatRichText = (html) => { //控制小程序中图片大小
+	let newContent= html.replace(/<img[^>]*>/gi,function(match,capture){
+		match = match.replace(/style="[^"]+"/gi, '').replace(/style='[^']+'/gi, '');
+		match = match.replace(/width="[^"]+"/gi, '').replace(/width='[^']+'/gi, '');
+		match = match.replace(/height="[^"]+"/gi, '').replace(/height='[^']+'/gi, '');
+		return match;
+	});
+	newContent = newContent.replace(/style="[^"]+"/gi,function(match,capture){
+		match = match.replace(/width:[^;]+;/gi, 'max-width:100%;').replace(/width:[^;]+;/gi, 'max-width:100%;');
+		return match;
+	});
+	newContent = newContent.replace(/<br[^>]*\/>/gi, '');
+	newContent = newContent.replace(/<p><\/p>/gi,'');
+	// code换行
+	newContent = newContent.replace(/\<pre/gi, '<pre style="white-space: pre-wrap;word-wrap: break-word;background: #e8e8e8;padding: 10px;margin-top: 10px;border-radius: 5px;"');
+	newContent = newContent.replace(/\<img/gi, '<img style="max-width:100%;height:auto;display:inline-block;margin:5rpx auto;vertical-align: middle;"');
+	return newContent;
+}
 export default {
     timeFilter, // 格式化时间戳（秒|毫秒）
     formatPhone, // 手机号格式化
     formatBank, // 4位一空格（格式化银行卡）
     toThousands, // 千分位格式化
     formatFloat, // 格式化小数位
-    realFormatSecond // 格式化时长
+    realFormatSecond, // 格式化时长
+	formatRichText // 格式化富文本
 }

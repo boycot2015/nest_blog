@@ -18,8 +18,9 @@
 			</swiper-item>
 		</swiper>
         <u-card
+		v-if="homeData.newLeast.length"
         :title="'最新发布'"
-        :sub-title="homeData.newLeast[0] && homeData.newLeast[0].updateTime"
+        :sub-title="new Date(homeData.newLeast[0].updateTime).getTime()|timeFilter"
 		>
             <view class="u-text-left" slot="body">
                 <view

@@ -2,7 +2,7 @@ import Vue from 'vue'
 import App from './App'
 import uView from "uview-ui";
 import api from "./api";
-import * as filters from "./api";
+import filters from "./filters";
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
 })
