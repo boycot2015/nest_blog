@@ -34,7 +34,7 @@
                     <image src="https://img11.360buyimg.com/n7/jfs/t1/94448/29/2734/524808/5dd4cc16E990dfb6b/59c256f85a8c3757.jpg" mode="aspectFill" />
                 </view>
             </view>
-            <view class="" slot="foot"><u-icon name="chat-fill" size="34" color="" :label="homeData.newLeast[0] && homeData.newLeast[0].comment.length + '评论'"></u-icon></view>
+            <view class="" slot="foot"><u-icon name="chat-fill" size="34" color="" :label="homeData.newLeast[0] && getCommentNum(homeData.newLeast[0].comment) + '评论'"></u-icon></view>
         </u-card>
     </view>
 </template>
@@ -66,6 +66,7 @@
     }
 </style>
 <script>
+	import { getCommentNum } from '@/utils'
     export default {
         data() {
             return {
@@ -87,6 +88,7 @@
                 homeData: {
                     newLeast: []
                 },
+				getCommentNum,
 				indicatorDots: true,
 				autoplay: true,
 				interval: 2000,

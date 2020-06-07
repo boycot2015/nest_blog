@@ -8,6 +8,7 @@ export default class MyDocument extends Document {
         return (
             <html>
                 <Head>
+                    <meta name="referrer" content="no-referrer" />
                     <style>{`body { margin: 0 } /* custom! */`}</style>
                     {/* <script src="http://fw.qq.com/ipaddress"></script> */}
                     {/* <script src="http://pv.sohu.com/cityjson?ie=utf-8"></script> */}

@@ -80,7 +80,12 @@ export class CommentService {
             }
             const commenter = await this.commentRepository.findOne({ 'name': comment.name, 'email': comment.email })
             insertCommentData.avatar = commenter && commenter.avatar ? commenter.avatar : colors[Math.floor(Math.random() * (colors.length - 1))]
-
+            if (comment.parentId) {
+                let parentCommenter = { name: '', content: '' }
+                comment.parentId && (parentCommenter = await this.commentRepository.findOne({ id: comment.parentId }))
+                insertCommentData.parentName = parentCommenter.name
+                insertCommentData.parentContent = parentCommenter.content
+            }
             const article = await this.articleService.getById(comment.articleId)
             const newcCommentData = await this.commentRepository.create({
                 ...insertCommentData,

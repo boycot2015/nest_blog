@@ -23,8 +23,8 @@ export class MinioService {
     initial() {
         this.minioClient = new Minio.Client({
             ...this.options,
-            endPoint: '192.168.1.175',
-            // endPoint: '192.168.0.111',
+            // endPoint: '192.168.1.175',
+            endPoint: '192.168.0.111',
             port: 9000,
             useSSL: false,
             accessKey: 'minioadmin',
@@ -97,7 +97,7 @@ export class MinioService {
             throw new HttpException(e.message, 500);
         }
     }
-    async removeObject (fileName, type = 'image/jpeg', BucketName = 'blog') {
+    async removeObject(fileName, type = 'image/jpeg', BucketName = 'blog') {
         try {
             await this.minioClient.removeObject(BucketName, fileName);
             return responseStatus.success.message
