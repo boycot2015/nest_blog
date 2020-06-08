@@ -141,7 +141,7 @@ const formatRichText = (html) => { //控制小程序中图片大小
 	});
 	// newContent = newContent.replace(/<br[^>]*\/>/gi, '');
 	newContent = newContent.replace(/<p><\/p>/gi,'');
-	newContent = newContent.replace(/\<p style=/gi,'<p style="text-align:start;text-indent:2em;margin-bottom: 10px;"');
+	newContent = newContent.replace(/\<p style=/gi,'<p style="text-align:start;text-indent:2em;margin: 5px; 0"');
 	// code换行
 	newContent = newContent.replace(/\<pre/gi, '<pre style="white-space: pre-wrap;word-wrap: break-word;background: #e8e8e8;padding: 10px;margin-top: 10px;border-radius: 5px;"');
 	newContent = newContent.replace(/\<img/gi, '<img referrer="never" style="max-width:100%;height:auto;display:inline-block;margin:5rpx auto;vertical-align: middle;"');

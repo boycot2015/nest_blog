@@ -13,12 +13,15 @@
 				</view>
 			</view>
 		</view>
-		<min-action-sheet ref="commentSheet">
+		<min-action-sheet ref="commentSheet" @on-close="resetCommentForm()">
 			<view class="pop-header" slot="header">
 				<text v-if="popData.num">{{popData.num}}条回复</text>
 				<text v-else>暂无回复</text>
 			</view>
-			<view class="pop-content" slot="main">
+			<view class="pop-content" slot="main"
+			:style="{
+				marginBottom: showCommentForm ? '100upx' : ''
+			}">
 				<view class="pdlr30">
 					<view class="user-info u-flex u-flex-row u-col-between" v-if="popData.name">
 						<view class="avatar" :style="{backgroundColor: popData.avatar}">{{popData.name.toUpperCase().slice(0,1)}}</view>
@@ -61,22 +64,67 @@
 					</view>
 				</view>
 			</view>
-			<view class="comment-form u-flex u-border-top pdlr30 u-flex-row" slot="bottom">
-				<view class="left u-flex-3 u-flex" :class="showCommentForm?'u-flex-col is-edit':'u-flex-row'">
-					<uni-icons class="edit-icon" color="#999999" type="compose" size="20"></uni-icons>
-					<input @focus="onShowCommentForm()" v-if="!showCommentForm" class="content" :type="'textarea'" placeholder="写评论..."/>
-					<textarea @focus="onShowCommentForm()" ref="textearaDom" v-else class="content" :type="showCommentForm?'textarea':'text'" @input="onContentInput" :value="commentForm.content" placeholder="写评论..."/>
-					<view class="u-flex u-flex-row">
-						<input v-if="showCommentForm" style="margin-right: 10upx" :type="'text'" @input="onNameInput" :value="commentForm.name" placeholder="用户名"/>
-						<input v-if="showCommentForm" :type="'email'" @input="onEmailInput" :value="commentForm.email" placeholder="邮箱"/>
+			<view
+			class="comment-form u-flex u-border-top pdlr30 u-flex-row"
+			v-if="!showCommentForm"
+			slot="bottom">
+					<view class="u-flex-3 u-flex u-flex-row">
+						<uni-icons class="edit-icon" color="#999999" type="compose" size="20"></uni-icons>
+						<input
+						@focus="onShowCommentForm()"
+						class="content" :type="'textarea'"
+						placeholder-class="comment-class"
+						placeholder="写评论..."
+						/>
 					</view>
-				</view>
-				<view class="right u-flex-1 u-flex u-flex-row">
-					<view v-if="showCommentForm" @click="onCommentSubmit" class="u-flex-1 u-text-center">发布</view>
-					<template v-else>
+					<view class="u-flex-1 u-flex u-flex-row">
 						<uni-icons class="u-flex-1" type="hand-thumbsup" size="20"></uni-icons>
 						<uni-icons class="u-flex-1" type="redo" size="20"></uni-icons>
-					</template>
+					</view>
+			</view>
+			<view class="comment-mask" slot="bottom" @click.prevent.stop="showCommentForm = false" v-else>
+				<view class="comment-form u-flex u-border-top  u-flex-col is-edit fixed" @click.stop >
+					<view class="u-flex u-flex-row pdlr30 u-border-bottom">
+						<textarea
+						@focus="onShowCommentForm()"
+						placeholder-class="comment-class"
+						ref="textearaDom"
+						class="content u-flex-3 u-align-left"
+						@input="onContentInput"
+						:value="commentForm.content"
+						:placeholder="contentPlaceholder" />
+						<button @click="onCommentSubmit" :disabled="!canSubmit" class="u-flex-1 u-text-center submit-btn" type="default">发布</button>
+						<!-- <view @click="onCommentSubmit" class="u-flex-1 u-text-center">发布</view> -->
+					</view>
+					<view class="u-flex u-flex-row pdlr30">
+						<input style="margin-right: 10upx"
+						placeholder-class="comment-class"
+						@focus="onShowCommentForm()"
+						:type="'text'"
+						class="u-flex-2"
+						@input="onNameInput"
+						:value="commentForm.name"
+						placeholder="用户名"
+						/>
+						<input :type="'email'"
+						@focus="onShowCommentForm()"
+						placeholder-class="comment-class"
+						@input="onEmailInput"
+						class="u-flex-2"
+						:value="commentForm.email"
+						placeholder="邮箱" />
+						<text class="comment-slider-emoji-icon  u-flex-1" @tap="isShowEmj = !isShowEmj" >{{ emojiArr[0][0] }}</text>
+						<!-- <uni-icons class="emjo-icon u-flex-1" color="#999999" @tap="isShowEmj = !isShowEmj" type="heart" size="20"></uni-icons> -->
+						<uni-icons class="pic-icon u-flex-1" color="#999999" type="images" size="20"></uni-icons>
+					</view>
+					<swiper class="comment-slider" indicator-dots :current="0" v-if="isShowEmj">
+					    <swiper-item v-for="(item, key) in emojiArr" :key="key" class="comment-slider-emoji u-flex" :class="[key==emojiArr.length-1?'lastbox':'']">
+					        <text v-for="(emoji, index) in item" :key="index" @click="selemoji(emoji)" class="comment-slider-emoji-icon  u-flex-1">{{ emoji }}</text>
+							<view class="remove-btn comment-slider-emoji-icon u-flex-1">
+								<uni-icons class="del-icon u-flex-1" color="#ccc" type="closeempty" size="24"></uni-icons>
+							</view>
+					    </swiper-item>
+					</swiper>
 				</view>
 				<uni-popup ref="popup" type="message">
 				    <uni-popup-message type="error" message="请填写必要信息" :duration="2000"></uni-popup-message>
@@ -92,7 +140,7 @@
 	import uniIcons from "@/components/uni-icons/uni-icons.vue"
 	import uniPopup from '@/components/uni-popup/uni-popup.vue'
 	import uniPopupMessage from '@/components/uni-popup/uni-popup-message.vue'
-	// import uniPopupDialog from '@/components/uni-popup/uni-popup-dialog.vue'
+	import emoji from '@/components/m-emoji/emoji.js'
 	export default {
 		components: {
 			CommentTree,
@@ -111,13 +159,27 @@
 					articleId: '',
 					content: '',
 					email: ''
-				}
+				},
+				contentPlaceholder: '优质的评论将会优先展示',
+				isShowEmj: false,
+				emojiArr: [],
+				canSubmit: false
 			}
 		},
 		computed: {
 		},
 		onLoad(query) {
 			this.init(query)
+		},
+		watch: {
+			showCommentForm (val) {
+				if (!val) {
+					this.resetCommentForm()
+				}
+			},
+			'$refs.commentSheet.show' (val) {
+				!val && this.resetCommentForm()
+			}
 		},
 		methods: {
 			async init (query) {
@@ -126,17 +188,46 @@
 					this.viewData = res.data
 					this.commentForm.articleId = res.data.id
 				}
+				let page = Math.ceil(emoji.length/21)
+				for (let i = 0; i < page - 30; i++) {
+					this.emojiArr[i] = [];
+					for (let k = 0; k < 20; k++) {
+						emoji[i*21+k]?this.emojiArr[i].push(
+						emoji[i*21+k]
+						):''
+					}
+				}
 			},
 			onCommentClick (item) {
-				 this.$refs.commentSheet.handleShow({})
+				this.$refs.commentSheet.handleShow({
+					success: (res) => {
+						switch (res.id) {
+							// -1代表取消按钮
+							case -1:
+							   console.log(res)
+							   break
+							// 代表异步按钮
+							case 0:
+							   setTimeout(() => {
+								 // 异步特有
+								 // 注意：loading必须为数字0
+								 res.handleHide()
+							   }, 3000)
+							   console.log(res)
+							break
+						}
+					}
+				 })
 				this.popData = item
 			},
 			onShowCommentForm (item) {
 				// this.showCommentForm = false
+				this.isShowEmj = false
 				if (item) {
 					// this.commentForm = item
 					this.showCommentForm = !this.showCommentForm
 					this.commentForm.parentId = item.id
+					this.contentPlaceholder = `回复 ${item.name}: `
 				} else {
 					this.showCommentForm = true
 				}
@@ -155,14 +246,26 @@
 				console.log(this.commentForm, 'this.commentForm')
 				if (!this.commentForm.content || !this.commentForm.name || !this.commentForm.email) {
 					this.$refs.popup.open()
+					canSubmit = false
 					return
 				}
+				canSubmit = true
 				console.log(this.commentForm, 'this.commentForm')
 				this.$api.comment.add({ ...this.commentForm }).then(res => {
 					if (res && res.success) {
 						this.showCommentForm = false
 					}
 				}).catch(() => {})
+			},
+			selemoji () {
+				
+			},
+			resetCommentForm () {
+				this.isShowEmj = false
+				this.showCommentForm = false
+				this.commentForm = {}
+				this.contentPlaceholder = '优质的评论将会优先展示'
+				this.commentForm.parentId = this.popData.id
 			}
 		}
 	}
@@ -243,41 +346,95 @@
 		}
 	}
 	.comment-form {
-		.left {
-			position: relative;
-			.edit-icon {
-				position: absolute;
-				left: 30upx;
-				top: 5upx;
-				color: $c-999;
+		.comment-class {
+			color: $c-999;
+		}
+		.edit-icon {
+			position: absolute;
+			left: 60upx;
+			top: 28upx;
+			color: $c-999;
+		}
+		uni-input, uni-textarea {
+			border: 1px solid $c-e8;
+			border-radius: 60upx;
+			font-size: 28upx;
+			padding: 10upx 30upx 5px 80upx;
+			background-color: $c-e8;
+		}
+		uni-input.content {
+			width: 400upx;
+		}
+		uni-textarea.content {
+			padding-left: 20upx;
+			border-radius: 10upx;
+			width: 560upx;
+			height: 100upx;
+		}
+		&.is-edit {
+			uni-input {
+				padding-left: 30upx;
+				margin-bottom: 0;
 			}
-			uni-input, uni-textarea {
-				border: 1px solid $c-e8;
-				border-radius: 60upx;
-				font-size: 20upx;
-				padding: 10upx 30upx 5px 80upx;
-			}
-			uni-input.content {
-				width: 400upx;
-			}
-			&.is-edit {
-				.edit-icon {
-					display: none;
-				}
-				uni-textarea.content {
-					padding-left: 20upx;
-					border-radius: 5upx;
-					width: 500upx;
-					height: 100upx;
-					margin-bottom: 10upx;
-				}
-				uni-input {
-					padding-left: 30upx;
-					margin-bottom: 0;
-				}
+		}
+		&.fixed {
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			background-color: $c-fff;
+			width: 100%;
+		}
+		.submit-btn {
+			font-size: 32upx;
+			color: $c-333;
+			background-color: $c-fff;
+			&:after {
+				border: 0;
+				background-color: transparent;
 			}
 		}
 	}
+	.comment-mask {
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		// background: rgba(0,0,0,0.2);
+		background: transparent;
+		height: 100%;
+		.comment-form {
+			transition: height 0.5s;
+		}
+	}
+}
+.comment-slider {
+    width: 100%;
+    height: 300upx;
+	background-color: $c-f8;
+	/deep/.uni-swiper-slides {
+		bottom: 40upx;
+	}
+    &-emoji {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content:center;
+        &-icon {
+            flex: 1;
+			flex-basis: 14.2%;
+			font-size: 50upx;
+            text-align: center;
+            // padding: 30upx;
+        }
+		.remove-btn .del-icon {
+			border: 1px solid $c-ccc;
+			border-radius: 10upx;
+			overflow: hidden;
+		}
+    }
+}
+// <!-- 设置最后一列左靠齐 -->
+.lastbox{
+    justify-content: flex-start;
 }
 .comment {
 	width: 100%;
