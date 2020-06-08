@@ -14,7 +14,7 @@
 					</view>
 				</template>
 				<view class="bottom">
-					<text class="time" :style="{color: item.avatar, marginRight: '10upx'}">{{new Date(item.updateTime).getTime()|timeFilter}}&nbsp;·</text>
+					<text class="time">{{new Date(item.updateTime).getTime()|timeFilter}}&nbsp;·</text>
 					<text class="more-btn" v-if="item.children && item.children.length && !showMore">
 						{{getCommentNum(item.children)}}个回复
 					</text>
@@ -72,32 +72,34 @@
 	// padding: 20upx 30upx;
 	.user-info {
 		.avatar {
-			width: 70upx;
-			height: 70upx;
+			width: 68upx;
+			height: 68upx;
 			overflow: hidden;
-			border-radius: 70upx;
+			border-radius: 68upx;
 			color: $c-fff;
 			text-align: center;
-			line-height: 70upx;
+			line-height: 68upx;
 			margin-right: 10upx;
 			background-color: $c-ccc;
 		}
 	}
 	&-content {
-		margin-left: 70upx;
+		margin-left: 68upx;
 		margin-bottom: 10upx;
+		font-size: 28upx;
 	}
 	
 	.bottom {
-		margin-left: 70upx;
-		font-size: 22upx;
+		margin-left: 68upx;
+		font-size: 24upx;
 		.time {
-			font-size: 22upx;
+			font-size: 24upx;
+			margin-right: 10upx;
 		}
 		.more-btn {
 			background-color: $c-e8;
-			border-radius: 20upx;
-			font-size: 22upx;
+			border-radius: 30upx;
+			font-size: 24upx;
 			padding: 5upx 20upx;
 		}
 	}

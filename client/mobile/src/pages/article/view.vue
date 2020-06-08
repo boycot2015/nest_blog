@@ -4,6 +4,9 @@
 			{{viewData.title}}
 		</view>
 		<view class="main u-border-bottom">
+			<view class="public-time pdlr30">
+				<text>发布时间：{{new Date(viewData.createTime).getTime()|timeFilter}}</text>
+			</view>
 			<view class="desc" v-if="viewData.content" v-html="$options.filters.formatRichText(viewData.content)"></view>
 			<view class="comment">
 				<view class="comment-title u-text-left">评论</view>
@@ -55,7 +58,7 @@
 						class="pop-content-comment"
 						:key="item.parentId" v-if="popData.name">
 							<view class="pop-content-desc" v-html="item.content"></view>
-							<text class="time" :style="{color: item.avatar, marginRight: '10upx'}">{{new Date(item.updateTime).getTime()|timeFilter}}&nbsp;·</text>
+							<text class="time">{{new Date(item.updateTime).getTime()|timeFilter}}&nbsp;·</text>
 							<text class="repeat">回复</text>
 							<!-- <view class="pop-content-desc" v-html="popData.content"></view> -->
 						</view>
@@ -119,8 +122,8 @@
 					</view>
 					<swiper class="comment-slider" indicator-dots :current="0" v-if="isShowEmj">
 					    <swiper-item v-for="(item, key) in emojiArr" :key="key" class="comment-slider-emoji u-flex" :class="[key==emojiArr.length-1?'lastbox':'']">
-					        <text v-for="(emoji, index) in item" :key="index" @click="selemoji(emoji)" class="comment-slider-emoji-icon  u-flex-1">{{ emoji }}</text>
-							<view class="remove-btn comment-slider-emoji-icon u-flex-1">
+					        <text v-for="(emoji, index) in item" :key="index" @tap="selemoji(emoji)" class="comment-slider-emoji-icon  u-flex-1">{{ emoji }}</text>
+							<view class="remove-btn comment-slider-emoji-icon u-flex-1" @tap="onEmojiDelete">
 								<uni-icons class="del-icon u-flex-1" color="#ccc" type="closeempty" size="24"></uni-icons>
 							</view>
 					    </swiper-item>
@@ -163,6 +166,7 @@
 				contentPlaceholder: '优质的评论将会优先展示',
 				isShowEmj: false,
 				emojiArr: [],
+				selectEmoji: [],
 				canSubmit: false
 			}
 		},
@@ -235,21 +239,22 @@
 			},
 			onContentInput (e) {
 				this.commentForm.content = e.detail.value
+				e.detail.value && (this.canSubmit = true)
 			},
 			onNameInput (e) {
 				this.commentForm.name = e.detail.value
+				e.detail.value && (this.canSubmit = true)
 			},
 			onEmailInput (e) {
 				this.commentForm.email = e.detail.value
+				e.detail.value && (this.canSubmit = true)
 			},
 			onCommentSubmit () {
 				console.log(this.commentForm, 'this.commentForm')
 				if (!this.commentForm.content || !this.commentForm.name || !this.commentForm.email) {
 					this.$refs.popup.open()
-					canSubmit = false
 					return
 				}
-				canSubmit = true
 				console.log(this.commentForm, 'this.commentForm')
 				this.$api.comment.add({ ...this.commentForm }).then(res => {
 					if (res && res.success) {
@@ -257,15 +262,31 @@
 					}
 				}).catch(() => {})
 			},
-			selemoji () {
-				
+			selemoji (emoji) {
+				this.commentForm.content += emoji
+				this.selectEmoji.push(emoji)
 			},
 			resetCommentForm () {
 				this.isShowEmj = false
+				this.canSubmit = false
 				this.showCommentForm = false
-				this.commentForm = {}
+				this.commentForm = {
+					name: '',
+					articleId: '',
+					content: '',
+					email: ''
+				}
 				this.contentPlaceholder = '优质的评论将会优先展示'
 				this.commentForm.parentId = this.popData.id
+			},
+			onEmojiDelete () {
+				// debugger
+				let content = this.commentForm.content
+				let len = this.selectEmoji.length - 1
+				len && this.selectEmoji.pop(this.selectEmoji[len])
+				content = content.slice(0, content.indexOf(this.selectEmoji[len]))
+				this.commentForm.content = content
+				console.log(this.selectEmoji, content, 'content.indexOf(this.selectEmoji[0])')
 			}
 		}
 	}
@@ -274,10 +295,13 @@
 <style lang="scss">
 .view-content {
 	.title {
-		font-size: 36upx;
+		font-size: 40upx;
 		font-weight: 600;
 		padding: 20upx 30upx;
 		border-bottom: 1px solid $c-e8;
+	}
+	.public-time {
+		font-size: 32upx;
 	}
 	.main {
 		.desc {
@@ -286,8 +310,12 @@
 			min-height: 600upx;
 			overflow: hidden;
 			line-height: 32upx;
-			margin: 20upx 0;
 			padding: 0 30upx;
+			margin-bottom: 30upx;
+			/deep/ p {
+				line-height: 54upx;
+				font-size: 34upx;
+			}
 		}
 	}
 	.pop-content {
@@ -301,13 +329,13 @@
 		border-top-left-radius: 20upx;
 		.user-info {
 			.avatar {
-				width: 70upx;
-				height: 70upx;
+				width: 68upx;
+				height: 68upx;
 				overflow: hidden;
-				border-radius: 70upx;
+				border-radius: 68upx;
 				color: $c-fff;
 				text-align: center;
-				line-height: 70upx;
+				line-height: 68upx;
 				margin-right: 10upx;
 				background-color: $c-ccc;
 			}
@@ -322,8 +350,9 @@
 			}
 		}
 		&-desc {
-			margin-left: 70upx;
+			margin-left: 68upx;
 			margin-bottom: 10upx;
+			font-size: 28upx;
 		}
 		&-title {
 			border-bottom: 1px solid $c-e8;
@@ -336,10 +365,11 @@
 		}
 		.time {
 			margin-left: 70upx;
-			font-size: 22upx;
+			font-size: 24upx;
+			margin-right: 10upx;
 		}
 		.repeat {
-			font-size: 22upx;
+			font-size: 24upx;
 		}
 		.parent-name {
 			color: $primary;
@@ -386,7 +416,7 @@
 		}
 		.submit-btn {
 			font-size: 32upx;
-			color: $c-333;
+			// color: $c-333;
 			background-color: $c-fff;
 			&:after {
 				border: 0;
