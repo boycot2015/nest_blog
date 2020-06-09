@@ -15,6 +15,71 @@
 					</comment-tree>
 				</view>
 			</view>
+			<view
+			class="comment-form u-flex u-border-top pdlr30 u-flex-row"
+			v-if="!showCommentForm">
+					<view class="u-flex-3 u-flex u-flex-row">
+						<uni-icons class="edit-icon" color="#999999" type="compose" size="20"></uni-icons>
+						<input
+						@focus="onShowCommentForm()"
+						class="content" :type="'textarea'"
+						placeholder-class="comment-class"
+						placeholder="写评论..."
+						/>
+					</view>
+					<view class="u-flex-1 u-flex u-flex-row">
+						<uni-icons class="u-flex-1" type="hand-thumbsup" size="20"></uni-icons>
+						<uni-icons class="u-flex-1" type="redo" size="20"></uni-icons>
+					</view>
+			</view>
+			<view class="comment-mask" @click.prevent.stop="showCommentForm = false" v-else>
+				<view class="comment-form u-flex u-border-top  u-flex-col is-edit fixed" @click.stop >
+					<view class="u-flex u-flex-row pdlr30 u-border-bottom">
+						<textarea
+						@focus="onShowCommentForm()"
+						placeholder-class="comment-class"
+						ref="textearaDom"
+						class="content u-flex-3 u-align-left"
+						@input="onContentInput"
+						:value="commentForm.content"
+						:placeholder="contentPlaceholder" />
+						<button @click="onCommentSubmit" :disabled="!canSubmit" class="u-flex-1 u-text-center submit-btn" type="default">发布</button>
+						<!-- <view @click="onCommentSubmit" class="u-flex-1 u-text-center">发布</view> -->
+					</view>
+					<view class="u-flex u-flex-row pdlr30">
+						<input style="margin-right: 10upx"
+						placeholder-class="comment-class"
+						@focus="onShowCommentForm()"
+						:type="'text'"
+						class="u-flex-2"
+						@input="onNameInput"
+						:value="commentForm.name"
+						placeholder="用户名"
+						/>
+						<input :type="'email'"
+						@focus="onShowCommentForm()"
+						placeholder-class="comment-class"
+						@input="onEmailInput"
+						class="u-flex-2"
+						:value="commentForm.email"
+						placeholder="邮箱" />
+						<text class="comment-slider-emoji-icon  u-flex-1" @tap="isShowEmj = !isShowEmj" >{{ emojiArr[0][0] }}</text>
+						<!-- <uni-icons class="emjo-icon u-flex-1" color="#999999" @tap="isShowEmj = !isShowEmj" type="heart" size="20"></uni-icons> -->
+						<uni-icons class="pic-icon u-flex-1" color="#999999" type="images" size="20"></uni-icons>
+					</view>
+					<swiper class="comment-slider" indicator-dots :current="0" v-if="isShowEmj">
+					    <swiper-item v-for="(item, key) in emojiArr" :key="key" class="comment-slider-emoji u-flex" :class="[key==emojiArr.length-1?'lastbox':'']">
+					        <text v-for="(emoji, index) in item" :key="index" @tap="selemoji(emoji)" class="comment-slider-emoji-icon  u-flex-1">{{ emoji }}</text>
+							<view class="remove-btn comment-slider-emoji-icon u-flex-1" @tap="onEmojiDelete">
+								<uni-icons class="del-icon u-flex-1" color="#ccc" type="closeempty" size="24"></uni-icons>
+							</view>
+					    </swiper-item>
+					</swiper>
+				</view>
+				<uni-popup ref="popup" type="message">
+				    <uni-popup-message type="error" message="请填写必要信息" :duration="2000"></uni-popup-message>
+				</uni-popup>
+			</view>
 		</view>
 		<min-action-sheet ref="commentSheet" @on-close="resetCommentForm()">
 			<view class="pop-header" slot="header">
@@ -294,6 +359,7 @@
 
 <style lang="scss">
 .view-content {
+	margin-bottom: 100upx;
 	.title {
 		font-size: 40upx;
 		font-weight: 600;
@@ -376,6 +442,11 @@
 		}
 	}
 	.comment-form {
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		background-color: $c-fff;
+		width: 100%;
 		.comment-class {
 			color: $c-999;
 		}
@@ -406,13 +477,6 @@
 				padding-left: 30upx;
 				margin-bottom: 0;
 			}
-		}
-		&.fixed {
-			position: absolute;
-			bottom: 0;
-			left: 0;
-			background-color: $c-fff;
-			width: 100%;
 		}
 		.submit-btn {
 			font-size: 32upx;
