@@ -3,7 +3,7 @@
 		<view class="title">
 			{{viewData.title}}
 		</view>
-		<view class="main u-border-bottom">
+		<view class="main">
 			<view class="public-time pdlr30">
 				<text>发布时间：{{new Date(viewData.createTime).getTime()|timeFilter}}</text>
 			</view>
@@ -36,7 +36,7 @@
 				<view class="comment-form u-flex u-border-top  u-flex-col is-edit fixed" @click.stop >
 					<view class="u-flex u-flex-row pdlr30 u-border-bottom">
 						<textarea
-						@focus="onShowCommentForm()"
+						:focus="showCommentForm"
 						placeholder-class="comment-class"
 						ref="textearaDom"
 						class="content u-flex-3 u-align-left"
@@ -49,7 +49,6 @@
 					<view class="u-flex u-flex-row pdlr30">
 						<input style="margin-right: 10upx"
 						placeholder-class="comment-class"
-						@focus="onShowCommentForm()"
 						:type="'text'"
 						class="u-flex-2"
 						@input="onNameInput"
@@ -57,7 +56,6 @@
 						placeholder="用户名"
 						/>
 						<input :type="'email'"
-						@focus="onShowCommentForm()"
 						placeholder-class="comment-class"
 						@input="onEmailInput"
 						class="u-flex-2"
@@ -81,7 +79,7 @@
 				</uni-popup>
 			</view>
 		</view>
-		<min-action-sheet ref="commentSheet" @on-close="resetCommentForm()">
+		<min-action-sheet ref="commentSheet" @on-close="resetCommentForm">
 			<view class="pop-header" slot="header">
 				<text v-if="popData.num">{{popData.num}}条回复</text>
 				<text v-else>暂无回复</text>
@@ -154,7 +152,7 @@
 				<view class="comment-form u-flex u-border-top  u-flex-col is-edit fixed" @click.stop >
 					<view class="u-flex u-flex-row pdlr30 u-border-bottom">
 						<textarea
-						@focus="onShowCommentForm()"
+						:focus="showCommentForm"
 						placeholder-class="comment-class"
 						ref="textearaDom"
 						class="content u-flex-3 u-align-left"
@@ -167,7 +165,6 @@
 					<view class="u-flex u-flex-row pdlr30">
 						<input style="margin-right: 10upx"
 						placeholder-class="comment-class"
-						@focus="onShowCommentForm()"
 						:type="'text'"
 						class="u-flex-2"
 						@input="onNameInput"
@@ -175,7 +172,6 @@
 						placeholder="用户名"
 						/>
 						<input :type="'email'"
-						@focus="onShowCommentForm()"
 						placeholder-class="comment-class"
 						@input="onEmailInput"
 						class="u-flex-2"
@@ -245,10 +241,10 @@
 				if (!val) {
 					this.resetCommentForm()
 				}
-			},
-			'$refs.commentSheet.show' (val) {
-				!val && this.resetCommentForm()
 			}
+		},
+		onPullDownRefresh() {
+			this.init(this.$route.query)
 		},
 		methods: {
 			async init (query) {
@@ -257,6 +253,9 @@
 					this.viewData = res.data
 					this.commentForm.articleId = res.data.id
 				}
+				setTimeout(function() {
+					uni.stopPullDownRefresh()
+				}, 500)
 				let page = Math.ceil(emoji.length/21)
 				for (let i = 0; i < page - 30; i++) {
 					this.emojiArr[i] = [];
@@ -268,26 +267,10 @@
 				}
 			},
 			onCommentClick (item) {
-				this.$refs.commentSheet.handleShow({
-					success: (res) => {
-						switch (res.id) {
-							// -1代表取消按钮
-							case -1:
-							   console.log(res)
-							   break
-							// 代表异步按钮
-							case 0:
-							   setTimeout(() => {
-								 // 异步特有
-								 // 注意：loading必须为数字0
-								 res.handleHide()
-							   }, 3000)
-							   console.log(res)
-							break
-						}
-					}
-				 })
-				this.popData = item
+				let that = this
+				this.$refs.commentSheet.handleShow({}).then(res => {
+					this.popData = item
+				})
 			},
 			onShowCommentForm (item) {
 				// this.showCommentForm = false
@@ -299,8 +282,12 @@
 					this.contentPlaceholder = `回复 ${item.name}: `
 				} else {
 					this.showCommentForm = true
+					this.commentForm.parentId = this.popData.id
 				}
-				// console.log(this.commentForm, this.showCommentForm, 'this.showCommentForm')
+				this.$nextTick(function(){
+					this.$refs.textearaDom && this.$refs.textearaDom.$el.focus()
+					// console.log(this.commentForm.parentId, this.$refs.textearaDom.$el.focus(), 'this.showCommentForm')
+				})
 			},
 			onContentInput (e) {
 				this.commentForm.content = e.detail.value
@@ -324,6 +311,8 @@
 				this.$api.comment.add({ ...this.commentForm }).then(res => {
 					if (res && res.success) {
 						this.showCommentForm = false
+						this.$refs.commentSheet.handleHide()
+						this.init(this.$route.query)
 					}
 				}).catch(() => {})
 			},
@@ -331,18 +320,20 @@
 				this.commentForm.content += emoji
 				this.selectEmoji.push(emoji)
 			},
-			resetCommentForm () {
+			resetCommentForm (maskClose) {
 				this.isShowEmj = false
 				this.canSubmit = false
 				this.showCommentForm = false
 				this.commentForm = {
 					name: '',
-					articleId: '',
+					articleId: this.commentForm.articleId,
 					content: '',
-					email: ''
+					email: '',
+					parentId: maskClose ? '' : this.popData.id
 				}
+				maskClose && (this.popData = {})
 				this.contentPlaceholder = '优质的评论将会优先展示'
-				this.commentForm.parentId = this.popData.id
+				// console.log(this.commentForm, maskClose, 'this.showCommentForm')
 			},
 			onEmojiDelete () {
 				// debugger
@@ -359,7 +350,7 @@
 
 <style lang="scss">
 .view-content {
-	margin-bottom: 100upx;
+	padding-bottom: 100upx;
 	.title {
 		font-size: 40upx;
 		font-weight: 600;
@@ -390,7 +381,7 @@
 		overflow: hidden;
 		position: relative;
 		overflow-y: auto;
-		padding: 20upx 0;
+		padding: 20upx 0 100upx;
 		border-top-right-radius: 20upx;
 		border-top-left-radius: 20upx;
 		.user-info {

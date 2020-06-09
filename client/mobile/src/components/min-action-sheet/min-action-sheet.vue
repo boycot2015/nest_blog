@@ -41,16 +41,16 @@ export default {
   },
   methods: {
     handleShow ({showCancel = true, cancelText = '取消',
-      maskClose = true, actions = [], asID = 'as',showRadius = true,
-      success = () => {}}) {
+      maskClose = true, actions = [], asID = 'as',showRadius = true}) {
       this.show = true
       this.asID = asID
       this.showCancel = showCancel
       this.cancelText = cancelText
       this.maskClose = maskClose
       this.actions = actions
-      this.success = success
+      this.success = () => {}
 	  this.showRadius = showRadius
+	  return Promise.resolve(this)
     },
     handleHide () {
       this.show = false
@@ -61,6 +61,7 @@ export default {
       this.actions = []
       this.success = () => {}
       this.isClick = true
+	  this.$emit('on-close', this.maskClose)
     },
     handleMaskClick () {
       if (!this.isClick) return

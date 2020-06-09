@@ -98,6 +98,9 @@
         onLoad() {
             this.initData()
         },
+		onPullDownRefresh() {
+			this.initData()
+		},
         methods: {
             async initData() {
                 let [bannerRes, homeRes] = await Promise.all([await this.$api.setting.get(), await this.$api.home.datas()])
@@ -119,11 +122,14 @@
                     // console.log(bannerData.banner, homeRes.data, 'bannerData.banner')
                     this.bannerlist = bannerData.banner
                 }
-                if (homeRes && homeRes.success) {
+				if (homeRes && homeRes.success) {
                     this.homeData = homeRes.data
                 } else {
                     homeRes && this.$message.error(homeRes.message)
                 }
+				setTimeout(function() {
+					uni.stopPullDownRefresh()
+				}, 500);
             },
             handleSwipperClick (index) {
                 console.log(index, 'index')
@@ -137,7 +143,6 @@
 				})
             },
 			handleBannerClick (item) {
-				// debugger
 				uni.navigateTo({
 					url: '/pages/webview?url='+ item.link
 				})

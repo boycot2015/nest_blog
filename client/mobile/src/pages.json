@@ -3,25 +3,45 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "博客首页"
+				"navigationBarTitleText": "博客首页",
+				"enablePullDownRefresh": true,
+				"app-plus": {
+					"pullToRefresh": {
+						"support": true,
+						"color": "#ff3333",
+						"style": "default",
+						"contentdown": {
+							"caption": "下拉可刷新"
+						},
+						"contentover": {
+							"caption": "释放可刷新"
+						},
+						"contentrefresh": {
+							"caption": "正在刷新"
+						}
+					}
+				}
 			}
 		}
 	    ,{
             "path" : "pages/userCenter/userCenter",
             "style" : {
-				"navigationBarTitleText": "个人中心"
+				"navigationBarTitleText": "个人中心",
+				"enablePullDownRefresh": true
 			}
 		}
 		,{
             "path" : "pages/article/index",
             "style" : {
-				"navigationBarTitleText": "博客列表"
+				"navigationBarTitleText": "博客列表",
+				"enablePullDownRefresh": true
 			}
 		}
 		,{
             "path" : "pages/article/view",
             "style" : {
-				"navigationBarTitleText": "详情"
+				"navigationBarTitleText": "详情",
+				"enablePullDownRefresh": true
 			}
         }
         ,{

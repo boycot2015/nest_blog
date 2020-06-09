@@ -20,10 +20,10 @@ export class Comment {
     @Column({ type: 'text', default: null, select: true })
     parentId: string;
 
-    @Column({ type: 'text', default: null, select: true })
+    @Column({ type: 'text', charset: 'utf8mb4', default: null, select: true })
     parentName: string;
 
-    @Column({ type: 'text', default: null, select: true })
+    @Column({ type: 'text', charset: 'utf8mb4', default: null, select: true })
     parentContent: string;
 
     @Column({ type: 'text', charset: 'utf8mb4', default: null, select: true })
