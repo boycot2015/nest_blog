@@ -244,7 +244,7 @@
 			}
 		},
 		onPullDownRefresh() {
-			this.init(this.$route.query)
+			this.init(this.commentForm.articleId)
 		},
 		methods: {
 			async init (query) {
