@@ -37,9 +37,10 @@
 					<view class="u-flex u-flex-row pdlr30 u-border-bottom">
 						<textarea
 						:focus="showCommentForm"
+						@focus="isShowEmj = false"
 						placeholder-class="comment-class"
 						ref="textearaDom"
-						class="content u-flex-3 u-align-left"
+						class="content u-flex-7 u-align-left"
 						@input="onContentInput"
 						:value="commentForm.content"
 						:placeholder="contentPlaceholder" />
@@ -50,7 +51,7 @@
 						<input style="margin-right: 10upx"
 						placeholder-class="comment-class"
 						:type="'text'"
-						class="u-flex-2"
+						class="u-flex-8"
 						@input="onNameInput"
 						:value="commentForm.name"
 						placeholder="用户名"
@@ -58,12 +59,12 @@
 						<input :type="'email'"
 						placeholder-class="comment-class"
 						@input="onEmailInput"
-						class="u-flex-2"
+						class="u-flex-8"
 						:value="commentForm.email"
 						placeholder="邮箱" />
 						<text class="comment-slider-emoji-icon  u-flex-1" @tap="isShowEmj = !isShowEmj" >{{ emojiArr[0][0] }}</text>
 						<!-- <uni-icons class="emjo-icon u-flex-1" color="#999999" @tap="isShowEmj = !isShowEmj" type="heart" size="20"></uni-icons> -->
-						<uni-icons class="pic-icon u-flex-1" color="#999999" type="images" size="20"></uni-icons>
+						<!-- <uni-icons class="pic-icon u-flex-1" color="#999999" type="images" size="20"></uni-icons> -->
 					</view>
 					<swiper class="comment-slider" indicator-dots :current="0" v-if="isShowEmj">
 					    <swiper-item v-for="(item, key) in emojiArr" :key="key" class="comment-slider-emoji u-flex" :class="[key==emojiArr.length-1?'lastbox':'']">
@@ -80,11 +81,29 @@
 			</view>
 		</view>
 		<min-action-sheet ref="commentSheet" @on-close="resetCommentForm">
-			<view class="pop-header" slot="header">
-				<text v-if="popData.num">{{popData.num}}条回复</text>
-				<text v-else>暂无回复</text>
+			<view class="pop-header u-flex" slot="header">
+				<uni-icons type="closeempty" @tap="$refs.commentSheet && $refs.commentSheet.handleHide()" color="#666" size="20"></uni-icons>
+				<view class="u-flex-1" v-show="!isScroll">
+					<text v-if="popData.num">{{popData.num}}条回复</text>
+					<text v-else>暂无回复</text>
+				</view>
+				<view
+				v-show="isScroll"
+				style="padding-left: 20upx;"
+				class="user-info u-flex u-flex-row u-flex-1 u-col-between"
+				v-if="popData.name">
+					<view class="avatar" :style="{backgroundColor: popData.avatar}">{{popData.name.toUpperCase().slice(0,1)}}</view>
+					<view class="user-name u-flex-2 u-flex u-flex-row">
+						{{popData.name}}
+						<text class="icon-user">楼主</text>
+					</view>
+				</view>
 			</view>
-			<view class="pop-content" slot="main"
+			<scroll-view
+			scroll-y="true"
+			@scroll="onCommentScroll"
+			class="pop-content"
+			slot="main"
 			:style="{
 				marginBottom: showCommentForm ? '100upx' : ''
 			}">
@@ -129,7 +148,7 @@
 						</comment-tree>
 					</view>
 				</view>
-			</view>
+			</scroll-view>
 			<view
 			class="comment-form u-flex u-border-top pdlr30 u-flex-row"
 			v-if="!showCommentForm"
@@ -153,9 +172,10 @@
 					<view class="u-flex u-flex-row pdlr30 u-border-bottom">
 						<textarea
 						:focus="showCommentForm"
+						@focus="isShowEmj = false"
 						placeholder-class="comment-class"
 						ref="textearaDom"
-						class="content u-flex-3 u-align-left"
+						class="content u-flex-7 u-align-left"
 						@input="onContentInput"
 						:value="commentForm.content"
 						:placeholder="contentPlaceholder" />
@@ -166,7 +186,7 @@
 						<input style="margin-right: 10upx"
 						placeholder-class="comment-class"
 						:type="'text'"
-						class="u-flex-2"
+						class="u-flex-8"
 						@input="onNameInput"
 						:value="commentForm.name"
 						placeholder="用户名"
@@ -174,12 +194,12 @@
 						<input :type="'email'"
 						placeholder-class="comment-class"
 						@input="onEmailInput"
-						class="u-flex-2"
+						class="u-flex-8"
 						:value="commentForm.email"
 						placeholder="邮箱" />
-						<text class="comment-slider-emoji-icon  u-flex-1" @tap="isShowEmj = !isShowEmj" >{{ emojiArr[0][0] }}</text>
+						<text class="comment-slider-emoji-icon  u-flex-1" @tap="isShowEmj = !isShowEmj" >{{ emojiArr[0][2] }}</text>
 						<!-- <uni-icons class="emjo-icon u-flex-1" color="#999999" @tap="isShowEmj = !isShowEmj" type="heart" size="20"></uni-icons> -->
-						<uni-icons class="pic-icon u-flex-1" color="#999999" type="images" size="20"></uni-icons>
+						<!-- <uni-icons class="pic-icon u-flex-1" color="#999999" type="images" size="20"></uni-icons> -->
 					</view>
 					<swiper class="comment-slider" indicator-dots :current="0" v-if="isShowEmj">
 					    <swiper-item v-for="(item, key) in emojiArr" :key="key" class="comment-slider-emoji u-flex" :class="[key==emojiArr.length-1?'lastbox':'']">
@@ -228,7 +248,8 @@
 				isShowEmj: false,
 				emojiArr: [],
 				selectEmoji: [],
-				canSubmit: false
+				canSubmit: false,
+				isScroll: false // 是否滚动
 			}
 		},
 		computed: {
@@ -244,7 +265,7 @@
 			}
 		},
 		onPullDownRefresh() {
-			this.init(this.commentForm.articleId)
+			this.init(this.viewData)
 		},
 		methods: {
 			async init (query) {
@@ -257,7 +278,7 @@
 					uni.stopPullDownRefresh()
 				}, 500)
 				let page = Math.ceil(emoji.length/21)
-				for (let i = 0; i < page - 30; i++) {
+				for (let i = 0; i < page - 25; i++) {
 					this.emojiArr[i] = [];
 					for (let k = 0; k < 20; k++) {
 						emoji[i*21+k]?this.emojiArr[i].push(
@@ -343,6 +364,13 @@
 				content = content.slice(0, content.indexOf(this.selectEmoji[len]))
 				this.commentForm.content = content
 				console.log(this.selectEmoji, content, 'content.indexOf(this.selectEmoji[0])')
+			},
+			onCommentScroll (event) {
+				if (event.detail.scrollTop > 50) {
+					this.isScroll = true
+				} else {
+					this.isScroll = false
+				}
 			}
 		}
 	}
@@ -360,6 +388,10 @@
 	.public-time {
 		font-size: 32upx;
 	}
+	.pop-header {
+		height: 68upx;
+		line-height: 68upx;
+	}
 	.main {
 		.desc {
 			font-size: 28upx;
@@ -375,37 +407,38 @@
 			}
 		}
 	}
+	.user-info {
+		transition: all 0.5s;
+		.avatar {
+			width: 68upx;
+			height: 68upx;
+			overflow: hidden;
+			border-radius: 68upx;
+			color: $c-fff;
+			text-align: center;
+			line-height: 68upx;
+			margin-right: 10upx;
+			background-color: $c-ccc;
+		}
+		.icon-user {
+			padding: 6upx;
+			font-size: 20upx;
+			line-height: 20upx;
+			margin-left: 20upx;
+			color: $primary;
+			border: 1px solid $primary;
+			border-radius: 5upx;
+		}
+	}
 	.pop-content {
 		min-height: 900upx;
 		max-height: 900upx;
 		overflow: hidden;
 		position: relative;
 		overflow-y: auto;
-		padding: 20upx 0 100upx;
+		padding: 0 0 100upx;
 		border-top-right-radius: 20upx;
 		border-top-left-radius: 20upx;
-		.user-info {
-			.avatar {
-				width: 68upx;
-				height: 68upx;
-				overflow: hidden;
-				border-radius: 68upx;
-				color: $c-fff;
-				text-align: center;
-				line-height: 68upx;
-				margin-right: 10upx;
-				background-color: $c-ccc;
-			}
-			.icon-user {
-				padding: 6upx;
-				font-size: 20upx;
-				line-height: 20upx;
-				margin-left: 20upx;
-				color: $primary;
-				border: 1px solid $primary;
-				border-radius: 5upx;
-			}
-		}
 		&-desc {
 			margin-left: 68upx;
 			margin-bottom: 10upx;
@@ -435,6 +468,7 @@
 	.comment-form {
 		position: fixed;
 		bottom: 0;
+		// top: calc(100% - 290upx);
 		left: 0;
 		background-color: $c-fff;
 		width: 100%;
