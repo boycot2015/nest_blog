@@ -30,7 +30,7 @@ async function bootstrap() {
         .build();
     const document = SwaggerModule.createDocument(app, options);
     SwaggerModule.setup('api-docs', app, document);
-    app.set('host', '192.168.0.111');
+    // app.set('host', '192.168.0.111');
     await app.listen(4000);
 }
 bootstrap();
