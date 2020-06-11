@@ -112,7 +112,7 @@ export class UsersService {
                 cipher: '123456',
                 password: '',
                 email: '',
-                administrator: false
+                administrator: true
             }
             insertUserData.password = aesDecrypt(user.password, insertUserData.cipher)
             const isRightPwd = await this.usersRepository.findOne({ 'username': user.username, 'password': user.password })

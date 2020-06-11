@@ -8,8 +8,8 @@ export class CategoryService {
     constructor(@InjectRepository(Category)
     private readonly categoryRepository: Repository<Category>) { }
     async get(data) {
-        data.currentPage = data.currentPage || 1
-        data.pageSize = data.pageSize || 10
+        // data.currentPage = data.currentPage || 1
+        // data.pageSize = data.pageSize || 10
         // 1. 准备工作：注入Repository，创建queryBuilder
         // 条件筛选和分页查询代码
         let queryBy = this.categoryRepository.createQueryBuilder()

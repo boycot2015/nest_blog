@@ -98,12 +98,18 @@
             "base" : "/"
         },
         "devServer" : {
-            "https" : false
+            "https" : false,
+            "port" : 3000
         },
         "uniStatistics" : {
             "enable" : true
         },
-        "title" : "blog"
+        "title" : "blog",
+        "optimization" : {
+            "treeShaking" : {
+                "enable" : true
+            }
+        }
     },
     "uniStatistics" : {
         "enable" : true
