@@ -17,7 +17,7 @@ function RunCmd (cmd, args, cb) {
 http.createServer(function (req, res) {
     handler(req, res, function (err) {
         res.statusCode = 404;
-        res.end('no such location');
+        res.end('<h3 style="text-align: center;margin: 400px auto;font-size: 32px;">welecome to deploy!</h3>');
     })
 }).listen(3333)
 
