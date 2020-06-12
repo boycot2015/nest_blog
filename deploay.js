@@ -1,6 +1,6 @@
 var http = require('http')
 var createHandler = require('github-webhook-handler')
-var handler = createHandler({ path: '/opt/www/web/nest_blog', secret: 'boycot2017' })
+var handler = createHandler({ path: '/deployBlog', secret: 'boycot2017' })
 
 function RunCmd (cmd, args, cb) {
     var spawn = require('child_process').spawn;
