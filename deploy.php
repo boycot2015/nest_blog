@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-
-=======
->>>>>>> dev
 <?php
  
 class Deployment {
