@@ -10,8 +10,8 @@ export class SettingService {
     constructor(@InjectRepository(Setting)
     private readonly settingRepository: Repository<Setting>) { }
     async get(data) {
-        data.currentPage = data.currentPage || 1
-        data.pageSize = data.pageSize || 10
+        // data.currentPage = data.currentPage || 1
+        // data.pageSize = data.pageSize || 10
         // 1. 准备工作：注入Repository，创建queryBuilder
         // 条件筛选和分页查询代码
         let queryBy = this.settingRepository.createQueryBuilder()
