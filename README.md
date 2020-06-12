@@ -14,7 +14,10 @@
   cd server
   npm install / yarn install
   npm run start / npm run start:dev (dev热更新)
-  
+  // admin
+  cd admin
+  npm install / yarn install
+  npm run start / npm run start:dev (dev热更新)
   // 客户端
   cd client/pc, cd client/mobile
   npm install / yarn install
