@@ -30,7 +30,7 @@ git pull 2>&1");
 			abort(403);
 		}
 	}
-	
+		
 	public function isFromGithub($payload,$signature)
 	{
         //$hash是github的密钥。然后与本地的密钥做对比。
