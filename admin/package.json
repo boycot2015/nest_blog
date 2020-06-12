@@ -5,8 +5,8 @@
     "scripts": {
         "dev": "node ./server/index.js",
         "dev:hot": "node ./server/index.js --watch",
-        "build": "next bunext build && PORT=3001 npm start",
-        "start": "next start -p $PORT",
+        "build": "next build && PORT=3001 npm start",
+        "start": "next start -p 3001",
         "export": "next build && next export && serve out",
         "github": "rm -rf node_modules/.cache && next build && next export && touch out/.nojekyll && git add out/ && git commit -m \"Deploy Next.js to gh-pages\" && git subtree push --prefix out origin gh-pages"
     },
