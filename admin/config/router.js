@@ -1,13 +1,14 @@
 import {
     MenuUnfoldOutlined,
-    MenuFoldOutlined,
+    SisternodeOutlined,
     RobotOutlined,
     UnorderedListOutlined,
     SettingOutlined,
-    GithubOutlined,
+    CommentOutlined,
     UserOutlined,
     TagsOutlined,
     SkinOutlined,
+    FormatPainterOutlined,
     FileSearchOutlined
 } from '@ant-design/icons';
 const routes = [
@@ -35,6 +36,15 @@ const routes = [
         }
     },
     {
+        path: '/register',
+        name: 'register',
+        meta: {
+            title: '注册',
+            hideLayout: true,
+            login: false
+        }
+    },
+    {
         path: '/userCenter',
         name: 'userCenter',
         meta: {
@@ -57,10 +67,24 @@ const routes = [
         }
     },
     {
+        path: '/comment',
+        name: 'comment',
+        meta: {
+            title: '评论列表',
+            icon: <CommentOutlined style={
+                {
+                    fontSize: '20px'
+                }
+            } />,
+            showInMenu: true,
+            login: false
+        }
+    },
+    {
         path: '/user',
         name: 'user',
         meta: {
-            title: '用户列表',
+            title: '会员列表',
             icon: <UserOutlined style={
                 {
                     fontSize: '20px'
@@ -76,6 +100,20 @@ const routes = [
         meta: {
             title: '标签管理',
             icon: <TagsOutlined style={
+                {
+                    fontSize: '20px'
+                }
+            } />,
+            showInMenu: true,
+            login: false
+        }
+    },
+    {
+        path: '/category',
+        name: 'category',
+        meta: {
+            title: '分类管理',
+            icon: <SisternodeOutlined style={
                 {
                     fontSize: '20px'
                 }
@@ -111,20 +149,33 @@ const routes = [
             showInMenu: true,
             login: false
         },
-        children: [{
-            path: '/setting/theme',
-            name: 'theme',
-            meta: {
-                title: '主题设置',
-                icon: <SkinOutlined style={
-                    {
-                        fontSize: '20px'
-                    }
-                } />,
-                showInMenu: true,
-                login: false
-            }
-        }]
+        // children: [{
+        //     path: '/setting/theme',
+        //     name: 'theme',
+        //     meta: {
+        //         title: '主题设置',
+        //         icon: <SkinOutlined style={
+        //             {
+        //                 fontSize: '20px'
+        //             }
+        //         } />,
+        //         showInMenu: true,
+        //         login: false
+        //     }
+        // }, {
+        //     path: '/setting',
+        //     name: 'setting',
+        //     meta: {
+        //         title: '自定义装修',
+        //         icon: <FormatPainterOutlined style={
+        //             {
+        //                 fontSize: '20px'
+        //             }
+        //         } />,
+        //         showInMenu: true,
+        //         login: false
+        //     }
+        // }]
     }
 ]
 export default routes

@@ -9,11 +9,12 @@ import {
     UseInterceptors,
     HttpException,
     UploadedFile,
+    UseGuards,
     UploadedFiles
 } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor, FileFieldsInterceptor } from '@nestjs/platform-express';
 import { ApiTags, ApiOperation, ApiParam, ApiQuery } from '@nestjs/swagger';
-// import { AuthGuard } from '@nestjs/passport';
+import { AuthGuard } from '@nestjs/passport';
 import { responseStatus } from "../../utils";
 import { createWriteStream } from 'fs';
 import { join } from 'path';
@@ -37,6 +38,7 @@ export class UploadController {
         return await this.minioService.getFileUrl(res.fileName)
     }
     @Get('/get')
+    // @UseGuards(AuthGuard())
     @ApiOperation({ summary: '获取文件', description: "获取文件" })
     async GetFileList (@Query() query) {
         const res = await this.fileService.get(query)
@@ -44,7 +46,18 @@ export class UploadController {
         return Promise.resolve(data)
     }
 
+    @Post('/delete')
+    @UseGuards(AuthGuard())
+    @ApiOperation({ summary: '删除文件', description: "删除文件" })
+    @ApiQuery({ name: 'id', description: "删除文件" })
+    async deleteFile (@Query('id') id: number) {
+        const res = await this.fileService.getById(id)
+        await this.minioService.removeObject(res.fileName)
+        return await this.fileService.delete(id)
+    }
+
     @Post('/upload')
+    @UseGuards(AuthGuard())
     @ApiOperation({ summary: '上传文件', description: "上传文件" })
     @ApiParam({name: 'file', type: 'file', required: true})
     @UseInterceptors(FileInterceptor('file')) // file对应HTML表单的name属性
@@ -59,6 +72,7 @@ export class UploadController {
     //注意此处是FilesInterceptor而上面是FileFieldsInterceptor
     @ApiOperation({ summary: '批量上传文件', description: "批量上传文件" })
     @UseInterceptors(FilesInterceptor('files')) //多个文件name属性相同的情况下
+    @UseGuards(AuthGuard())
     async UploadedFiles(@Body() body, @UploadedFiles() files) {
         let filesArr = []
         for (const file of files) {
@@ -84,6 +98,7 @@ export class UploadController {
         maxCount: 1
     },
     ]))
+    @UseGuards(AuthGuard())
     @ApiOperation({ summary: '上传多个字段的文件', description: "上传多个字段的文件" })
     UploadedFileFields(@UploadedFiles() files, @Body() body) {
         if (!body.name) {

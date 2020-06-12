@@ -4,6 +4,7 @@ import { ApiTags, ApiQuery, ApiProperty, ApiOperation } from '@nestjs/swagger';
 import { Article } from '../../entities/article.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { Tag } from '../../entities/tag.entity';
+import { Category } from '../../entities/category.entity';
 
 class GetArticle {
     @ApiProperty({
@@ -49,7 +50,7 @@ class ArticleForm {
 
     @ApiProperty({
         description: '分类',
-        required: false
+        required: true
     })
     category: string;
 
@@ -58,7 +59,7 @@ class ArticleForm {
         default: false,
         required: false
     })
-    visitors: boolean;
+    administrator: boolean;
 }
 
 class EditArticleForm {
@@ -79,6 +80,12 @@ class EditArticleForm {
     content: string;
 
     @ApiProperty({
+        description: '文章分类',
+        required: false
+    })
+    category: string;
+
+    @ApiProperty({
         description: '标签',
         required: false
     })
@@ -94,7 +101,7 @@ class EditArticleForm {
         default: false,
         required: false
     })
-    visitors: boolean;
+    administrator: boolean;
 }
 export class ArticleState {
     @ApiProperty({
@@ -115,8 +122,8 @@ export class ArticleState {
 export class ArticleController {
     constructor(private articleService: ArticleService) { }
     @Get()
+    // @UseGuards(AuthGuard())
     @ApiOperation({ summary: '获取文章列表', description: "获取文章列表" })
-    @UseGuards(AuthGuard())
     get(@Query() data: GetArticle) {
         return this.articleService.get(data)
     }
@@ -129,24 +136,28 @@ export class ArticleController {
     }
 
     @Post('/add')
+    @UseGuards(AuthGuard())
     @ApiOperation({ summary: '新增文章', description: "新增文章" })
     create(@Body() data: ArticleForm) {
         return this.articleService.create(data)
     }
 
     @Post('/edit')
+    @UseGuards(AuthGuard())
     @ApiOperation({ summary: '编辑文章', description: "编辑文章" })
     edit(@Body() data: EditArticleForm) {
         return this.articleService.edit(data)
     }
 
     @Post('/delete')
+    @UseGuards(AuthGuard())
     @ApiOperation({ summary: '删除文章', description: "删除文章" })
     @ApiQuery({ name: 'id', type: 'number', required: true })
     delete(@Query('id') id: number) {
         return this.articleService.delete(id)
     }
     @Post('/status')
+    @UseGuards(AuthGuard())
     @ApiOperation({ summary: '更改用户状态' })
     @ApiQuery({ name: 'id', description: '文章id', required: true })
     @UseGuards(AuthGuard())

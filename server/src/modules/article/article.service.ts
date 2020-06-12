@@ -2,24 +2,29 @@ import { Injectable, HttpException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Article } from "../../entities/article.entity";
-import { responseStatus } from "../../utils";
+import { responseStatus, filterTreeData } from "../../utils";
 import * as dayjs from 'dayjs';
 import { TagService } from '../tag/tag.service';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable()
 export class ArticleService {
     constructor(@InjectRepository(Article)
     private readonly articleRepository: Repository<Article>,
+        private readonly authService: AuthService,
         private readonly tagService: TagService
     ) { }
     async get(data) {
         data.current = data.current || 1
         data.pageSize = data.pageSize || 10
-        console.log(data, 'asdada')
+        // console.log(data, 'asdada')
         // 1. 准备工作：注入Repository，创建queryBuilder
         // 条件筛选和分页查询代码
         let queryBy = this.articleRepository.createQueryBuilder('article')
             .leftJoinAndSelect('article.tags', 'tag')
+            .andWhere('article.isDelete=:delete').setParameter('delete', false)
+        // .leftJoinAndSelect('article.comment', 'comment')
+
         // 2. 条件筛选查询，如名称、类型等，传入对应字段即可
         // queryBy = queryBy.where(data as Partial<Article>)
         const { current = 1, pageSize = 12, status, ...otherParams } = data;
@@ -49,8 +54,19 @@ export class ArticleService {
         return await queryBy.getManyAndCount()
     }
     /**
+     * 获取所以文章
+     */
+    async getAll() {
+        let queryBy = this.articleRepository.createQueryBuilder('article')
+        queryBy = queryBy.leftJoinAndSelect('article.comment', 'comment')
+            .orderBy('article.updateTime', 'ASC')
+        // 获取结果及(非分页的)查询结果总数
+        // 或使用 .getMany() 不会返回总数
+        return await queryBy.getManyAndCount()
+    }
+    /**
      * 创建文章
-     * @param data 
+     * @param data
      */
     async create(data: Partial<Article>): Promise<Article> {
         // article.id = this.articles.length + 1
@@ -119,7 +135,7 @@ export class ArticleService {
         console.log(id, 'iddddddd')
         const res = await this.articleRepository.findOne({ id: +id })
         if (res) {
-            await this.articleRepository.remove(res)
+            await this.articleRepository.save({ ...res, isDelete: true })
             return responseStatus.success.message
         }
         else throw new HttpException(`暂无数据`, 404);
@@ -131,16 +147,27 @@ export class ArticleService {
     async getById(id: number) {
         // const article = this.articles.find(article => article.id === id)
         // return Promise.resolve(article);
-        const res = await this.articleRepository.findOne({ id })
+        const res = await this.articleRepository.findOne({ id }, { relations: ['comment'] })
+        if (!res) throw new HttpException(`暂无数据`, 404);
+
+        // 新增访客量
+        const updatedArticle = { ...res, visitor: (+res.visitor) + 1 }
+        await this.articleRepository.save(updatedArticle);
+
         let queryBy = this.articleRepository.createQueryBuilder('article')
             .leftJoinAndSelect('article.tags', 'tag')
-        if (!res) throw new HttpException(`暂无数据`, 404);
+            .leftJoinAndSelect("article.comment", "comment")
+            .orderBy('comment.create_time', 'DESC')
+        // queryBy.leftJoinAndSelect('article.category', 'category')
+        //     .orderBy('category.create_time', 'DESC')
         queryBy = queryBy.andWhere(`article.id=${id}`)
-        return queryBy.getOne()
-
+        // console.log(await queryBy.getOne(), 'queryBy.getOne()')
+        let data = await queryBy.getOne()
+        data.comment = filterTreeData(data.comment, null)
+        return Promise.resolve(data)
     }
     // 设置文章状态
-    async setStatus ({id, status}) {
+    async setStatus({ id, status }) {
         if (!id || !status) {
             throw new HttpException("参数为空", responseStatus.failed.code);
         }

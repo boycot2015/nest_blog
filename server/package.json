@@ -34,6 +34,7 @@
     "dayjs": "^1.8.26",
     "minio": "^7.0.16",
     "mysql": "^2.18.1",
+    "nodemailer": "^6.4.6",
     "passport": "^0.4.1",
     "passport-http-bearer": "^1.0.1",
     "passport-jwt": "^4.0.0",
@@ -41,7 +42,8 @@
     "rimraf": "^3.0.2",
     "rxjs": "^6.5.4",
     "swagger-ui-express": "^4.1.4",
-    "typeorm": "^0.2.24"
+    "typeorm": "^0.2.24",
+    "ua-parser-js": "^0.7.21"
   },
   "devDependencies": {
     "@nestjs/cli": "^7.0.0",

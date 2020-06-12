@@ -17,7 +17,7 @@ export class UsersService {
     //     cipher: '',
     //     password: '',
     //     email: '',
-    //     visitors: true
+    //     administrator: true
     // }
     async getAllUsers(data) {
         // return Promise.resolve(this.users);
@@ -81,9 +81,11 @@ export class UsersService {
         let { password } = data
         // password = decryptByDES(password);
         password = aesDecrypt(password, data.cipher)
-        const canLogin = await this.usersRepository.findOne({ 'username': data.username, 'password': password })
-        if (canLogin) return this.authService.signIn(canLogin)
-        else throw new HttpException("用户名或密码错误,请重新输入！", responseStatus.failed.code);
+        const loginUser = await this.usersRepository.findOne({ 'username': data.username, 'password': password })
+        if (!loginUser) throw new HttpException("用户名或密码错误,请重新输入！", responseStatus.failed.code);
+        const { status } = loginUser
+        if (loginUser && (status + '' === '1001')) return this.authService.signIn(loginUser)
+        else if ((status + '' === '1002')) throw new HttpException("该账户已被冻结，请联系管理员！", responseStatus.failed.code);
     }
     async getUser(id: number): Promise<Users> {
         // console.log(id, 'userid')
@@ -96,15 +98,11 @@ export class UsersService {
         if (query) return query
         else throw new HttpException("用户名不存在！", 404);
     }
-    async addUser(user) {
-        // user.id = this.users.length + 1
-        // this.users.push(user);
-        // return Promise.resolve('操作成功！');
+    async register(user) {
         if (!user) {
             throw new HttpException("参数为空", responseStatus.failed.code);
         }
         const hasUser = await this.usersRepository.findOne({ 'username': user.username })
-        // console.log(hasUser)
         if (hasUser) {
             throw new HttpException("用户名已存在,请重新输入！", responseStatus.failed.code);
         } else {
@@ -114,7 +112,7 @@ export class UsersService {
                 cipher: '123456',
                 password: '',
                 email: '',
-                visitors: true
+                administrator: true
             }
             insertUserData.password = aesDecrypt(user.password, insertUserData.cipher)
             const isRightPwd = await this.usersRepository.findOne({ 'username': user.username, 'password': user.password })
@@ -127,38 +125,30 @@ export class UsersService {
             return responseStatus.success.message
         }
     }
-    async editUser (user) {
+    async editUser(user) {
         if (!user) {
             throw new HttpException("参数为空", responseStatus.failed.code);
         }
-        let existUser = await this.usersRepository.findOne({ id : user.id })
+        let existUser = await this.usersRepository.findOne({ id: user.id })
         // console.log(hasUser)
         if (!existUser) {
             throw new HttpException("用户名不存在！", responseStatus.failed.code);
         } else {
             let insertUserData = {
-                id: 0,
                 avatar: '',
                 username: '',
                 cipher: '123456',
                 password: '',
                 email: '',
-                status: {},
-                visitors: true
+                status: {}
             }
-            insertUserData.id = user.id
             insertUserData.password = aesDecrypt(user.password, insertUserData.cipher)
             insertUserData.avatar = user.avatar
             insertUserData.username = user.username
             insertUserData.cipher = user.password
             insertUserData.email = user.email
             insertUserData.status = user.status
-            const { id, ...otherParams } = insertUserData
-            // const isRightPwd = await this.usersRepository.findOne({ id: user.id, 'password': insertUserData.password })
-            // console.log(isRightPwd, 'username')
-            // if (!isRightPwd) throw new HttpException("用户或密码错误,请重新输入！", responseStatus.failed.code)
-            // existUser.updateTime = new Date()
-            const updatedUser = { ...existUser, ...otherParams }
+            const updatedUser = { ...existUser, ...insertUserData }
             await this.usersRepository.save(updatedUser)
             return responseStatus.success.message
         }
@@ -179,7 +169,7 @@ export class UsersService {
             return responseStatus.success.message
         }
     }
-    async setStatus ({id, status}) {
+    async setStatus({ id, status }) {
         if (!id || !status) {
             throw new HttpException("参数为空", responseStatus.failed.code);
         }

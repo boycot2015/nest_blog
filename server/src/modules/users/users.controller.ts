@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Body, Query, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { ApiTags, ApiQuery, ApiProperty, ApiOperation } from '@nestjs/swagger';
-import { Users } from '../../entities/users.entity';
 import { AuthGuard } from '@nestjs/passport';
 export class QueryDt {
     @ApiProperty({
@@ -96,15 +95,14 @@ export class UsersController {
     constructor(private usersService: UsersService) { }
 
     @Get('/get')
+    // @UseGuards(AuthGuard())
     @ApiOperation({ summary: '获取用户列表' })
-    @UseGuards(AuthGuard())
     getAllUsers(@Query() data: QueryDt) {
         return this.usersService.getAllUsers(data)
     }
 
     @Get('/get/ById')
     @ApiOperation({ summary: '获取用户' })
-    @UseGuards(AuthGuard())
     @ApiQuery({ name: 'id', description: '用户id', required: true })
     getUser(@Query('id') id) {
         return this.usersService.getUser(+id)
@@ -115,11 +113,15 @@ export class UsersController {
     login(@Body() user: UserForm) {
         return this.usersService.login(user)
     }
+    @Post('/register')
+    @ApiOperation({ summary: '创建用户' })
+    public register(@Body() user: UserForm) {
+        return this.usersService.register(user)
+    }
     @Post('/add')
     @ApiOperation({ summary: '创建用户' })
-    @UseGuards(AuthGuard())
-    public addUser(@Body() user: UserForm) {
-        return this.usersService.addUser(user)
+    public add(@Body() user: UserForm) {
+        return this.usersService.register(user)
     }
     @Post('/edit')
     @ApiOperation({ summary: '编辑用户' })

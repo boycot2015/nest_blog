@@ -5,129 +5,102 @@ import {
     Select, Table, Cascader,
     Badge
 } from 'antd';
+import {
+    PlusOutlined
+} from '@ant-design/icons';
 import Head from 'next/head';
 import Router from 'next/router';
 const { Option, OptGroup } = Select;
-const columns = (props) => [
-    {
-        title: '用户头像',
-        dataIndex: 'avatar',
-        align: 'center',
-        key: 'avatar',
-        width: 70,
-        rowKey: record => record.dataIndex,
-        render: avatar => <a><img src={avatar} /></a>,
-    },
-    {
-        title: '用户名',
-        dataIndex: 'username',
-        align: 'center',
-        key: 'username',
-        width: 150,
-        rowKey: record => record.dataIndex,
-        render: text => <a>{text}</a>,
-    },
-    {
-        title: '账号状态',
-        align: 'center',
-        dataIndex: 'status',
-        key: 'status',
-        width: 150,
-        rowKey: record => record.dataIndex,
-        render: status =>
-            <span>
-                <Badge status={status === 1001 ? 'success' : 'default'} />
-                {status === 1001 ? '启用' : '禁用'}
-            </span>,
-    },
-    {
-        title: '电子邮箱',
-        align: 'center',
-        dataIndex: 'email',
-        key: 'email',
-        width: 150,
-        rowKey: record => record.dataIndex
-    },
-    {
-        title: '创建时间',
-        align: 'center',
-        dataIndex: 'createTime',
-        key: 'createTime',
-        width: 150,
-        rowKey: record => record.dataIndex,
-        render: time => React.$filters.timeFilter(new Date(time).getTime())
-    },
-    {
-        title: '修改时间',
-        align: 'center',
-        dataIndex: 'updateTime',
-        key: 'updateTime',
-        width: 150,
-        rowKey: record => record.dataIndex,
-        render: time => React.$filters.timeFilter(new Date(time).getTime())
-    },
-    {
-        title: '操作',
-        align: 'center',
-        key: 'action',
-        width: 150,
-        rowKey: record => record.dataIndex,
-        render: (text, record) => (
-            <span>
-                <a style={{ marginRight: 16 }} href={`/user/edit?id=${record.id}`}>查看</a>
-                <a style={{ marginRight: 16 }} onClick={() => props.handleChangeStatus(record)}>{record.status && record.status === 1002 ? '启用' : '禁用'}</a>
-                <a style={{ marginRight: 16 }} href={`/user/edit?id=${record.id}`}>编辑</a>
-                <a>删除</a>
-            </span>
-        ),
-    },
-];
+const columns = (props) => {
+    const { userinfo } = props.state
+    return [
+        {
+            title: '用户头像',
+            dataIndex: 'avatar',
+            align: 'center',
+            key: 'avatar',
+            width: 60,
+            rowKey: record => record.dataIndex,
+            render: avatar => <a><img src={avatar} /></a>,
+        },
+        {
+            title: '会员名称',
+            dataIndex: 'username',
+            align: 'center',
+            key: 'username',
+            width: 150,
+            rowKey: record => record.dataIndex,
+            render: (text, record) => <a>{text + (record.administrator && record.id === userinfo.id ? '(管理员)' : '')}</a>,
+        },
+        {
+            title: '账号状态',
+            align: 'center',
+            dataIndex: 'status',
+            key: 'status',
+            width: 150,
+            rowKey: record => record.dataIndex,
+            render: status =>
+                <span>
+                    <Badge status={status === 1001 ? 'success' : 'default'} />
+                    {status === 1001 ? '启用' : '禁用'}
+                </span>,
+        },
+        {
+            title: '电子邮箱',
+            align: 'center',
+            dataIndex: 'email',
+            key: 'email',
+            width: 150,
+            rowKey: record => record.dataIndex
+        },
+        {
+            title: '创建时间',
+            align: 'center',
+            dataIndex: 'createTime',
+            key: 'createTime',
+            width: 150,
+            rowKey: record => record.dataIndex,
+            render: time => React.$filters.timeFilter(new Date(time).getTime())
+        },
+        {
+            title: '修改时间',
+            align: 'center',
+            dataIndex: 'updateTime',
+            key: 'updateTime',
+            width: 150,
+            rowKey: record => record.dataIndex,
+            render: time => React.$filters.timeFilter(new Date(time).getTime())
+        },
+        {
+            title: '操作',
+            align: 'center',
+            key: 'action',
+            width: 150,
+            rowKey: record => record.dataIndex,
+            render: (text, record) => (
+                <div>
+                    <a style={{ marginRight: 16 }} onClick={() => Router.push(`/user/view?id=${record.id}`)}>查看</a>
+                    {userinfo.administrator && userinfo.id !== record.id && <a style={{ marginRight: 16 }} onClick={() => props.handleChangeStatus(record)}>{record.status && record.status === 1002 ? '启用' : '禁用'}</a>}
+                    {userinfo.administrator && <a style={{ marginRight: 16 }} onClick={() => Router.push(`/user/edit?id=${record.id}`)}>编辑</a>}
+                    {userinfo.administrator && userinfo.id !== record.id && <a style={{ marginRight: 16 }} onClick={() => props.handleDelete(record)}>删除</a>}
+                </div>
+            ),
+        },
+    ];
+}
 function handleChange (value) {
     console.log(`selected ${value}`);
 }
-const options = [
-    {
-        value: 'web',
-        label: '前端',
-        children: [
-            {
-                value: 'js',
-                label: 'js',
-                children: [
-                    {
-                        value: 'ts',
-                        label: 'ts',
-                    },
-                ],
-            },
-        ],
-    },
-    {
-        value: 'server',
-        label: '后端',
-        children: [
-            {
-                value: 'springBoot',
-                label: 'springBoot',
-                children: [
-                    {
-                        value: 'Redis',
-                        label: 'Redis',
-                    },
-                ],
-            },
-        ],
-    }
-]
 const AdvancedSearchForm = (props) => {
     const [form] = Form.useForm();
+    props.state.reset && form.resetFields()
     const getFields = () => {
         const children = [
             {
-                label: '用户名',
+                label: '会员名称',
                 type: 1,
                 name: 'username',
-                placeholder: '用户名'
+                placeholder: '会员名称'
             },
             {
                 label: '状态',
@@ -183,7 +156,7 @@ const AdvancedSearchForm = (props) => {
         >
             <Row gutter={18}>
                 {getFields()}
-                <Col span={6} style={{ textAlign: 'right' }}>
+                <Col span={4} style={{ textAlign: 'right' }}>
                     <Button type="primary" htmlType="submit">
                         查询
                 </Button>
@@ -205,22 +178,24 @@ class User extends React.Component {
     constructor(props) {
         super(props)
     }
-    static async getInitialProps ({ ctx, router, api }) {
+    static async getInitialProps ({ $api, $filters, userinfo }) {
         // 从query参数中回去id
         //通过process的browser属性判断处于何种环境：Node环境下为false,浏览器为true
         // 发送服务器请求
         // let token = Base64.decode(req.headers[''])
-        const res = await api.user.get()
+        const res = await $api.user.get()
         if (res && res.success) {
             return {
                 loading: false,
                 data: res.data[0],
                 pageData: {
                     current: 1,
-                    pageSize: 3,
+                    pageSize: 5,
                     total: res.data[1],
-                    pageSizeOptions: [10, 20, 50, 100]
+                    pageSizeOptions: [5, 10, 20, 50]
                 },
+                $filters,
+                userinfo
             }
         } else {
             return {
@@ -228,19 +203,19 @@ class User extends React.Component {
                 data: [],
                 pageData: {
                     current: 1,
-                    pageSize: 3,
+                    pageSize: 5,
                     total: 999,
-                    pageSizeOptions: [10, 20, 50, 100]
-                }
+                    pageSizeOptions: [5, 10, 20, 50]
+                },
+                $filters,
+                userinfo
             }
         }
     }
     state = {
-        loading: true,
-        data: this.props.data,
-        pageData: this.props.pageData,
         queryData: {},
-        hasData: true
+        hasData: true,
+        ...this.props
     }
     async handlerFormSubmit (values, isPage) {
         isPage && this.setState({ loading: true, pageData: values })
@@ -249,16 +224,15 @@ class User extends React.Component {
             queryData: values,
             pageData: {
                 current: 1,
-                pageSize: 3,
+                pageSize: 5,
                 total: this.state.pageData.total,
-                pageSizeOptions: [10, 20, 50, 100]
+                pageSizeOptions: [5, 10, 20, 50]
             }
         })
         // 发送服务器请求
         const { current, pageSize } = isPage ? values : this.state.pageData
         const params = { current, pageSize, ...this.state.queryData }
         const res = await $api.user.get(params)
-        // console.log(res.data.data[0], 'asdasdasdasdasd')
         if (res && res.success) {
             this.setState({
                 loading: false,
@@ -284,13 +258,27 @@ class User extends React.Component {
     async handleChangeStatus (item) {
         let { id, status } = item
         status = status === 1001 ? 1002 : 1001
-        const res = await React.$api.user.status({ id, status })
+        console.log(this.props, ' $api')
+        const res = await $api.user.status({ id, status })
         if (res && res.success) {
             message.success(res.message)
-            this.handlerFormSubmit({})
+            this.setState({ reset: true })
+            this.handlerFormSubmit({ ...this.state.pageData, status: '' }, true)
             return
         }
         message.error(res.message)
+    }
+    async handleDelete () {
+        let { id, status } = item
+        status = status === 1001 ? 1002 : 1001
+        const res = await $api.user.delete({ id, status })
+        if (res && res.success) {
+            message.success(res.message)
+            this.setState({ reset: true })
+            this.handlerFormSubmit({ ...this.state.pageData, status: '' }, true)
+            return
+        }
+        res && message.error(res.message)
     }
     componentDidMount () {
         this.setState({ loading: false })
@@ -302,21 +290,26 @@ class User extends React.Component {
         return (
             <Fragment>
                 <Head>
-                    <title>用户列表</title>
+                    <title>会员列表</title>
                 </Head>
                 <h3 className='text-gray-600 text-lg leading-4 mb-5 divide-x border-solid border-l-4 pl-2 border-orange-f9'>
-                    <span>用户列表</span>
-                    {/* process.browser && localStorage.getItem('userinfo') && !JSON.parse(localStorage.getItem('userinfo')).visitors &&  */}
-                    {<Button className='float-right' onClick={() => Router.push('/user/add')} type='primary'>创建用户</Button>}
+                    <span>会员列表</span>
+                    {/* process.browser && localStorage.getItem('userinfo') && !JSON.parse(localStorage.getItem('userinfo')).administrator &&  */}
+                    {this.props.userinfo && this.props.userinfo.administrator && <Button className='float-right' onClick={() => Router.push('/user/add')} icon={<PlusOutlined />} type='primary'>创建会员</Button>}
                 </h3>
-                <AdvancedSearchForm setParentState={this.handlerFormSubmit.bind(this)} />
+                <AdvancedSearchForm setParentState={this.handlerFormSubmit.bind(this)} state={this.state} />
                 <Table
                     {...this.state}
                     rowKey={(record, index) => index}
                     dataSource={state.hasData ? this.state.data : null}
                     columns={columns(this)}
                     onChange={(pageData) => this.handlerFormSubmit(pageData, true)}
-                    pagination={{ ...this.state.pageData }}
+                    pagination={{
+                        ...this.state.pageData,
+                        showSizeChanger: true,
+                        showTitle: (total, range) => '页',
+                        showTotal: (total, range) => `共 ${total} 条`
+                    }}
                 />
             </Fragment>
         )

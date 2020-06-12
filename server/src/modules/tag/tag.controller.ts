@@ -27,7 +27,7 @@ class TagForm {
         default: false,
         required: false
     })
-    visitors: boolean;
+    administrator: boolean;
 }
 // class QueryForm {
 //     @ApiProperty({
@@ -49,7 +49,6 @@ export class TagController {
     constructor(private tagService: TagService) { }
     @Get('/get')
     @ApiOperation({ summary: '获取标签列表', description: "获取标签列表" })
-    // @UseGuards(AuthGuard())
     getTagList(@Query() data) {
         return this.tagService.get(data)
     }
@@ -63,17 +62,20 @@ export class TagController {
 
     @Post('/add')
     @ApiOperation({ summary: '新增标签', description: "新增标签" })
+    @UseGuards(AuthGuard())
     addTag(@Body() data: TagForm) {
         return this.tagService.create(data)
     }
 
     @Post('/edit')
     @ApiOperation({ summary: '编辑标签', description: "编辑标签" })
+    @UseGuards(AuthGuard())
     editTag(@Body() data: TagForm) {
         return this.tagService.edit(data)
     }
 
     @Post('/delete')
+    @UseGuards(AuthGuard())
     @ApiOperation({ summary: '删除标签', description: "删除标签" })
     @ApiQuery({ name: 'id', type: 'number' })
     deleteTag(@Query() data) {

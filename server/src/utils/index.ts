@@ -1,70 +1,8 @@
 // import CryptoJS from 'crypto-js'
+import * as day from 'dayjs'
 import * as CryptoJS from 'crypto-js';
-// const CryptoJS = { AES, mode, pad, enc }
-/** created by zch 2019-08-09
- * @description 采用DES对密码进行加密及解密
- */
-
-// // DES加密 Pkcs7填充方式
-// export const encryptByDES = (message, key) => {
-//     console.log(CryptoJS)
-//     const keyHex = CryptoJS.enc.Utf8.parse(key)
-//     const encrypted = CryptoJS.DES.encrypt(message, keyHex, {
-//         mode: CryptoJS.mode.ECB,
-//         padding: CryptoJS.pad.Pkcs7
-//     })
-//     return encrypted.ciphertext.toString()
-// }
-// // DES解密
-// export const decryptByDES = (ciphertext, key) => {
-//     console.log(CryptoJS)
-//     const keyHex = CryptoJS.enc.Utf8.parse(key)
-//     // direct decrypt ciphertext
-//     const decrypted = CryptoJS.DES.decrypt({
-//         ciphertext: CryptoJS.enc.Hex.parse(ciphertext)
-//     }, keyHex, {
-//         mode: CryptoJS.mode.ECB,
-//         padding: CryptoJS.pad.Pkcs7
-//     })
-//     return decrypted.toString(CryptoJS.enc.Utf8)
-// }
-export const encryptByDES = (data: string): string => {
-    // const Key = '123456789';
-    // const tmpDES = DES.encrypt(data, Key, {
-    //     mode: mode.ECB,
-    //     padding: pad.Pkcs7
-    // });
-    // return tmpDES.toString();
-    const key = "123456789";
-    const keyHex = CryptoJS.enc.Utf8.parse(key)
-    const encrypted = CryptoJS.DES.encrypt(data, keyHex, {
-        mode: CryptoJS.mode.ECB,
-        padding: CryptoJS.pad.Pkcs7
-    })
-    return encrypted.ciphertext.toString()
-}
-export const decryptByDES = (data: string): string => {
-    const key = "123456789";
-    const keyHex = CryptoJS.enc.Utf8.parse(key)
-    // {
-    //     ciphertext: enc.Hex.parse(ciphertext)
-    // }
-    const decrypted = CryptoJS.DES.decrypt(data, keyHex, {
-        mode: CryptoJS.mode.ECB,
-        padding: CryptoJS.pad.Pkcs7
-    })
-    return decrypted.toString(CryptoJS.enc.Utf8)
-}
-/** 密码加密解密示例
- * example
- */
-
-// const _key = 'abcdefghijklmn'
-// const _password = '123456'
-// 加密
-// console.log(this.encryptByDES(_password, _key))
-// 解密
-// console.log(this.decryptByDES(_password, _key))
+const UAParser = require('ua-parser-js');
+const nodemailer = require("nodemailer");
 
 
 // AES加密解密
@@ -103,3 +41,142 @@ export const responseStatus = {
     }
 }
 
+/**
+ * 格式化时间戳（秒|毫秒）
+ * @param {timestamp} value
+ */
+export const timeFormat = (value, timeStr: Required<string>) => {
+    value = value.toString()
+    timeStr = timeStr || 'YYYY-MM-DD HH:mm:ss'
+    if (value) {
+        if (value.length === 13) {
+            return day(Number(value)).format(timeStr)
+        }
+        return day.unix(Number(value)).format(timeStr)
+    } else {
+        return '-'
+    }
+}
+/** 2020-05-17
+ * 根请求头获取ip
+ * @param req 
+ */
+export function getClientIP(req) {
+    const ip =
+        req.headers['x-real-ip'] ||
+        req.headers['x-forwarded-for'] || // 判断是否有反向代理 IP
+        (req.connection && req.connection.remoteAddress) || // 判断 connection 的远程 IP
+        (req.socket && req.socket.remoteAddress) || // 判断后端的 socket 的 IP
+        (req.connection &&
+            req.connection.socket &&
+            req.connection.socket.remoteAddress);
+    // console.log(req.connection.remoteAddress, 'ipipipipipipipipipipipipipipipip')
+    return ip.split(':').pop();
+}
+/** 2020-05-17
+ * 获取浏览器信息
+ * @param userAgent 浏览器信息
+ */
+export const parseUserAgent = (userAgent) => {
+    const uaparser = new UAParser();
+    uaparser.setUA(userAgent);
+    const uaInfo = uaparser.getResult();
+    let msg = `${uaInfo.browser.name || ''} ${uaInfo.browser.version || ''} `;
+    msg += ` ${uaInfo.os.name || ''}  ${uaInfo.os.version || ''} `;
+    msg += `${uaInfo.device.vendor || ''} ${uaInfo.device.model || ''} ${uaInfo
+        .device.type || ''}`;
+    return msg;
+};
+
+/**
+ * 递归实现树形结构
+ * @param {*} data 需要递归的数组
+ * @param {*} parentViewCode 递归条件
+ */
+export function filterTreeData(data, parentId = null) {
+    let tree = []
+    let temp
+    for (let i = 0; i < data.length; i++) {
+        if (data[i].parentId === parentId) {
+            let obj = data[i]
+            temp = filterTreeData(data, data[i].id)
+            if (temp.length > 0) {
+                obj.children = temp
+            }
+            tree.push(obj)
+        }
+    }
+    return tree
+}
+
+/** 发送电子邮箱
+ * sendOption = {
+        from    : 'boycot2017@163.com',//发件人邮箱
+        to      : '*@*,*@*',//收件人邮箱，多个邮箱地址间用','隔开
+        subject : 'title',//邮件主题
+        text: 'Hi!'//text和html两者只支持一种
+    }
+    callback = function(err, res) {
+        console.log(err, res);
+    }
+ * @param {*} sendOption 发送的配置项
+ * @param {*} callback 发送成功回调
+ */
+const smtpTransport = nodemailer.createTransport({
+    service: '163',
+    auth: {
+        // user: 'boycot2017@163.com',
+        // pass: 'GIZNBKXISKNIQJSE'//注：此处为授权码，并非邮箱密码
+        user: 'boycot001@163.com',
+        pass: 'IAKKRWWTCZCOPYON'
+    }
+});
+
+export const sendMail = (sendOption, callback) => {
+    smtpTransport.sendMail(sendOption, callback);
+}
+
+export const getOneMonthDateList = () => {
+    let daysInMonth = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    let currentDate = new Date()
+    currentDate.setMonth(currentDate.getMonth() + 1)
+    let strYear = currentDate.getFullYear()
+    let strDay = currentDate.getDate()
+    let strMonth = currentDate.getMonth() + 1
+    if (((strYear % 4) === 0) && ((strYear % 100) !== 0) || ((strYear % 400) === 0)) {
+        daysInMonth[2] = 29
+    }
+    if (strMonth - 1 === 0) {
+        strYear -= 1
+        strMonth = 12
+    } else {
+        strMonth -= 1
+    }
+    strDay = Math.min(strDay, daysInMonth[strMonth])
+    // if (strMonth < 10) {
+    //     strMonth = '0' + strMonth
+    // }
+    // if (strDay < 10) {
+    //     strDay = '0' + strDay
+    // }
+    let dateStr = strYear + '-' + strMonth + '-' + strDay
+    const dateList = []
+    let startDate = new Date(dateStr)
+    while (true) {
+        startDate.setDate(startDate.getDate() + 1)
+        let year = startDate.getFullYear()
+        let month = startDate.getMonth() < 10 ? '0' + startDate.getMonth() : startDate.getMonth()
+        let day = startDate.getDate() < 10 ? '0' + startDate.getDate() : startDate.getDate()
+        if (startDate.getTime() < currentDate.getTime()) {
+            if (startDate.getDate() < 10) {
+                // startDate.getFullYear() 获取年，此处没加上年份
+                dateList.push(year + '-' + month + '-' + day)
+            } else {
+                dateList.push(year + '-' + month + '-' + day)
+            }
+        } else {
+            break
+        }
+    }
+    return dateList
+}

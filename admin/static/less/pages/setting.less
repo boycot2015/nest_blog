@@ -1,0 +1,92 @@
+.ant-carousel .slick-slide {
+    text-align: center;
+    height: 250px;
+    line-height: 250px;
+    // background: #364d79;
+    overflow: hidden;
+  }
+.container {
+    .ant-carousel .slick-slide {
+        a {
+            display: block;
+            height: 250px;
+            img {
+                margin: 0 auto;
+                max-width: 1200px;
+                height: 100%;
+            }
+        }
+        .upload-text {
+            color: #364d79;
+        }
+        .ant-upload.ant-upload-drag {
+            width: 400px !important;
+            background-color:transparent;
+            margin: 0 auto;
+        }
+    }
+    .ant-carousel .slick-next,
+    .ant-carousel .slick-prev {
+        left: 25px;
+        width: 40px;
+        height: 80px;
+        line-height: 80px;
+        background: rgba(0,0,0,0.6);
+        cursor: pointer;
+        margin-top: -40px;
+        font-size: 20px;
+        z-index: 2;
+        border-radius: 5px;
+        transition: all .5s;
+        color: @white;
+        overflow: hidden;
+        &:hover {
+            background: rgba(0,0,0,0.3);
+        }
+    }
+    .ant-carousel .slick-next {
+        right: 25px;
+        left: auto;
+    }
+    .section {
+        input {
+            width: 300px;
+            margin-right: 10px;
+        }
+    }
+    .theme-box {
+        width: 100%;
+        height: 170px;
+        overflow: hidden;
+        border-radius: 5px;
+        font-size: 12px;
+        text-align: center;
+        color: @white;
+        border: 1px solid @c-ccc;
+        box-shadow: 0 0 20px @c-ccc;
+        .left {
+            width: 40px;
+            height: 100%;
+            line-height: 170px;
+            background-color: @primary;
+        }
+        .top {
+            width: calc(100% - 40px);
+            height: 20px;
+            line-height: 20px;
+            background-color: @gray;
+        }
+        .main {
+            padding: 30px 10px 0 50px;
+            width: 100%;
+            height: 170px;
+            line-height: 140px;
+            background-color: @c-e8;
+            .container {
+                border-radius: 5px;
+                height: calc(100% - 10px);
+                background-color: @white;
+            }
+        }
+    }
+}

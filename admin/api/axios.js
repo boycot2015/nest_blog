@@ -32,7 +32,7 @@ service.interceptors.request.use(
 
         //判断请求方式是否为POST，进行转换格式
         if (config.url.indexOf('upload') < 0) {
-            console.log(config.data, 'config.data')
+            // console.log(config.data, 'config.data')
             config.method === 'post'
                 ? config.data = qs.stringify({ ...config.data })
                 : config.params = { ...config.params };
@@ -50,6 +50,9 @@ service.interceptors.request.use(
 service.interceptors.response.use(
     (response) => {
         let { data } = response;
+        if (response.code === 403) {
+            message.error(info.message)
+        }
         return data
     },
     (error) => {
@@ -63,17 +66,33 @@ service.interceptors.response.use(
         } else {
             // 此处整理错误信息格式
             info = data
-            if (info.code === 401) {
-                destroyCookie('token')
+            if (info.code === 403) {
+                destroyCookie(null, 'token')
                 if (process.browser) {
                     message.error('用户信息认证失败，请重新登录！')
-                    localStorage.removeItem('userinfo')
                     Router.push('/login')
-                    return
+                    return info
                 }
             }
+            if (info.code === 401) {
+                if (process.browser) {
+                    info.message = '访客模式暂无操作权限！'
+                    const userinfo = JSON.parse(JSON.parse(localStorage.getItem('userinfo')))
+                    if (userinfo && userinfo.administrator) {
+                        info.message = '用户信息认证失败，请重新登录！'
+                        localStorage.removeItem('userinfo')
+                        Router.push({
+                            pathname: '/login',
+                            query: { ...Router.query, redirect: Router.pathname }
+                        })
+                    }
+                }
+                return info
+            } else {
+                message.error(data.message)
+            }
         }
-        return info
+        // return info
     }
 )
 

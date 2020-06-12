@@ -8,8 +8,8 @@ export class TagService {
     constructor(@InjectRepository(Tag)
     private readonly tagRepository: Repository<Tag>) { }
     async get(data) {
-        data.currentPage = data.currentPage || 1
-        data.pageSize = data.pageSize || 10
+        // data.currentPage = data.currentPage || 1
+        // data.pageSize = data.pageSize || 10
         console.log(data, 'asdada')
         // 1. 准备工作：注入Repository，创建queryBuilder
         // 条件筛选和分页查询代码
@@ -82,29 +82,6 @@ export class TagService {
         if (res) return res
         else throw new HttpException(`标签不存在！`, 404);
     }
-    /**
-     * 获取指定标签信息，包含相关文章
-     * @param id
-     */
-    async getArticleById(id, status = null): Promise<Tag> {
-        const data = await this.tagRepository
-            .createQueryBuilder('tag')
-            .leftJoinAndSelect('tag.articles', 'articles')
-            .orderBy('articles.updateAt', 'DESC')
-            .where('tag.id=:id')
-            .orWhere('tag.label=:id')
-            .orWhere('tag.value=:id')
-            .setParameter('id', id)
-            .getOne();
-
-        if (status) {
-            data.articles = data.articles.filter((a) => a.status === status);
-            return data;
-        } else {
-            return data;
-        }
-    }
-
     async findByIds(ids): Promise<Array<Tag>> {
         return this.tagRepository.findByIds(ids);
     }

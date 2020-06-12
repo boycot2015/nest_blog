@@ -1,13 +1,18 @@
 const WithLess = require('@zeit/next-less');
 const WithCss = require('@zeit/next-css');
 const WithSass = require('@zeit/next-sass');
-const withPlugins = require('next-compose-plugins');
+// const withPlugins = require('next-compose-plugins');
+//顶部引入
+const AntDesignThemePlugin = require('antd-theme-webpack-plugin');
 const FilterWarningsPlugin = require('webpack-filter-warnings-plugin');
+const path = require('path')
 // fix: prevents error when .less files are required by node
 if (typeof require !== 'undefined') {
     require.extensions['.less'] = file => { };
 }
-
+if (typeof require !== 'undefined') {
+    require.extensions['.css'] = file => { }
+}
 // 配置说明
 const nextConfig = {
     // 编译文件的输出目录
@@ -15,7 +20,7 @@ const nextConfig = {
     // 是否给每个路由生成Etag
     // Etag是用来做缓存验证的，如果路由执行的时候，新的Etag是相同的，那么就会复用当前内容，而无需重新渲染
     // 默认情况下，nextJS是会对每个路由生成Etag的。但是如果我们部署的时候，ngx已经做了Etag的配置，那么就可以关闭nextJS的Etag，节省性能
-    generateEtags: false,
+    generateEtags: true,
     // （不常用）页面内容缓存配置，只针对开发环境
     onDemandEntries: {
         // 内容在内存中缓存的时长（ms）
@@ -35,11 +40,52 @@ const nextConfig = {
         return null
     },
     // （重要配置）手动修改webpack config
-    webpack (config, options) {
+    webpack (config, { isServer }) {
+        if (isServer) {
+            const antStyles = /antd\/.*?\/style.*?/;
+            const origExternals = [...config.externals];
+            config.externals = [
+                (context, request, callback) => {
+                    if (request.match(antStyles)) return callback();
+                    if (typeof origExternals[0] === 'function') {
+                        origExternals[0](context, request, callback)
+                    } else {
+                        callback()
+                    }
+                },
+                ...(typeof origExternals[0] === 'function' ? [] : origExternals),
+            ];
+
+            config.module.rules.unshift({
+                test: antStyles,
+                use: 'null-loader',
+            })
+        }
         config.plugins.push(
             new FilterWarningsPlugin({
                 // ignore ANTD chunk styles [mini-css-extract-plugin] warning
                 exclude: /mini-css-extract-plugin[^]*Conflicting order between:/,
+            })
+        )
+        config.plugins.push(
+            new AntDesignThemePlugin({
+                antDir: path.join(__dirname, './node_modules/antd'),//antd包位置
+                stylesDir: path.join(__dirname, './static/less/theme'),//指定皮肤文件夹
+                varFile: path.join(__dirname, './static/less/theme/variables.less'),//自己设置默认的主题色
+                indexFileName: './pages/_document.js',
+                mainLessFile: path.join(__dirname, './static/less/theme/index.less'),
+                outputFilePath: path.join(__dirname, './static/css/color.less'),//输出到什么地方
+                themeVariables: [//这里写要改变的主题变量
+                    '@primary-color',
+                    '@btn-primary-bg',
+                    '@text-color',
+                    '@secondary-color',
+                    '@text-color-secondary',
+                    '@heading-color',
+                    '@layout-body-background',
+                    '@layout-header-background'
+                ],
+                generateOnce: false
             })
         )
         return config
@@ -65,14 +111,10 @@ const nextConfig = {
     // 上面这两个配置在组件里使用方式如下：
     // import getCofnig from 'next/config'
     // const { serverRuntimeConfig,publicRuntimeConfig } = getCofnig()
-    // console.log( serverRuntimeConfig,publicRuntimeConfig )
+    // console.log(serverRuntimeConfig, publicRuntimeConfig)
     router: {
         middleware: 'headers'
     }
-}
-
-if (typeof require !== 'undefined') {
-    require.extensions['.css'] = file => { }
 }
 module.exports = WithLess(
     WithSass(

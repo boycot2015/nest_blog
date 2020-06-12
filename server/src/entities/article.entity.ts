@@ -4,12 +4,15 @@ import {
     PrimaryGeneratedColumn,
     ManyToOne,
     ManyToMany,
+    OneToMany,
     CreateDateColumn,
     UpdateDateColumn,
     JoinTable
 } from 'typeorm';
 import { Users } from './users.entity';
 import { Tag } from './tag.entity';
+import { Comment } from './comment.entity';
+import { Category } from './category.entity';
 
 @Entity()
 export class Article {
@@ -32,12 +35,19 @@ export class Article {
     @Column({ type: 'text', default: null, charset: 'utf8mb4', select: true })
     content: string
 
+    @Column({ type: 'text', default: null, charset: 'utf8mb4', select: true })
+    category: string
+
+    @Column({ type: 'text', default: null, charset: 'utf8mb4', select: true })
+    categoryName: string
+    
     @Column('enum', {
         enum: [1001, 1002, 1003]
     })
     status: string; // 文章状态
+
     @Column({ type: 'text', default: null, charset: 'utf8mb4', select: true })
-    category: string; // 分类
+    visitor: number; // 文章访问记录
 
     @CreateDateColumn({
         type: 'datetime',
@@ -57,4 +67,12 @@ export class Article {
     @ManyToOne(() => Users, user => user.article)
     @JoinTable()
     user: Users
+
+    @OneToMany(() => Comment, comment => comment.article)
+    @JoinTable()
+    comment: Array<Comment>
+
+    // @ManyToOne(() => Category, category => category.article)
+    // @JoinTable()
+    // category: Category
 }

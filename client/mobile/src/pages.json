@@ -1,0 +1,90 @@
+{
+	"pages": [
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "博客首页",
+				"enablePullDownRefresh": true,
+				"app-plus": {
+					"pullToRefresh": {
+						"support": true,
+						"color": "#ff3333",
+						"style": "default",
+						"contentdown": {
+							"caption": "下拉可刷新"
+						},
+						"contentover": {
+							"caption": "释放可刷新"
+						},
+						"contentrefresh": {
+							"caption": "正在刷新"
+						}
+					}
+				}
+			}
+		}
+	    ,{
+            "path" : "pages/userCenter/userCenter",
+            "style" : {
+				"navigationBarTitleText": "个人中心",
+				"enablePullDownRefresh": true
+			}
+		}
+		,{
+            "path" : "pages/article/index",
+            "style" : {
+				"navigationBarTitleText": "博客列表",
+				"enablePullDownRefresh": true
+			}
+		}
+		,{
+            "path" : "pages/article/view",
+            "style" : {
+				"navigationBarTitleText": "详情",
+				"enablePullDownRefresh": true
+			}
+        }
+        ,{
+            "path" : "pages/category/category",
+            "style" : {
+				"navigationBarTitleText": "分类"
+			}
+        },{
+            "path" : "pages/webview",
+            "style" : {
+				"navigationBarTitleText": "web-view"
+			}
+        }
+    ],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8"
+	},
+	"tabBar": {
+	    "color": "#7A7E83",
+	    "selectedColor": "#FFA7C5",
+	    "borderStyle": "black",
+	    "backgroundColor": "#ffffff",
+	    "list": [{
+	        "pagePath": "pages/index/index",
+	        "iconPath": "/static/index-0.png",
+	        "selectedIconPath": "/static/index-1.png",
+	        "text": "首页"
+	    }, {
+	        "pagePath": "pages/category/category",
+	        "iconPath": "/static/tag-0.png",
+	        "selectedIconPath": "/static/tag-1.png",
+	        "text": "分类"
+	    }, {
+	        "pagePath": "pages/userCenter/userCenter",
+	        "iconPath": "/static/center-0.png",
+	        "selectedIconPath": "/static/center-1.png",
+	        "text": "个人中心"
+	    }]
+	},
+	"easycom": {
+		"^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
+	}
+}

@@ -3,27 +3,23 @@ import { Form, Button, Checkbox, Input, message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import Head from 'next/head';
 import Router from 'next/router';
-import userApi from '../api/user';
-import Cookies from 'js-cookies'
+import { setCookie, destroyCookie } from 'nookies'
 import { aesEncrypt } from '../utils'
 import { Base64 } from 'js-base64';
 
-const NormalLoginForm = () => {
+const NormalLoginForm = (props) => {
     const onFinish = values => {
         values.password = aesEncrypt(values.password)
-        userApi.login(values).then(res => {
+        $api.user.login(values).then(res => {
             let userinfo = {}
             if (res && res.success) {
-                userinfo = JSON.parse(Base64.decode(res.data.split('.')[1]))
-                localStorage.setItem('userinfo', JSON.stringify({
-                    remember: values.remember,
-                    ...userinfo
-                }))
-                console.log('Received values of form: ', res)
-                Cookies.setItem('token', res.data)
-                Router.push('/')
+                setCookie(props, 'token', res.data)
+                window.localStorage.setItem('userinfo', JSON.stringify(Base64.decode(res.data.split('.')[1])))
+                !Router.query.redirect && Router.push('/')
+                // console.log(Router.query, 'Router');
+                Router.query.redirect && Router.push({ pathname: Router.query.redirect, query: { id: Router.query.id } })
             } else {
-                message.error(res.message)
+                res && message.error(res.message)
             }
         })
     };
@@ -79,7 +75,7 @@ const NormalLoginForm = () => {
                     登录
                 </Button>
             </Form.Item>
-            <a href="">注册</a>
+            未注册？<a href="/register">注册</a>
         </Form>
     );
 };
@@ -88,6 +84,9 @@ class Login extends React.Component {
     constructor(props) {
         super(props);
     }
+    componentDidMount () {
+        destroyCookie(null, 'token')
+    }
     render () {
         return (
             <div className='login-container flexbox-v align-c'>
@@ -95,7 +94,7 @@ class Login extends React.Component {
                     <title>用户登录</title>
                 </Head>
                 <div className='login-box pad20'>
-                    <NormalLoginForm></NormalLoginForm>
+                    <NormalLoginForm props={this.props}></NormalLoginForm>
                 </div>
             </div>
         )
