@@ -2,7 +2,7 @@
  
 class Deployment {
  
-	public $serect = 'mengling@1234333'; //webhooks中配置的密钥
+	public $serect = 'boycot2017'; //webhooks中配置的密钥
  
 	public function deploy()
 	{
