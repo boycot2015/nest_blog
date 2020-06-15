@@ -56,9 +56,9 @@ const nextConfig = {
                 ...(typeof origExternals[0] === 'function' ? [] : origExternals),
             ];
 
-            config.module.rules.unshift({
+            config.module.rules.push({
                 test: antStyles,
-                use: 'null-loader',
+                use: 'null-loader'
             })
         }
         config.plugins.push(

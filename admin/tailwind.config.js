@@ -1,6 +1,7 @@
 module.exports = {
     prefix: '',
-    important: false,
+    // important: true,
+    important: '#__next',
     separator: ':',
     purge: false,
     // purge: [
