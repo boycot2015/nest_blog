@@ -147,7 +147,32 @@ const formatRichText = (html) => { //控制小程序中图片大小
 	newContent = newContent.replace(/\<img/gi, '<img referrer="never" style="max-width:100%;height:auto;display:inline-block;margin:5rpx auto;vertical-align: middle;"');
 	return newContent;
 }
+/**	js获取富文本中的第一张图片url正则公式
+ * @param {Object} str
+ */
+export const getImgUrl = (str) => {
+	let data = ''
+	str.replace(/<img [^>]*src=['"]([^'"]+)[^>]*>/, function (match, capture) {
+		data = capture
+	})
+	return data
+}
+/**
+ * 处理评论递归数量
+ */
+export const getCommentNum = (val) => {
+	let num = 0
+	val.map(el => {
+		num += 1
+		if(el.children && el.children.length) {
+			num += getCommentNum(el.children)
+		}
+	})
+	return num
+}
 export default {
+	getImgUrl,
+	getCommentNum,
     timeFilter, // 格式化时间戳（秒|毫秒）
     formatPhone, // 手机号格式化
     formatBank, // 4位一空格（格式化银行卡）

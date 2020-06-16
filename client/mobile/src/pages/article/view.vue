@@ -221,17 +221,11 @@
 <script>
 	import CommentTree from '@/components/Comment.vue'
 	import minActionSheet from '@/components/min-action-sheet/min-action-sheet'
-	import uniIcons from "@/components/uni-icons/uni-icons.vue"
-	import uniPopup from '@/components/uni-popup/uni-popup.vue'
-	import uniPopupMessage from '@/components/uni-popup/uni-popup-message.vue'
 	import emoji from '@/components/m-emoji/emoji.js'
 	export default {
 		components: {
 			CommentTree,
-			minActionSheet,
-			uniIcons,
-			uniPopup,
-			uniPopupMessage
+			minActionSheet
 		},
 		data() {
 			return {

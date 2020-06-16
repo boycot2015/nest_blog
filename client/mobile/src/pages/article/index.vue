@@ -1,8 +1,23 @@
 <template>
-	<view>
-		<view class="title">
-			{{viewList[0].title}}
+	<view class="article">
+		<view class="article-banner" @click="goDetail()" v-if="viewList && viewList.length">
+			<image class="banner-img" :src="viewList[0].content|getImgUrl"></image>
+			<view class="banner-title">{{ viewList[0].title }}</view>
 		</view>
+		<view class="article-list">
+			<uni-card v-for="(val, index) in viewList" :key="index">
+				<view class="u-flex u-flex-row" @click="handleBannerClick(val)">
+					<view class="u-flex-1">
+						<view class="left">
+							<view class="title">{{val.title}}</view>
+							<view class="time">{{val.comment|getCommentNum }} 条评论 · {{new Date(val.createTime).getTime()|timeFilter}}</view>
+						</view>
+					</view>
+					<image :src="val.content|getImgUrl"></image>
+				</view>
+			</uni-card>
+		</view>
+		<uni-load-more :status="status" :icon-size="16" />
 	</view>
 </template>
 
@@ -10,18 +25,35 @@
 	export default {
 		data() {
 			return {
-				viewList: []
+				viewList: [],
+				status: 'loading',
+				contentText: ''
 			}
 		},
 		onLoad() {
 			this.init()
 		},
+		onPullDownRefresh() {
+			this.init()
+		},
 		methods: {
 			async init () {
-				let res = await this.$api.article.get({id: this.$route.query.id})
+				this.status = 'loading'
+				let res = await this.$api.article.get()
 				if (res && res.success) {
+					console.log(res.data[0], 'res.data[0]')
 					this.viewList = res.data[0]
+					this.status = 'more'
+					setTimeout(function() {
+						uni.stopPullDownRefresh()
+					}, 1000)
 				}
+			},
+			handleBannerClick (item) {
+				uni.navigateTo({
+					url: '/pages/article/view?id='+ item.id
+				})
+				// this.$router.push('/pages/webview?url='+ item.link)
 			}
 		}
 	}

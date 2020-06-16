@@ -11,3 +11,13 @@ export const getCommentNum = (val) => {
 	})
 	return num
 }
+/**	js获取富文本中的第一张图片url正则公式
+ * @param {Object} str
+ */
+export const getImgUrl = (str) => {
+	let data = 'https://img11.360buyimg.com/n7/jfs/t1/94448/29/2734/524808/5dd4cc16E990dfb6b/59c256f85a8c3757.jpg'
+	str.replace(/<img [^>]*src=['"]([^'"]+)[^>]*>/, function (match, capture) {
+		data = capture
+	})
+	return data
+}

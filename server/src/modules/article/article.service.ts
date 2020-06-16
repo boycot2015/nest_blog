@@ -21,6 +21,7 @@ export class ArticleService {
         // 1. 准备工作：注入Repository，创建queryBuilder
         // 条件筛选和分页查询代码
         let queryBy = this.articleRepository.createQueryBuilder('article')
+            .leftJoinAndSelect('article.comment', 'comment')
             .leftJoinAndSelect('article.tags', 'tag')
             .andWhere('article.isDelete=:delete').setParameter('delete', false)
         // .leftJoinAndSelect('article.comment', 'comment')

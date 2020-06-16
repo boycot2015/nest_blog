@@ -27,11 +27,14 @@
                     v-for="(val, index) in homeData.newLeast"
                     :key="val.id"
                     @click="handleView(val)"
-					:class="{'u-p-t-0': index === 0 }"
-                    class="u-body-item u-flex u-border-bottom u-col-between"
+					:class="{
+						'u-p-t-0': index === 0,
+						'u-border-bottom': index !== homeData.newLeast.length - 1
+					}"
+                    class="u-body-item u-flex u-col-between"
                 >
                     <view class="u-body-item-title u-flex-1 u-text-left u-line-2" v-html="val.title"></view>
-                    <image src="https://img11.360buyimg.com/n7/jfs/t1/94448/29/2734/524808/5dd4cc16E990dfb6b/59c256f85a8c3757.jpg" mode="aspectFill" />
+                    <image v-if="$options.filters.getImgUrl(val.content)" :src="val.content|getImgUrl" mode="aspectFill" />
                 </view>
             </view>
             <view class="" slot="foot"><u-icon name="chat-fill" size="34" color="" :label="homeData.newLeast[0] && getCommentNum(homeData.newLeast[0].comment) + '评论'"></u-icon></view>

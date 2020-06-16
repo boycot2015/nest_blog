@@ -73,6 +73,11 @@
 	        "selectedIconPath": "/static/index-1.png",
 	        "text": "首页"
 	    }, {
+	        "pagePath": "pages/article/index",
+	        "iconPath": "/static/tag-0.png",
+	        "selectedIconPath": "/static/tag-1.png",
+	        "text": "列表"
+	    }, {
 	        "pagePath": "pages/category/category",
 	        "iconPath": "/static/tag-0.png",
 	        "selectedIconPath": "/static/tag-1.png",
@@ -85,6 +90,10 @@
 	    }]
 	},
 	"easycom": {
-		"^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
+		 "autoscan": true,
+		 "custom": {
+			"^u-(.*)": "uview-ui/components/u-$1/u-$1.vue",
+			"uni-(.*)": "@/components/uni-$1/uni-$1.vue" // 匹配components目录内的vue文件
+		 }
 	}
 }
