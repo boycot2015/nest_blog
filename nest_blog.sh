@@ -28,7 +28,8 @@ pm2 delete my_blog
 pm2 start npm --name my_blog -- start
 
 cd $MOBILE_DIR
-cnpm i
+npm i
+cnpm i node-sass sass-loader --save
 #yarn install
 npm run build
 # unzip build.zip
