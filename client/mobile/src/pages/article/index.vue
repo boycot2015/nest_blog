@@ -1,16 +1,17 @@
 <template>
 	<view class="article">
-		<view class="article-banner" @click="goDetail()" v-if="viewList && viewList.length">
+		<view class="article-banner" @click="goDetail(viewList[0])" v-if="viewList && viewList.length">
 			<image class="banner-img" :src="viewList[0].content|getImgUrl"></image>
 			<view class="banner-title">{{ viewList[0].title }}</view>
 		</view>
 		<view class="article-list">
 			<uni-card v-for="(val, index) in viewList" :key="index">
-				<view class="u-flex u-flex-row" @click="handleBannerClick(val)">
+				<view class="u-flex u-flex-row" @click="goDetail(val)">
 					<view class="u-flex-1">
 						<view class="left">
 							<view class="title">{{val.title}}</view>
-							<view class="time">{{val.comment|getCommentNum }} 条评论 · {{new Date(val.createTime).getTime()|timeFilter}}</view>
+							<view class="time" v-if="val.comment && val.comment.length">{{val.comment|getCommentNum }} 条评论 · {{new Date(val.createTime).getTime()|timeFilter}}</view>
+							<view class="time" v-else>暂无评论 · {{new Date(val.createTime).getTime()|timeFilter}}</view>
 						</view>
 					</view>
 					<image :src="val.content|getImgUrl"></image>
@@ -49,7 +50,7 @@
 					}, 1000)
 				}
 			},
-			handleBannerClick (item) {
+			goDetail (item) {
 				uni.navigateTo({
 					url: '/pages/article/view?id='+ item.id
 				})

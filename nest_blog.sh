@@ -33,6 +33,8 @@ cnpm i node-sass sass-loader --save
 #yarn install
 npm run build
 # unzip build.zip
+
+echo "copy blog_mobile to default host /usr/share/nginx/html..."
 scp -r /opt/www/web/nest_blog/client/mobile/dist/build/h5/* /usr/share/nginx/html
 
 echo "complete!-----------------"
