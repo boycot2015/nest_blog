@@ -465,8 +465,7 @@ class Setting extends React.Component {
                                         <div
                                             key={item.index}
                                             onClick={this.handleSetBannerOptions.bind(this, item)}>
-                                            <a><img src={item.url} /></a>
-                                            <h3>{item.title}</h3>
+                                            <a><img src={item.url} /><h3>{item.title}</h3></a>
                                         </div>)) :
                                     <Dragger
                                         key={0}
