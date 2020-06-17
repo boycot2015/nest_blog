@@ -1,5 +1,5 @@
 <template>
-	<view class="view-content">
+	<view class="view-content" v-if="!showLoading">
 		<view class="title">
 			{{viewData.title}}
 		</view>
@@ -229,6 +229,7 @@
 		},
 		data() {
 			return {
+				showLoading: true,
 				viewData: {},
 				popData: {},
 				showCommentForm: false,
@@ -249,6 +250,9 @@
 		computed: {
 		},
 		onLoad(query) {
+			uni.showLoading({
+			    title: '加载中...'
+			})
 			this.init(query)
 		},
 		watch: {
@@ -267,18 +271,27 @@
 				if (res && res.success) {
 					this.viewData = res.data
 					this.commentForm.articleId = res.data.id
-				}
-				setTimeout(function() {
-					uni.stopPullDownRefresh()
-				}, 500)
-				let page = Math.ceil(emoji.length/21)
-				for (let i = 0; i < page - 25; i++) {
-					this.emojiArr[i] = [];
-					for (let k = 0; k < 20; k++) {
-						emoji[i*21+k]?this.emojiArr[i].push(
-						emoji[i*21+k]
-						):''
+					let page = Math.ceil(emoji.length/21)
+					for (let i = 0; i < page - 25; i++) {
+						this.emojiArr[i] = [];
+						for (let k = 0; k < 20; k++) {
+							emoji[i*21+k]?this.emojiArr[i].push(
+							emoji[i*21+k]
+							):''
+						}
 					}
+					uni.hideLoading()
+					this.showLoading = false
+					setTimeout(function() {
+						uni.stopPullDownRefresh()
+					}, 500)
+				} else {
+					uni.showToast({
+					    title: '加载失败！',
+						icon: 'none',
+					    duration: 2000
+					});
+					uni.stopPullDownRefresh()
 				}
 			},
 			onCommentClick (item) {
