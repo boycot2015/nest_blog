@@ -30,7 +30,7 @@ handler.on('push', function (event) {
     console.log('Received a push event for %s to %s',
         event.payload.repository.name,
         event.payload.ref);
-    var shpath = './' + event.payload.repository.name + '.sh';
+    var shpath = '/opt/www/web/deploy/' + event.payload.repository.name + '.sh';
     RunCmd('sh', [shpath], function (result) {
         console.log(result);
     })
