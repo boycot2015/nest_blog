@@ -50,7 +50,7 @@ class AntApp extends App {
             //         compact: true, // 开启紧凑模式
             //     })
             // }
-            process.browser && window.less.modifyVars(options).then(() => {
+            process.browser && window.less && window.less.modifyVars(options).then(() => {
                 console.log(themeColor, 'success')
             }).
                 catch(error => {

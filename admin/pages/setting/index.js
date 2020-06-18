@@ -80,7 +80,7 @@ const BannerOptionsForm = ({ visible, initProps, onSubmit, handleUpload, onCance
                         customRequest={(option) => handleUpload(option)}
                         showUploadList={false}
                     >
-                        <div className="text-lg h-40" style={{ margin: '0 auto' }}>
+                        <div className="text-lg h-40" style={{ margin: '0 auto', height: 50 }}>
                             <img src={url} style={{ height: '100%', margin: '0 auto' }} />
                         </div>
                     </Upload>
