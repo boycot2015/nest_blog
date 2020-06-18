@@ -49,24 +49,6 @@
 			height: 300upx;
 		}
 	}
-    .u-card-wrap {
-        background-color: $u-bg-color;
-        padding: 1px;
-    }
-
-    .u-body-item {
-        font-size: 32upx;
-        color: #333;
-        padding: 20upx 0;
-    }
-        
-    .u-body-item image {
-        width: 120upx;
-        flex: 0 0 120upx;
-        height: 120upx;
-        border-radius: 8upx;
-        margin-left: 12upx;
-    }
 </style>
 <script>
 	import { getCommentNum } from '@/utils'
