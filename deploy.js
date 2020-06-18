@@ -3,7 +3,7 @@ var createHandler = require('github-webhook-handler')
 var handler = createHandler({ path: '/deployBlog', secret: 'boycot2017' })
 
 function RunCmd (cmd, args, cb) {
-    var spawn = require('child_process').spawn;
+    var spawn = require('child_process').spawnSync;
     var child = spawn(cmd, args);
     var result = '';
     child.stdout.on('data', function (data) {
