@@ -74,8 +74,8 @@
 	        "text": "首页"
 	    }, {
 	        "pagePath": "pages/article/index",
-	        "iconPath": "/static/tag-0.png",
-	        "selectedIconPath": "/static/tag-1.png",
+	        "iconPath": "/static/hot-0.png",
+	        "selectedIconPath": "/static/hot-1.png",
 	        "text": "列表"
 	    }, {
 	        "pagePath": "pages/category/category",
@@ -86,7 +86,7 @@
 	        "pagePath": "pages/userCenter/userCenter",
 	        "iconPath": "/static/center-0.png",
 	        "selectedIconPath": "/static/center-1.png",
-	        "text": "个人中心"
+	        "text": "我的"
 	    }]
 	},
 	"easycom": {
