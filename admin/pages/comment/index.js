@@ -325,6 +325,7 @@ class Article extends React.Component {
                 {/* <AdvancedSearchForm setParentState={this.handlerFormSubmit.bind(this)} /> */}
                 <Table
                     {...this.state}
+                    className="comment-table"
                     rowKey={(record, index) => index}
                     dataSource={state.hasData ? this.state.data : null}
                     columns={columns(this)}

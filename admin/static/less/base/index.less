@@ -24,6 +24,9 @@
 .fr {
     float: right;
 }
+.tc {
+    text-align: center;
+}
 .clearfix::after {
     clear: both;
     overflow: hidden;
@@ -75,4 +78,34 @@ h3.border-orange-f9 {
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
   border-radius: 10px;
+}
+body {
+    color: #f0f2f5;
+}
+.g-scrollview {
+    width: calc(100% - 20px);
+    height: 100%;
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    position: relative;
+    margin-bottom: -1px;
+    // background: #f5f5f5;
+}
+.ant-table {
+    max-height: 550px;
+    min-height: 550px;
+    overflow: hidden;
+    overflow-y: auto;
+}
+.file-table,
+.comment-table {
+    .ant-table {
+        max-height: 605px;
+        min-height: 605px;
+    }
 }

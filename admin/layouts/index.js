@@ -13,7 +13,7 @@ import {
 import zhCN from 'antd/lib/locale-provider/zh_CN';
 import moment from 'moment';
 import 'moment/locale/zh-cn';
-
+import Footer from './footer';
 import Cookies from 'js-cookies'
 import config from '../config'
 import {
@@ -178,17 +178,17 @@ class Container extends React.Component {
                             ))}
                     </Menu>
                 </Sider>
-                <Layout className="site-layout" style={{ marginLeft: !this.state.collapsed ? 200 : 80, transition: 'all 0.3s' }}>
+                <Layout className="site-layout flex-col" style={{ marginLeft: !this.state.collapsed ? 200 : 80, transition: 'all 0.3s' }}>
                     <Header
                         className="site-layout-background flex flex-row items-center justify-between"
                         style={{
                             backgroundColor: '#fff',
                             overflow: 'auto',
-                            width: !this.state.collapsed ? 'calc(100vw - 200px)' : 'calc(100vw - 80px)',
-                            position: 'fixed',
-                            zIndex: 9,
-                            transition: 'all 0.3s',
-                            left: !this.state.collapsed ? 200 : 80,
+                            // width: !this.state.collapsed ? 'calc(100vw - 200px)' : 'calc(100vw - 80px)',
+                            // position: 'fixed',
+                            // zIndex: 9,
+                            // transition: 'all 0.3s',
+                            // left: !this.state.collapsed ? 200 : 80,
                         }}
                     >
                         <div style={{ width: 240 }} className='flex-2 flex flex-row items-center justify-between' >
@@ -221,7 +221,7 @@ class Container extends React.Component {
                             </Dropdown>
                         </div>
                     </Header>
-                    <div className="main mt-20 ml-5">
+                    <div className="main mt-5 ml-5 g-scrollview">
                         <Breadcrumb className="h-5 leading-5">
                             <Breadcrumb.Item href="/">
                                 <RobotOutlined />
@@ -233,9 +233,10 @@ class Container extends React.Component {
                         <Content
                             className="site-layout-background bg-white"
                             style={{
-                                margin: '24px 16px 24px 0',
+                                margin: '24px 16px 16px 0',
                                 padding: 24,
-                                minHeight: 'calc(100vh - 148px)',
+                                maxHeight: 'calc(100vh - 180px)',
+                                minHeight: 'calc(100vh - 180px)',
                             }}
                         >
                             <ConfigProvider locale={zhCN} renderEmpty={customizeRenderEmpty}>
@@ -243,6 +244,7 @@ class Container extends React.Component {
                             </ConfigProvider>
                         </Content>
                     </div>
+                    <Footer></Footer>
                 </Layout>
             </Layout >
         );

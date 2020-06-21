@@ -73,3 +73,9 @@
   -moz-border-radius: 10px;
   border-radius: 10px;
 }
+
+.ant-table {
+    max-height: 400px;
+    overflow: hidden;
+    overflow-y: auto;
+}
