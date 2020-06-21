@@ -191,7 +191,7 @@ class Container extends React.Component {
                             // left: !this.state.collapsed ? 200 : 80,
                         }}
                     >
-                        <div style={{ width: 240 }} className='flex-2 flex flex-row items-center justify-between' >
+                        <div style={{ width: 160 }} className='flex-2 flex flex-row items-center justify-between' >
                             {React.createElement(this.state.collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
                                 className: 'trigger text-lg tl',
                                 onClick: this.toggle,
