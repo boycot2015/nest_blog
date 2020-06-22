@@ -431,6 +431,7 @@ class Article extends React.Component {
                     columns={columns(this)}
                     handleDelete={(val) => this.handleDelete(val)}
                     handleReview={(val) => this.handleReview(val)}
+                    scroll={{ y: 510 }}
                     onChange={(pageData) => this.handlerFormSubmit(pageData, true)}
                     pagination={{
                         ...this.state.pageData,

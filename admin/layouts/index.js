@@ -235,6 +235,7 @@ class Container extends React.Component {
                             style={{
                                 margin: '24px 16px 16px 0',
                                 padding: 24,
+                                overflow: 'hidden',
                                 maxHeight: 'calc(100vh - 180px)',
                                 minHeight: 'calc(100vh - 180px)',
                             }}

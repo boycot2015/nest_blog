@@ -300,6 +300,7 @@ class User extends React.Component {
                 <AdvancedSearchForm setParentState={this.handlerFormSubmit.bind(this)} state={this.state} />
                 <Table
                     {...this.state}
+                    scroll={{ y: 510 }}
                     rowKey={(record, index) => index}
                     dataSource={state.hasData ? this.state.data : null}
                     columns={columns(this)}

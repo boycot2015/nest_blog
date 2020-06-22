@@ -328,6 +328,7 @@ class Article extends React.Component {
                 <Table
                     {...this.state}
                     className="file-table"
+                    scroll={{ y: 555 }}
                     rowKey={(record, index) => index}
                     dataSource={state.hasData ? this.state.data : null}
                     columns={columns(this)}
