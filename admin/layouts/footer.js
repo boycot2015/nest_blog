@@ -6,7 +6,7 @@ class Footer extends React.Component {
     render () {
         return (
             <div
-                class="copyright tc"
+                className="copyright tc"
                 style={{
                     marginBottom: 14
                 }}>
