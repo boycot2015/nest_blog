@@ -2,6 +2,7 @@
 node_modules/
 unpackage/
 dist/
+admin/static/css/color.less
 
 # local env files
 .env.local
