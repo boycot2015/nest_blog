@@ -9,6 +9,7 @@ export default class MyDocument extends Document {
             <html>
                 <Head>
                     <meta name="referrer" content="no-referrer" />
+                    <meta name="baidu-site-verification" content="FkRnzHszOA" />
                     <style>{`body { margin: 0 } /* custom! */`}</style>
                     {/* <script src="http://fw.qq.com/ipaddress"></script> */}
                     {/* <script src="http://pv.sohu.com/cityjson?ie=utf-8"></script> */}
