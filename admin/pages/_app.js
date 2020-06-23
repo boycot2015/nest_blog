@@ -31,6 +31,20 @@ class AntApp extends App {
     }
     componentDidMount () {
         this.setThemeConfig()
+        this.setState({
+            userAgent: navigator.userAgent
+        })
+        window.addEventListener('resize', () => {
+            // if (/(iPhone|iPad|iPod|iOS|Android)/i.test(navigator.userAgent)) { //移动端
+            //     //TODO
+            // }
+            if (this.state.userAgent !== navigator.userAgent) {
+                window.location.reload(true)
+                this.setState({
+                    userAgent: navigator.userAgent
+                })
+            }
+        })
     }
 
     setThemeConfig () { // 更换主题颜色

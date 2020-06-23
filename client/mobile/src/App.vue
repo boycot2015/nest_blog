@@ -1,7 +1,24 @@
 <script>
 	export default {
+		data () {
+			return {
+				userAgent: ''
+			}
+		},
 		onLaunch: function() {
 			console.log('App Launch')
+			this.userAgent = navigator.userAgent
+			window.addEventListener('resize', () => {
+				// if (/(iPhone|iPad|iPod|iOS|Android)/i.test(navigator.userAgent)) { //移动端
+				//     //TODO
+				// }
+				if (this.userAgent !== navigator.userAgent) {
+					window.location.reload(true)
+					this.setState({
+						userAgent: navigator.userAgent
+					})
+				}
+			})
 		},
 		onShow: function() {
 			console.log('App Show')
