@@ -5,6 +5,7 @@
 			"style": {
 				"navigationBarTitleText": "博客首页",
 				"enablePullDownRefresh": true,
+				"titleNView": false,
 				"app-plus": {
 					"pullToRefresh": {
 						"support": true,
@@ -27,6 +28,7 @@
             "path" : "pages/userCenter/userCenter",
             "style" : {
 				"navigationBarTitleText": "个人中心",
+				"titleNView": false,
 				"enablePullDownRefresh": true
 			}
 		}
@@ -34,6 +36,7 @@
             "path" : "pages/article/index",
             "style" : {
 				"navigationBarTitleText": "博客列表",
+				"titleNView": false,
 				"enablePullDownRefresh": true
 			}
 		}
@@ -47,12 +50,20 @@
         ,{
             "path" : "pages/category/category",
             "style" : {
+				// "titleNView": false,
 				"navigationBarTitleText": "分类"
 			}
         },{
             "path" : "pages/webview",
             "style" : {
+				"titleNView": false,
 				"navigationBarTitleText": "web-view"
+			}
+        }
+        ,{
+            "path" : "pages/login/login",
+            "style" : {
+				"titleNView": false
 			}
         }
     ],

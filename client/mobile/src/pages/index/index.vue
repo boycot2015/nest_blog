@@ -1,5 +1,5 @@
 <template>
-    <view class="content">
+    <view class="content" v-show="!loading">
 		 <swiper
 		 class="swiper"
 		 :indicator-dots="indicatorDots"
@@ -17,6 +17,17 @@
 				</view>
 			</swiper-item>
 		</swiper>
+		<view class="notice pdlr30 u-flex"
+		v-if="showNotice && homeData.notice">
+			<text class="title">公告：</text>
+			<view
+				@click="onNoticeClick(homeData.notice)"
+				class="notice-content u-flex-3"
+			>
+				<text ref="textMove" class="text">{{homeData.notice.title}}</text>
+			</view>
+			<uni-icons type="closeempty" @tap="showNotice = false" color="#666" size="20"></uni-icons>
+		</view>
         <u-card
 		v-if="homeData.newLeast.length"
         :title="'最新发布'"
@@ -49,6 +60,31 @@
 			height: 300upx;
 		}
 	}
+	.notice{
+		position:relative;
+		height:72upx;
+		font:normal 24upx/72upx "microsoft yahei";
+		color:#333;
+		background:#ffebcb;
+		overflow:hidden;
+		z-index:100;
+		padding:0 30upx;
+		.title {
+			background:#ffebcb;
+		}
+		&-content {
+			position: relative;
+			z-index: 9;
+			height:100%;
+			overflow: hidden;
+		}
+		.text {
+			height:100%;
+			width: auto;
+			flex-wrap: nowrap;
+			position: absolute;
+		}
+	}
 </style>
 <script>
 	import { getCommentNum } from '@/utils'
@@ -77,50 +113,52 @@
 				indicatorDots: true,
 				autoplay: true,
 				interval: 2000,
-				duration: 500
+				duration: 500,
+				showNotice: true,
+				loading: true
             }
         },
-        onLoad() {
-            this.initData()
+        async onLoad() {
+			uni.showLoading({
+			    title: '加载中...'
+			})
+            await this.initData()
+			this.textMove()
         },
 		onPullDownRefresh() {
 			this.initData()
 		},
         methods: {
             async initData() {
-                let [bannerRes, homeRes] = await Promise.all([await this.$api.setting.get(), await this.$api.home.datas()])
-                let bannerData = {
+                let [configRes, listRes] = await Promise.all([await this.$api.setting.get(), await this.$api.home.datas()])
+                let homeData = {
                     banner: [],
                     notice: {},
                     siteConfig: {},
                     theme: {},
                     id: ''
                 }
-                if (bannerRes && bannerRes.success) {
-                    if (bannerRes.data && bannerRes.data[0].length) {
-                        bannerData.banner = bannerRes.data[0][0].banner !== null ? JSON.parse(bannerRes.data[0][0].banner) : []
-                        bannerData.notice = bannerRes.data[0][0].notice !== null ? JSON.parse(bannerRes.data[0][0].notice) : {}
-                        bannerData.siteConfig = bannerRes.data[0][0].siteConfig !== null ? JSON.parse(bannerRes.data[0][0].siteConfig) : {}
-                        bannerData.theme = bannerRes.data[0][0].theme !== null ? JSON.parse(bannerRes.data[0][0].theme) : {}
-                        bannerData.id = bannerRes.data[0][0].id
+                if (configRes && configRes.success) {
+                    if (configRes.data && configRes.data[0].length) {
+                        homeData.banner = configRes.data[0][0].banner !== null ? JSON.parse(configRes.data[0][0].banner) : []
+                        homeData.notice = configRes.data[0][0].notice !== null ? JSON.parse(configRes.data[0][0].notice) : {}
+                        homeData.siteConfig = configRes.data[0][0].siteConfig !== null ? JSON.parse(configRes.data[0][0].siteConfig) : {}
+                        homeData.theme = configRes.data[0][0].theme !== null ? JSON.parse(configRes.data[0][0].theme) : {}
+                        homeData.id = configRes.data[0][0].id
                     }
-                    // console.log(bannerData.banner, homeRes.data, 'bannerData.banner')
-                    this.bannerlist = bannerData.banner
+                    // console.log(homeData, listRes.data, 'homeData.banner')
+                    this.bannerlist = homeData.banner
+					this.homeData = homeData
                 }
-				if (homeRes && homeRes.success) {
-                    this.homeData = homeRes.data
+				if (listRes && listRes.success) {
+                    this.homeData.newLeast = listRes.data.newLeast
                 } else {
-                    homeRes && this.$message.error(homeRes.message)
+                    listRes && this.$message.error(listRes.message)
+					this.showNotice = false
                 }
-				setTimeout(function() {
-					uni.stopPullDownRefresh()
-				}, 500);
-            },
-            handleSwipperClick (index) {
-                console.log(index, 'index')
-                let path = this.bannerlist[index].link
-                path.includes('http') && window.open(path)
-                !path.includes('http') && this.$router.push(path)
+				uni.stopPullDownRefresh()
+				uni.hideLoading()
+				this.loading = false
             },
             handleView (item) {
 				uni.navigateTo({
@@ -128,10 +166,45 @@
 				})
             },
 			handleBannerClick (item) {
-				uni.navigateTo({
+				item.link.includes('http') && uni.navigateTo({
 					url: '/pages/webview?url='+ item.link
 				})
+				!path.includes('http') &&
+				uni.navigateTo({
+					url: item.link
+				})
 				// this.$router.push('/pages/webview?url='+ item.link)
+			},
+			textMove () {
+				let oCon = this.$refs.textMove.$el
+				if(oCon !== null) {
+				    let _move = null
+					let seep = -2
+				    _move = setInterval(() => {
+						this.autoRoll(oCon, seep)
+					}, 80)
+				    // clearInterval(_move)
+				    if (oCon.innerText.length <= 22) {
+				        clearInterval(_move)
+				    } else {
+				        oCon.innerText += oCon.innerText
+						this.autoRoll(oCon, seep)
+				    }
+				}
+			},
+			autoRoll(oCon, seep) {
+			    if (oCon.offsetLeft < -oCon.offsetWidth / 2) {
+			        oCon.style.left = 0
+			    }
+			    if (oCon.offsetLeft > 0) {
+			        oCon.style.left = -oCon.offsetWidth / 2 + 'px'
+			    }
+			    oCon.style.left = oCon.offsetLeft + seep + 'px'
+			},
+			onNoticeClick (item) {
+				if (item.link) {
+					this.handleBannerClick(item)
+				}
 			}
         }
     }

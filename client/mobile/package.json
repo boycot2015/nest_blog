@@ -47,6 +47,7 @@
     "@dcloudio/uni-stat": "^2.0.0-27520200518001",
     "axios": "0.19.0",
     "core-js": "^3.6.5",
+    "crypto-js": "^4.0.0",
     "dayjs": "^1.8.28",
     "eslint": "^7.1.0",
     "eslint-config-standard": "^14.1.1",

@@ -31,14 +31,30 @@
 				contentText: '',
 				current: 1,
 				pageSize: 2,
+				category: [],
 				total: 0
 			}
 		},
-		onLoad() {
+		onLoad(e) {
 			this.init()
+		},
+		onShow () {
+			if (getApp().globalData.category) {
+				this.viewList = []
+				this.category = getApp().globalData.category
+			}
+			this.init({
+				current: 1,
+				category: this.category,
+				pageSize: this.pageSize
+			})
+		},
+		onHide() {
+			this.category = ''
 		},
 		onPullDownRefresh() {
 			this.current = 1
+			this.category = ''
 			this.init()
 		},
 		onReachBottom() {
@@ -46,13 +62,14 @@
 			if (this.viewList.length === this.total) return
 			this.current += 1
 			this.status = 'more'
-			const { current, pageSize } = this 
-			this.init({ current, pageSize })
+			const { current, pageSize, category } = this 
+			this.init({ current, pageSize, category })
 		},
 		methods: {
 			async init (optipns) {
 				optipns = optipns || {
 					current: this.current,
+					category: this.category,
 					pageSize: this.pageSize
 				}
 				this.status = 'loading'

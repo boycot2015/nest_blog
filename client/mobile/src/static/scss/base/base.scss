@@ -19,3 +19,11 @@
 	border-radius: 8upx;
 	margin-left: 12upx;
 }
+uni-tabbar .uni-tabbar__bd,
+uni-tabbar .uni-tabbar~.uni-placeholder {
+	height: 100upx;
+}
+uni-tabbar .uni-tabbar__icon {
+	height: 48upx;
+	width: 48upx;
+}
