@@ -75,6 +75,10 @@ $uni-font-size-subtitle:36upx;
 $uni-color-paragraph: #3F536E; // 文章段落颜色
 $uni-font-size-paragraph:30upx;
 
+
+uni-button[type=primary] {
+	background-color: $uni-color-primary;
+}
 // 组件scss
 @import 'uview-ui/theme.scss';
 @import '/static/scss/index.scss';

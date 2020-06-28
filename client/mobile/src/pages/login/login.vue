@@ -38,6 +38,11 @@
 <script>
 	import Cookie from 'js-cookie'
 	import { aesEncrypt } from '@/utils'
+	 import {  
+		// mapState,  
+		mapMutations  
+	} from 'vuex'
+
 	export default {
 		data() {
 			return {
@@ -45,7 +50,11 @@
 			}
 		},
 		methods: {
-			formSubmit: function(e) {
+			...mapMutations([
+				'login',
+				'logout'
+			]),
+			formSubmit (e) {
 				let formdata = e.detail.value
 				// console.log('form发生了submit事件，携带数据为：' + JSON.stringify(e.detail.value))
 				// uni.showModal({
@@ -60,15 +69,35 @@
 					})
 					return
 				}
-				this.$api.user.login(formdata).then(res => {
-					if (res && res.success) {
-						Cookie.set('token', res.data)
-						uni.navigateBack()
+				let api = this.isLogin ? 'login' : 'register'
+				this.$api.user[api](formdata).then(async res => {
+					if (this.isLogin) {
+						if (res && res.success) {
+							// Cookie.set('token', res.data)
+							await this.login(res.data)
+							if (this.$route.query.redirect) {
+								uni.navigateBack()
+							} else {
+								uni.switchTab({
+									url: '/pages/userCenter/userCenter'
+								})
+							}
+						} else {
+							uni.showModal({
+								content: res.message,
+								showCancel: false
+							})
+						}
 					} else {
-						uni.showModal({
-							content: res.message,
-							showCancel: false
-						})
+						if (res && res.success) {
+							this.isLogin = true
+							this.formReset()
+						} else {
+							uni.showModal({
+								content: res.message,
+								showCancel: false
+							})
+						}
 					}
 				})
 			},

@@ -66,6 +66,12 @@
 				"titleNView": false
 			}
         }
+        ,{
+            "path" : "pages/userCenter/info",
+            "style" : {
+				"navigationBarTitleText": "个人信息"
+			}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
