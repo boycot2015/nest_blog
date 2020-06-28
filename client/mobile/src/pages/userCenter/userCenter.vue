@@ -34,7 +34,6 @@
 .user-center {
 	background-color: $c-f8;
 	height: 100%;
-	padding-bottom: 90upx;
 	.user-info {
 		// background: linear-gradient($c-ccc, $primary, $error);
 		background-color: $primary;
@@ -113,6 +112,8 @@
 					let userinfo = JSON.parse(Base64.decode(Cookie.get('token').split('.')[1]))
 					this.userInfo = userinfo
 					console.log(userinfo, 'userinfo')
+				} else {
+					this.isLogin = false
 				}
 				this.loading = false
 				uni.stopPullDownRefresh()

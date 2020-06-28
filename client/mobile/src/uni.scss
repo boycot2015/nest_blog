@@ -79,6 +79,9 @@ $uni-font-size-paragraph:30upx;
 uni-button[type=primary] {
 	background-color: $uni-color-primary;
 }
+uni-button:after {
+    border: none;
+}
 // 组件scss
 @import 'uview-ui/theme.scss';
 @import '/static/scss/index.scss';

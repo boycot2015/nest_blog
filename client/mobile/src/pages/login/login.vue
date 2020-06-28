@@ -9,16 +9,16 @@
 			@reset="formReset"
 		>
 			<view class="uni-form-item uni-column u-flex">
-				<view class="title u-flex-2">用&nbsp;户&nbsp;名：</view>
-				<input class="uni-input u-flex-6" name="username" placeholder="输入用户名" />
+				<view class="title u-flex-3">用&nbsp;户&nbsp;&nbsp;名：</view>
+				<input class="uni-input u-flex-8" name="username" placeholder="输入用户名" />
 			</view>
 			<view class="uni-form-item uni-column u-flex">
-				<view class="title u-flex-2">密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码：</view>
-				<input class="uni-input u-flex-6" type="password" name="password" placeholder="输入密码" />
+				<view class="title u-flex-3">密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码：</view>
+				<input class="uni-input u-flex-8" type="password" name="password" placeholder="输入密码" />
 			</view>
 			<view class="uni-form-item uni-column u-flex" v-if="!isLogin">
-				<view class="title u-flex-2">确认密码：</view>
-				<input class="uni-input u-flex-6" type="password" name="password" placeholder="输入密码" />
+				<view class="title u-flex-3">确认密码：</view>
+				<input class="uni-input u-flex-8" type="password" name="password" placeholder="确认密码" />
 			</view>
 			<!-- <view class="uni-form-item uni-column u-flex u-text-center">
 				<view class="title u-flex-1">记住密码</view>
@@ -64,6 +64,7 @@
 				formdata.password = aesEncrypt(formdata.password, '123456')
 				if (!formdata.username || !formdata.password) {
 					uni.showModal({
+						title: '温馨提示',
 						content: '用户名或密码不能为空！',
 						showCancel: false
 					})
@@ -117,7 +118,7 @@
 		.logo {
 			width:160upx;
 			height: 160upx;
-			margin: 200upx 0;
+			margin: 150upx 0;
 			image {
 				width:100%;
 				height: 100%;
@@ -127,14 +128,16 @@
 			width: 600upx;
 			.uni-form-item {
 				margin-bottom: 30upx;
+				font-size: 32upx;
 				.uni-input {
-					padding-bottom: 12upx;
+					// padding-bottom: 8upx;
 					border-bottom: 1px solid $c-e8;
 				}
 			}
 			.uni-btn-v {
+				margin-top: 60upx;
 				uni-button[type=primary] {
-					margin-bottom: 20upx;
+					margin-bottom: 30upx;
 					background-color: $uni-color-primary;
 				}
 			}
