@@ -268,7 +268,7 @@ class User extends React.Component {
         }
         message.error(res.message)
     }
-    async handleDelete () {
+    async handleDelete (item) {
         let { id, status } = item
         status = status === 1001 ? 1002 : 1001
         const res = await $api.user.delete({ id, status })
