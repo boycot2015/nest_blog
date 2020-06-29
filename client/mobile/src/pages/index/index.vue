@@ -13,7 +13,7 @@
 			@click="handleBannerClick(item)"
 			:key="item.index">
 				<view class="swiper-item">
-					<image :src="item.url" mode=""></image>
+					<image :src="item.url" mode="aspectFill"></image>
 				</view>
 			</swiper-item>
 		</swiper>
@@ -166,13 +166,14 @@
 				})
             },
 			handleBannerClick (item) {
+				console.log(item.link.includes('http'), 'e.url')
 				item.link.includes('http') && uni.navigateTo({
 					url: '/pages/webview?url='+ item.link
 				})
-				!path.includes('http') &&
-				uni.navigateTo({
-					url: item.link
-				})
+				// !item.link.includes('http') &&
+				// uni.navigateTo({
+				// 	url: item.link
+				// })
 				// this.$router.push('/pages/webview?url='+ item.link)
 			},
 			textMove () {

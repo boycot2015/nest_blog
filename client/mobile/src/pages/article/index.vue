@@ -1,7 +1,7 @@
 <template>
 	<view class="article">
 		<view class="article-banner" @click="goDetail(viewList[0])" v-if="viewList && viewList.length">
-			<image class="banner-img" :src="viewList[0].content|getImgUrl"></image>
+			<image class="banner-img" :src="viewList[0].content|getImgUrl" mode="aspectFill"></image>
 			<view class="banner-title">{{ viewList[0].title }}</view>
 		</view>
 		<view class="article-list">
@@ -9,12 +9,12 @@
 				<view class="u-flex u-flex-row" @click="goDetail(val)">
 					<view class="u-flex-1">
 						<view class="left">
-							<view class="title">{{val.title}}</view>
+							<view class="title u-line-2">{{val.title}}</view>
 							<view class="time" v-if="val.comment && val.comment.length">{{val.comment|getCommentNum }} 条评论 · {{new Date(val.createTime).getTime()|timeFilter}}</view>
 							<view class="time" v-else>暂无评论 · {{new Date(val.createTime).getTime()|timeFilter}}</view>
 						</view>
 					</view>
-					<image :src="val.content|getImgUrl"></image>
+					<image :src="val.content|getImgUrl" mode="aspectFill"></image>
 				</view>
 			</uni-card>
 		</view>
@@ -30,7 +30,7 @@
 				status: 'loading',
 				contentText: '',
 				current: 1,
-				pageSize: 2,
+				pageSize: 3,
 				category: [],
 				total: 0
 			}

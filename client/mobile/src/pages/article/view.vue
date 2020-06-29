@@ -390,6 +390,7 @@
 		font-size: 40upx;
 		font-weight: 600;
 		padding: 20upx 30upx;
+		text-align: justify;
 		border-bottom: 1px solid $c-e8;
 	}
 	.public-time {

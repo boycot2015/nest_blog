@@ -17,23 +17,37 @@
 		</view>
 		<view
 		class="scroll-content right-content u-flex-2"
-		:class="{ 'u-row-center u-flex': showNoData }"
 		>
-			<view class="scroll-content-main u-flex" v-if="!showNoData">
-				<view
-				class="category-item u-text-center"
-				v-for="(item, index) in categoryChildren"
-				:key="item.id"
-				@tap="onChildClick(item)"
-				>
-					<view class="text">
-						{{item.value}}
+		<!-- :class="{ 'u-row-center u-flex': showNoData }" -->
+		<!-- v-if="!showNoData" -->
+			<view class="scroll-content-main u-flex">
+				<block v-if="categoryChildren.length">
+					<view
+					class="category-item u-text-center"
+					v-for="(item, index) in categoryChildren"
+					:key="item.id"
+					@tap="onChildClick(item)"
+					>
+						<view class="text">
+							{{item.value}}
+						</view>
 					</view>
-				</view>
+				</block>
+				<block v-else-if="menuList.length">
+					<view
+					class="category-item u-text-center"
+					@tap="onChildClick(menuList.filter(item => item.id === actived)[0])"
+					>
+						<view class="text">
+							{{menuList.filter(item => item.id === actived)[0].value}}
+						</view>
+					</view>
+				</block>
+				<!-- <view class="no-data" v-else>
+					暂无数据 ~
+				</view> -->
 			</view>
-			<view class="no-data" v-else>
-				暂无数据 ~
-			</view>
+			
 		</view>
 	</view>
 </template>
@@ -67,11 +81,13 @@
 					this.showNoData = true
 				} else {
 					this.showNoData = false
-				}
+                }
 				this.actived = item.id
 			},
 			onChildClick (item) {
-				getApp().globalData.category = [item.parentId, item.id]
+				getApp().globalData.category = []
+				item.parentId !== null && getApp().globalData.category.push(item.parentId)
+				getApp().globalData.category.push(item.id)
 				uni.switchTab({
 					url: '/pages/article/index?category=' + item.id
 				})

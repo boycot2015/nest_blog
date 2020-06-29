@@ -22,8 +22,10 @@
 	&-list {
 		min-height: 450upx;
 		image {
-			width: 100upx;
-			height: 100upx;
+			width: 130upx;
+			height: 130upx;
+			border-radius: 10upx;
+			overflow: hidden;
 		}
 		.left {
 			margin-right: 20upx;
