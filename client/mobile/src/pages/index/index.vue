@@ -170,11 +170,11 @@
 				item.link.includes('http') && uni.navigateTo({
 					url: '/pages/webview?url='+ item.link
 				})
-				// !item.link.includes('http') &&
-				// uni.navigateTo({
-				// 	url: item.link
-				// })
-				// this.$router.push('/pages/webview?url='+ item.link)
+				!item.link.includes('http') &&
+				uni.navigateTo({
+					url: item.link
+				})
+				this.$router.push('/pages/webview?url='+ item.link)
 			},
 			textMove () {
 				let oCon = this.$refs.textMove.$el
