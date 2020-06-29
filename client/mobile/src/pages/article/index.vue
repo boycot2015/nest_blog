@@ -31,7 +31,7 @@
 				contentText: '',
 				current: 1,
 				pageSize: 3,
-				category: [],
+				category: '',
 				total: 0
 			}
 		},
@@ -39,18 +39,20 @@
 			this.init()
 		},
 		onShow () {
-			if (getApp().globalData.category) {
+			let category = getApp().globalData.category
+			// if (this.viewList.length === this.total) return
+			if (category && JSON.stringify(category) !== JSON.stringify(this.category)) {
 				this.viewList = []
-				this.category = getApp().globalData.category
+				this.category = category
+				this.init({
+					current: this.category ? 1 : this.current + 1,
+					category: this.category,
+					pageSize: this.pageSize
+				})
 			}
-			this.init({
-				current: 1,
-				category: this.category,
-				pageSize: this.pageSize
-			})
 		},
 		onHide() {
-			this.category = ''
+			// this.category = ''
 		},
 		onPullDownRefresh() {
 			this.current = 1

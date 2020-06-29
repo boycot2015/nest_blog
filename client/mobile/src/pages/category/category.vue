@@ -64,6 +64,7 @@
 			}
 		},
 		onLoad() {
+			getApp().globalData.category = ''
 			this.init()
 		},
 		methods: {
