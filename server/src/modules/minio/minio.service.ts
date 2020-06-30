@@ -25,6 +25,7 @@ export class MinioService {
             ...this.options,
             // endPoint: '192.168.1.175',
             endPoint: '106.13.8.33',
+            // endPoint: '47.113.87.100',
             port: 9000,
             useSSL: false,
             accessKey: 'minioadmin',
