@@ -34,19 +34,19 @@ export class SettingService {
         // return await this.articleRepository.query(data);
     }
     async add(data) {
-        const { banner, notice, siteConfig, theme } = data
+        const { banner, notice, siteConfig, theme, activity } = data
         if (!banner || !notice) {
             throw new HttpException(`参数为空！`, 400);
         }
-        await this.settingRepository.save({ banner, notice, siteConfig, theme });
+        await this.settingRepository.save({ banner, notice, siteConfig, theme, activity });
         return responseStatus.success.message
     }
     async edit(data) {
-        const { id, banner, notice, siteConfig, theme } = data
+        const { id, banner, notice, siteConfig, theme, activity } = data
         if (id && banner && notice) {
             const res = await this.settingRepository.findOne({ id });
             const updatedcategory = await this.settingRepository.merge(
-                res, { banner, notice, siteConfig, theme }
+                res, { banner, notice, siteConfig, theme, activity }
             );
             if (res) {
                 await this.settingRepository.save(updatedcategory);

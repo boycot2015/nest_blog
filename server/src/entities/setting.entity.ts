@@ -24,7 +24,8 @@ export class Setting {
 
   @Column({ type: 'text', charset: 'utf8mb4', default: null, select: true })
   theme: string;
-
+  @Column({ type: 'text', charset: 'utf8mb4', default: null, select: true })
+  activity: string;
   @CreateDateColumn({
     type: 'datetime',
     comment: '创建时间',

@@ -9,7 +9,8 @@ import {
     Modal, Menu, ConfigProvider,
     Button, Form, Input, Radio,
     Avatar, notification, Row, Col,
-    Carousel, Upload, message, Card
+    Carousel, Upload, message, Card,
+    DatePicker
 } from 'antd';
 import {
     RightOutlined,
@@ -20,6 +21,7 @@ import {
     UploadOutlined
 } from '@ant-design/icons';
 import { parseCookies, setCookie, destroyCookie } from 'nookies'
+import moment from 'moment';
 const { Dragger } = Upload;
 let selectedBanner = {} // 当前banner配置
 let selectedTheme = {} // 当前主题配置
@@ -197,6 +199,7 @@ class Setting extends React.Component {
                 notice: {},
                 siteConfig: {},
                 theme: {},
+                activity: {},
                 id: ''
             }
             if (res && res.data[0].length) {
@@ -204,6 +207,7 @@ class Setting extends React.Component {
                 data.notice = res.data[0][0].notice !== null ? JSON.parse(res.data[0][0].notice) : {}
                 data.siteConfig = res.data[0][0].siteConfig !== null ? JSON.parse(res.data[0][0].siteConfig) : {}
                 data.theme = res.data[0][0].theme !== null ? JSON.parse(res.data[0][0].theme) : {}
+                data.activity = res.data[0][0].activity !== null ? JSON.parse(res.data[0][0].activity) : {}
                 data.id = res.data[0][0].id
                 selectedTheme = data.theme
             }
@@ -217,6 +221,7 @@ class Setting extends React.Component {
                 notice: {},
                 siteConfig: {},
                 theme: {},
+                activity: {},
                 id: ''
             }
         }
@@ -396,8 +401,10 @@ class Setting extends React.Component {
             notice: JSON.stringify(this.state.data.notice),
             siteConfig: JSON.stringify(this.state.data.siteConfig),
             theme: JSON.stringify(this.state.data.theme),
+            activity: JSON.stringify(this.state.data.activity),
             id: this.state.data.id
         }
+        console.log('onOk: ', data)
         $api.setting[api](data).then(res => {
             if (res && res.success) {
                 $api.setting.get().then(res => {
@@ -407,6 +414,7 @@ class Setting extends React.Component {
                             banner: '[]',
                             notice: '{}',
                             siteConfig: '{}',
+                            activity: '{}',
                             theme: '{}'
                         }]
                         this.setState({
@@ -414,12 +422,25 @@ class Setting extends React.Component {
                             notice: data && JSON.parse(data[0].notice),
                             theme: data && JSON.parse(data[0].theme) || {},
                             siteConfig: data && JSON.parse(data[0].siteConfig) || {},
+                            activity: data && JSON.parse(data[0].activity) || {},
                             id: data && data[0].id || ''
                         })
                         // 设置全局样式
                         setCookie(this.props.ctx, 'themeColor', data[0].theme)
                     }
                 })
+            }
+        })
+    }
+    onTimeOk (value) {
+        // console.log('onOk: ', value)
+        this.setState({
+            data: {
+                ...this.state.data,
+                activity: {
+                    ...this.state.data.activity,
+                    time: value._d
+                }
             }
         })
     }
@@ -507,7 +528,7 @@ class Setting extends React.Component {
                                 </Col>
                             </Row>
                         </div>
-                        <div className="flex flex-1 flex-col mt-5 lg:mt-0">
+                        <div className="flex flex-1 flex-col mt-5 lg:mt-0 data-config-centent">
                             <div className={'section mb-5'}>
                                 <h3 className='text-gray-600 text-x22 leading-4 mb-5 lg:mb-0 pl-2'>
                                     <span>三、公告配置</span>
@@ -536,6 +557,25 @@ class Setting extends React.Component {
                                     <Input placeholder="博主邮箱地址"
                                         onChange={(e) => this.setState({ data: { ...this.state.data, siteConfig: { ...this.state.data.siteConfig, email: e.target.value } } })}
                                         value={this.state.data.siteConfig.email} />
+                                </div>
+                            </div>
+                            <div className={'section mb-5'}>
+                                <h3 className='text-gray-600 text-x22 leading-4 mb-5 lg:mb-0 pl-2'>
+                                    <span>四、活动时间配置</span>
+                                </h3>
+                                <div className="mt-5 lg:inline-block">
+                                    <Input placeholder="活动名称"
+                                        onChange={(e) => this.setState({ data: { ...this.state.data, activity: { ...this.state.data.activity, name: e.target.value } } })}
+                                        value={this.state.data.activity.name} />
+                                </div>
+                                <div className="mt-5 lg:inline-block">
+                                    <DatePicker
+                                        format="YYYY-MM-DD HH:mm"
+                                        placeholder="选择活动时间"
+                                        value={moment(this.state.data.activity.time)}
+                                        showTime
+                                        onOk={(val) => this.onTimeOk(val)}
+                                    />
                                 </div>
                             </div>
                             <Button className="mt-5 w-40" type='primary' onClick={() => this.submit(1002)}>保存</Button>

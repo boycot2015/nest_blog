@@ -1,20 +1,28 @@
 import { Injectable } from '@nestjs/common';
 import { ArticleService } from "./modules/article/article.service";
+import { SettingService } from "./modules/setting/setting.service";
 import { timeFormat, getOneMonthDateList } from "./utils";
 
 @Injectable()
 export class AppService {
-    constructor(private articleService: ArticleService) { }
+    constructor(private articleService: ArticleService,
+        private settingService: SettingService) { }
     getHello(): string {
         return 'Hello World!';
     }
     async getDatas(): Promise<object> {
         const res = await this.articleService.getAll()
+        const config = await this.settingService.get({})
+        let activity = JSON.parse(config[0][0].activity)
+        let deadline = new Date(activity.time).getTime()
+        let deadTitle = activity.name
+        console.log(config, 'config')
         let newLeast = res[0].filter(el => el.status + '' === '1001')
         newLeast = newLeast.length > 4 ? newLeast.slice(-4) : newLeast
         let data = {
             currentTime: Date.now(),
-            deadline: new Date('2020-06-25 00:00:00').getTime(),
+            deadline,
+            deadTitle,
             newLeast: newLeast,
             publicData: {
                 total: res[1],

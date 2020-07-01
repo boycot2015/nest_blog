@@ -15,8 +15,8 @@
                 position: relative;
                 img {
                     margin: 0 auto;
-                    max-width: 1200px;
-                    height: 100%;
+                    max-width: 1260px;
+                    height: auto;
                 }
                 h3 {
                     line-height: 32px;
@@ -64,7 +64,7 @@
             left: auto;
         }
         .slick-dots-bottom {
-            bottom: 0px;
+            bottom: 15px;
             right: 0px;
             left: auto;
         }
@@ -109,5 +109,16 @@
                 background-color: @white;
             }
         }
+    }
+    .ant-picker-input > input {
+        border: 0;
+    }
+    .ant-picker {
+        width: 300px;
+    }
+    .data-config-centent {
+        max-height: 350px;
+        overflow: hidden;
+        overflow-y: auto;
     }
 }

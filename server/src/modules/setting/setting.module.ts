@@ -15,6 +15,7 @@ import { AuthService } from '../auth/auth.service';
             expiresIn: 3600
         }
     })],
+    exports: [SettingService],
     controllers: [SettingController],
     providers: [SettingService, AuthService],
 })

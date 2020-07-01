@@ -28,6 +28,7 @@ class Home extends React.Component {
                 loading: true,
                 currentTime: timeFilter(res.data.currentTime),
                 deadline: timeFilter(res.data.deadline),
+                deadTitle: res.data.deadTitle,
                 homeData: res.data.newLeast,
                 datas: res.data,
                 total: res.data.total,
@@ -38,6 +39,7 @@ class Home extends React.Component {
                 currentTime: timeFilter(Date.now()),
                 data: [],
                 datas: {},
+                deadTitle: '',
                 deadline: new Date('2020-06-25 00:00:00').getTime(),
                 total: 999
             }
@@ -153,7 +155,7 @@ class Home extends React.Component {
     }
 
     render () {
-        const { loading, deadline } = this.state;
+        const { loading, deadline, deadTitle } = this.state;
         return (
             <Fragment>
                 <Head>
@@ -172,7 +174,7 @@ class Home extends React.Component {
                                 <p className='text-2xl text-gray-900 mb-0 font-normal'>{this.state.currentTime}</p>
                             </div>
                             <div className='flex-1 flex flex-col'>
-                                <Countdown className='flex-1 text-2xl text-gray-900 font-normal' title="端午节倒计时" value={deadline} format="D 天 H 时 m 分 s 秒" />
+                                <Countdown className='flex-1 text-2xl text-gray-900 font-normal' title={deadTitle + "倒计时"} value={deadline} format="D 天 H 时 m 分 s 秒" />
                             </div>
                         </div>
                         <div className='flex-1 flex flex-col'>
