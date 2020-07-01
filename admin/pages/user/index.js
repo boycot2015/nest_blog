@@ -3,10 +3,11 @@ import {
     Form, Tag, message,
     Button, Row, Col, Input,
     Select, Table, Cascader,
-    Badge
+    Badge, Modal
 } from 'antd';
 import {
-    PlusOutlined
+    PlusOutlined,
+    ExclamationCircleOutlined
 } from '@ant-design/icons';
 import Head from 'next/head';
 import Router from 'next/router';
@@ -190,7 +191,7 @@ class User extends React.Component {
                 data: res.data[0],
                 pageData: {
                     current: 1,
-                    pageSize: 5,
+                    pageSize: 10,
                     total: res.data[1],
                     pageSizeOptions: [5, 10, 20, 50]
                 },
@@ -203,7 +204,7 @@ class User extends React.Component {
                 data: [],
                 pageData: {
                     current: 1,
-                    pageSize: 5,
+                    pageSize: 10,
                     total: 999,
                     pageSizeOptions: [5, 10, 20, 50]
                 },
@@ -224,7 +225,7 @@ class User extends React.Component {
             queryData: values,
             pageData: {
                 current: 1,
-                pageSize: 5,
+                pageSize: 10,
                 total: this.state.pageData.total,
                 pageSizeOptions: [5, 10, 20, 50]
             }
@@ -269,16 +270,25 @@ class User extends React.Component {
         message.error(res.message)
     }
     async handleDelete (item) {
-        let { id, status } = item
-        status = status === 1001 ? 1002 : 1001
-        const res = await $api.user.delete({ id, status })
-        if (res && res.success) {
-            message.success(res.message)
-            this.setState({ reset: true })
-            this.handlerFormSubmit({ ...this.state.pageData, status: '' }, true)
-            return
-        }
-        res && message.error(res.message)
+        Modal.confirm({
+            title: '温馨提示',
+            icon: <ExclamationCircleOutlined />,
+            content: '确认删除？',
+            okText: '确认',
+            cancelText: '取消',
+            onOk: async () => {
+                let { id, status } = item
+                status = status === 1001 ? 1002 : 1001
+                const res = await $api.user.delete({ id, status })
+                if (res && res.success) {
+                    message.success(res.message)
+                    this.setState({ reset: true })
+                    this.handlerFormSubmit({ ...this.state.pageData, status: '' }, true)
+                    return
+                }
+                res && message.error(res.message)
+            }
+        })
     }
     componentDidMount () {
         this.setState({ loading: false })

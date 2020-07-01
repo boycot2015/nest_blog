@@ -26,7 +26,7 @@ export class UsersService {
         console.log(data, 'asdada')
         // 1. 准备工作：注入Repository，创建queryBuilder
         // 条件筛选和分页查询代码
-        let queryBy = this.usersRepository.createQueryBuilder()
+        let queryBy = this.usersRepository.createQueryBuilder('users')
         // 2. 条件筛选查询，如名称、类型等，传入对应字段即可
         // .where(data as Partial<Users>)
         const { current = 1, pageSize = 10, status, ...otherParams } = data;

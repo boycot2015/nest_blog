@@ -10,6 +10,9 @@ app.prepare().then(() => {
     const router = new Router();
 
     router.get('*', async ctx => {
+        // console.log(ctx.req, ctx.res, 'ctx.req.cookies')
+        // const token = ctx.cookies.get('token')
+        // !token && ctx.response.redirect("/login")
         await handle(ctx.req, ctx.res);
         ctx.respond = false;
     });

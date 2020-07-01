@@ -20,7 +20,11 @@ export default {
         return axios.get(url.getById, { params })
     },
     delete (data) {
-        return axios.post(url.delete, data)
+        return axios({
+            method: 'post',
+            url: url.delete,
+            params: data
+        })
     },
     status (data) {
         return axios.post(url.status, data)
