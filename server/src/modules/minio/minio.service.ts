@@ -23,12 +23,13 @@ export class MinioService {
     initial() {
         let option = {
             // endPoint: '192.168.1.175',
-            endPoint: '106.13.8.33',
+            // endPoint: '106.13.8.33',
             // endPoint: '47.113.87.100',
+            endPoint: 'www.file.boycot.top',
             port: 9000,
             useSSL: false,
-            accessKey: 'minioadmin',
-            secretKey: 'minioadmin',
+            accessKey: 'boycot',
+            secretKey: 'zch17184',
         }
         this.options = { ...this.options, ...option }
         this.minioClient = new Minio.Client({
