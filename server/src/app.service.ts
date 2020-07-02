@@ -16,7 +16,7 @@ export class AppService {
         let activity = JSON.parse(config[0][0].activity)
         let deadline = new Date(activity.time).getTime()
         let deadTitle = activity.name
-        console.log(config, 'config')
+        // console.log(config, 'config')
         let newLeast = res[0].filter(el => el.status + '' === '1001')
         newLeast = newLeast.length > 4 ? newLeast.slice(-4) : newLeast
         let data = {

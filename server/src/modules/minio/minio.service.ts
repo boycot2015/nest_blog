@@ -21,8 +21,7 @@ export class MinioService {
     }
 
     initial() {
-        this.minioClient = new Minio.Client({
-            ...this.options,
+        let option = {
             // endPoint: '192.168.1.175',
             endPoint: '106.13.8.33',
             // endPoint: '47.113.87.100',
@@ -30,6 +29,10 @@ export class MinioService {
             useSSL: false,
             accessKey: 'minioadmin',
             secretKey: 'minioadmin',
+        }
+        this.options = { ...this.options, ...option }
+        this.minioClient = new Minio.Client({
+            ...this.options
         });
     }
 
@@ -79,20 +82,22 @@ export class MinioService {
         }
     }
     async getFileUrl(fileName, type = 'image/jpeg', BucketName = 'blog') {
-        this.initial();
+        // this.initial();
         try {
-            return await this.minioClient.presignedUrl('GET', BucketName, fileName, 24 * 60 * 60 * 7)
+            // return await this.minioClient.presignedUrl('GET', BucketName, fileName, 24 * 60 * 60 * 7)
+            return 'http://' + this.options.endPoint + ':' + this.options.port + '/' + BucketName + '/' + fileName
         } catch (e) {
             throw new HttpException(e.message, 500);
         }
     }
     async getFileUrls(BucketName = 'blog', files) {
-        this.initial();
+        // this.initial();
         try {
             for (const file of files[0]) {
-                file.url = await this.minioClient.presignedUrl('GET', BucketName, file.fileName)
+                // file.url = await this.minioClient.presignedUrl('GET', BucketName, file.fileName)
+                // let obj = await this.minioClient.listObjects(BucketName, '', true)
+                file.url = 'http://' + this.options.endPoint + ':' + this.options.port + '/' + BucketName + '/' + file.fileName
             }
-            // console.log(files, 'files')
             return Promise.resolve(files)
         } catch (e) {
             throw new HttpException(e.message, 500);
