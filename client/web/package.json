@@ -10,6 +10,9 @@
     "serve": "nuxt serve"
   },
   "dependencies": {
+    "@nuxtjs/style-resources": "^1.0.0",
+    "less": "^3.11.3",
+    "less-loader": "^6.1.3",
     "nuxt": "^2.13.0"
   },
   "devDependencies": {

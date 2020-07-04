@@ -1,0 +1,89 @@
+html,body, #__nuxt, #__layout {
+  height: 100%;
+}
+.clearfix {
+  clear: both;
+  overflow: hidden;
+}
+.fl {
+  float: left;
+}
+.fr {
+  float: right;
+}
+.tc {
+  text-align: center;
+}
+.tl {
+  text-align: left;
+}
+.tr {
+  text-align: right;
+}
+.bd-top {
+  border-top: 1px solid @c-e8;
+}
+.flexbox-h {
+  display: flex;
+  flex-direction: row;
+}
+.flexbox-v {
+  display: flex;
+  flex-direction: column;
+}
+.just-s {
+  justify-content: flex-start;
+}
+.just-c {
+  justify-content: center;
+}
+.just-e {
+  justify-content: flex-end;
+}
+.just-b {
+  justify-content: space-between;
+}
+.just-a {
+  justify-content: space-around;
+}
+.align-c {
+  align-items: center;
+}
+.align-l {
+  align-items: center;
+}
+.align-r {
+  align-items: center;
+}
+.flex1 {
+  flex: 1;
+}
+.flex2 {
+  flex: 2;
+}
+.flex3 {
+  flex: 3;
+}
+.flex4 {
+  flex: 4;
+}
+
+::-webkit-scrollbar {/*滚动条整体样式*/
+  width: 6px;     /*高宽分别对应横竖滚动条的尺寸*/
+  height: 1px;
+
+}
+
+::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+  background: @c-ccc;
+
+}
+
+::-webkit-scrollbar-track {/*滚动条里面轨道*/
+  -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+  border-radius: 10px;
+  background: @c-f8;
+}

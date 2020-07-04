@@ -29,7 +29,15 @@ export default {
   ** Global CSS
   */
   css: [
+    /**
+     * 配置全局 css
+     */
+    // './assets/less/base/variable.less',
+    './assets/less/index.less',
   ],
+  styleResources: {
+    less: ['./assets/less/base/variable.less'],
+  },
   /*
   ** Plugins to load before mounting the App
   ** https://nuxtjs.org/guide/plugins
@@ -47,6 +55,7 @@ export default {
   buildModules: [
     // Doc: https://github.com/nuxt-community/nuxt-tailwindcss
     '@nuxtjs/tailwindcss',
+    '@nuxtjs/style-resources',
   ],
   /*
   ** Nuxt.js modules

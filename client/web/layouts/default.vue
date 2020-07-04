@@ -1,20 +1,33 @@
 <template>
-  <div>
-    <Nuxt />
+  <div class="root tc">
+    <Header></Header>
+    <div class="root-main clearfix">
+      <Aside class="fl"></Aside>
+      <div class="root-main-container fl">
+        main
+        <Nuxt />
+      </div>
+      <Aside class="fr"></Aside>
+    </div>
+    <Footer></Footer>
   </div>
 </template>
-
+<script>
+import Header from "./header";
+import Footer from "./footer";
+import Aside from "./aside";
+export default {
+  components: {
+    Header,
+    Footer,
+    Aside
+  }
+};
+</script>
 <style>
 html {
-  font-family:
-    'Source Sans Pro',
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    'Helvetica Neue',
-    Arial,
-    sans-serif;
+  font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
   font-size: 16px;
   word-spacing: 1px;
   -ms-text-size-adjust: 100%;

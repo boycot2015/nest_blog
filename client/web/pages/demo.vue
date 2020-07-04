@@ -1,6 +1,23 @@
 <template>
   <div class="container">
-    <div></div>
+    <div>
+      <Logo />
+      <h1 class="title">blog</h1>
+      <div class="links">
+        <a
+          href="https://nuxtjs.org/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="button--green"
+        >Documentation</a>
+        <a
+          href="https://github.com/nuxt/nuxt.js"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="button--grey"
+        >GitHub</a>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -16,6 +33,7 @@ export default {};
 */
 .container {
   margin: 0 auto;
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
