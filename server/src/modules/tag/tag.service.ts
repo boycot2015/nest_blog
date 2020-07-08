@@ -13,23 +13,31 @@ export class TagService {
         console.log(data, 'asdada')
         // 1. 准备工作：注入Repository，创建queryBuilder
         // 条件筛选和分页查询代码
-        let queryBy = this.tagRepository.createQueryBuilder()
+        let queryBy = this.tagRepository.createQueryBuilder('tag')
+        .leftJoinAndSelect('tag.articles', 'tags')
         // 2. 条件筛选查询，如名称、类型等，传入对应字段即可
         queryBy = queryBy.where(data as Partial<Tag>)
-
         // 3. 时间范围筛选
         if (data && data['update_time.start'] && data['update_time.end']) {
-            queryBy = queryBy.andWhere('update_time BETWEEN :start AND :end', {
-                start: data['update_time.start'],
-                end: data['update_time.end']
+            queryBy = queryBy.andWhere('tag.update_time BETWEEN :start AND :end', {
+                start: data['tag.update_time.start'],
+                end: data['tag.update_time.end']
             })
         }
         // 普通排序
-        queryBy = queryBy.orderBy('update_time', 'DESC')
+        queryBy = queryBy.orderBy('tag.update_time', 'DESC')
         // 5. 获取结果及(非分页的)查询结果总数
         // 或使用 .getMany() 不会返回总数
 
-        return await queryBy.getManyAndCount()
+        let res = await queryBy.getManyAndCount()
+        let resData :Array<Object> = []
+        res[0].map(el => {
+            if (el.articles) {
+                const { articles, ...othders } = el
+                resData.push({ articleNum: el.articles.length, ...othders })
+            }
+        })
+        return Promise.resolve([resData, res[1]])
         // return await this.articleRepository.query(data);
     }
     async create(data) {
