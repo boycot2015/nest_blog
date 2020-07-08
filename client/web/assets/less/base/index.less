@@ -1,9 +1,15 @@
 html,body, #__nuxt, #__layout {
-  height: 100%;
+//   height: 100%;
+  font-size: 12px;
+  background-color: @c-f8;
 }
 .clearfix {
   clear: both;
   overflow: hidden;
+}
+.w1200 {
+  width: 1200px;
+  margin: 0 auto;
 }
 .fl {
   float: left;
@@ -77,13 +83,14 @@ html,body, #__nuxt, #__layout {
 ::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
 
   border-radius: 10px;
-  -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
-  background: @c-ccc;
+  -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+  box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+  background: @c-e8;
 
 }
 
 ::-webkit-scrollbar-track {/*滚动条里面轨道*/
-  -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+//   -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
   border-radius: 10px;
-  background: @c-f8;
+  background: @white;
 }

@@ -2,15 +2,16 @@
   <div class="error">
     <div class="content">
       <img :src="errorImg" alt />
-      <p>{{errMsg}}</p>
+      <p>{{ errMsg }}</p>
     </div>
-    <a href="/">返回首页</a>
+    <nuxt-link to="/">返回首页</nuxt-link>
   </div>
 </template>
 <style lang="css">
 .error {
   display: flex;
-  height: 100vh;
+  /* height: 100vh; */
+  min-height: 600px;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -39,16 +40,18 @@
 </style>
 <script>
 export default {
-  data() {
-    return {
-      errMsg: "找不到页面了~",
-      errorImg: require("../assets/img/ic_404.svg")
-    };
-  },
-  asyncData() {
-    return {
-      // errorImg: require("../assets/img/ic_404.svg")
-    };
-  }
-};
+    name: 'error',
+    // layout: 'error-layout',
+    data () {
+        return {
+            errMsg: '找不到页面了~',
+            errorImg: require('../assets/img/ic_404.svg')
+        }
+    },
+    asyncData () {
+        return {
+            // errorImg: require("../assets/img/ic_404.svg")
+        }
+    }
+}
 </script>
