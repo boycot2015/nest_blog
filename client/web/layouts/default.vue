@@ -12,12 +12,14 @@
           <Aside
           title="标签"
           :data="tagList"
+          icon="tag"
+          :total="tagTotal"
           :props="{
                 key: 'articleNum',
                 value: 'value'
             }"
         ></Aside>
-          <Aside title="分类" :data="categoryList"></Aside>
+          <Aside title="分类" icon="cate" :total="categoryTotal" :data="categoryList"></Aside>
       </div>
     </div>
     <Footer></Footer>
@@ -35,19 +37,26 @@ export default {
     },
     data () {
         return {
-            categoryList: [],
-            tagList: [],
+            // categoryList: [],
+            // tagList: [],
             isHeadFixed: false,
             isAsideFixed: false,
             scrollObj: {},
             isNight: false
         }
     },
-    async asyncData ({ app }) {
-        let [tagRes, categoryRes] = await Promise.all([app.$api.tag.get(), app.$api.category.get()])
-        console.log(tagRes, categoryRes)
-        return {
-            categoryList: [tagRes, categoryRes]
+    computed: {
+        categoryList () {
+            return this.$store.state.asideConfig.categoryList
+        },
+        tagList () {
+            return this.$store.state.asideConfig.tagList
+        },
+        categoryTotal () {
+            return this.$store.state.asideConfig.categoryTotal
+        },
+        tagTotal () {
+            return this.$store.state.asideConfig.tagTotal
         }
     },
     watch: {
@@ -59,7 +68,6 @@ export default {
         }
     },
     created () {
-        this.getInitData()
     },
     mounted () {
         this.scroll((res) => {
@@ -71,12 +79,6 @@ export default {
         })
     },
     methods: {
-        async getInitData () {
-            let [tagRes, categoryRes] = await Promise.all([this.$api.tag.get(), this.$api.category.get()])
-            this.categoryList = categoryRes.data[0]
-            this.tagList = tagRes.data[0]
-            console.log(this.tagList)
-        },
         scroll (fn) {
             let beforeScrollTop = document.scrollingElement.scrollTop
             fn = fn || function () {}
@@ -99,8 +101,8 @@ export default {
 </script>
 <style>
 html {
-  font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, "Helvetica Neue", Arial, sans-serif;
+  /* font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif; */
   font-size: 16px;
   word-spacing: 1px;
   -ms-text-size-adjust: 100%;

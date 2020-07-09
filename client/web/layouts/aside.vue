@@ -1,6 +1,6 @@
 <template>
   <div class="site-aside">
-    <div class="title">{{ title }}</div>
+    <div class="title"><i v-if="icon" :class="'icon icon-'+icon"></i>{{ title }} &nbsp; {{ total ? [total] : '' }}</div>
     <ul class="list flexbox-h just-s" v-if="data && data.length">
       <li v-for="item in data" class="list-item" :key="item.id">
         <span>
@@ -20,9 +20,17 @@ export default {
             type: String,
             default: ''
         },
+        total: {
+            type: [String, Number],
+            default: 0
+        },
         data: {
             type: Array,
             default: () => []
+        },
+        icon: {
+            type: String,
+            default: ''
         },
         props: {
             type: Object,

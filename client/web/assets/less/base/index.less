@@ -1,11 +1,21 @@
 html,body, #__nuxt, #__layout {
 //   height: 100%;
   font-size: 12px;
+  font-family: 'Microsoft YaHei';
   background-color: @c-f8;
 }
-.clearfix {
-  clear: both;
-  overflow: hidden;
+i,span,em {
+    font-style: normal;
+}
+img {
+    display: inline-block;
+}
+li,ol,dl {
+    list-style: none;
+}
+* {
+    margin: 0;
+    padding: 0;
 }
 .w1200 {
   width: 1200px;
@@ -73,7 +83,27 @@ html,body, #__nuxt, #__layout {
 .flex4 {
   flex: 4;
 }
+.clearfix:before,.clearfix:after{content:""; display:table;}
+.clearfix:after{clear:both;}
 
+/*文字超出隐藏*/
+/*文字超出隐藏*/
+.ellipsis{overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
+.ellipsisTwo{
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+}
+.line-clamp1,
+.line-clamp2,
+.line-clamp3,
+.line-clamp4{overflow: hidden;text-overflow: ellipsis; display: -webkit-box;-webkit-box-orient: vertical;}
+.line-clamp1{-webkit-line-clamp: 1;}
+.line-clamp2{-webkit-line-clamp: 2;}
+.line-clamp3{-webkit-line-clamp: 3;}
+.line-clamp4{-webkit-line-clamp: 4;}
 ::-webkit-scrollbar {/*滚动条整体样式*/
   width: 6px;     /*高宽分别对应横竖滚动条的尺寸*/
   height: 1px;
