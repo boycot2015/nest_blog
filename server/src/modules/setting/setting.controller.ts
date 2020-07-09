@@ -60,19 +60,19 @@ export class SettingController {
         return this.settingService.get(data)
     }
     @Post('/add')
-    // @UseGuards(AuthGuard())
+    @UseGuards(AuthGuard())
     @ApiOperation({ summary: '新增设置信息' })
     add(@Body() data: SettingVo) {
         return this.settingService.add(data)
     }
     @Post('/edit')
-    // @UseGuards(AuthGuard())
+    @UseGuards(AuthGuard())
     @ApiOperation({ summary: '编辑设置信息' })
     edit(@Body() data: QueryDt) {
         return this.settingService.edit(data)
     }
     @Post('/delete')
-    // @UseGuards(AuthGuard())
+    @UseGuards(AuthGuard())
     @ApiOperation({ summary: '删除设置信息' })
     delete(@Query() id: number) {
         return this.settingService.delete(id)
