@@ -87,8 +87,8 @@ export default {
     build: {
     },
     server: {
-        port: 3000,
-        host: '192.168.1.175'
+        port: 8080
+        // host: '192.168.1.175'
         // host: 'pc.f.test.limofang.cn'
         // host: 'jianhua.f.test.limofang.cn'
     }
