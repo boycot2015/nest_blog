@@ -92,7 +92,7 @@ export default {
         /*
         ** You can extend webpack config here
         */
-        publicPath: '', // 打包的默认路径为 ‘_nuxt’ 或者可以指定cdn 域名
+        // publicPath: '', // 打包的默认路径为 ‘_nuxt’ 或者可以指定cdn 域名
         extend (config, ctx) {
             // Run ESLint on save
             if (ctx.isDev && ctx.isClient) {
@@ -117,16 +117,16 @@ export default {
      */
     extend (config, ctx) {
         // console.log('extend', config, ctx)
-        config.resolve = merge(config.resolve, {
-            alias: {
-                components: path.resolve(__dirname, 'components'),
-                assets: path.resolve(__dirname, 'assets'),
-                pages: path.resolve(__dirname, 'pages'),
-                http: path.resolve(__dirname, 'http'),
-                utils: path.resolve(__dirname, 'utils'),
-                store: path.resolve(__dirname, 'store')
-            }
-        })
+        // config.resolve = merge(config.resolve, {
+        //     alias: {
+        //         components: path.resolve(__dirname, 'components'),
+        //         assets: path.resolve(__dirname, 'assets'),
+        //         pages: path.resolve(__dirname, 'pages'),
+        //         http: path.resolve(__dirname, 'http'),
+        //         utils: path.resolve(__dirname, 'utils'),
+        //         store: path.resolve(__dirname, 'store')
+        //     }
+        // })
     },
     server: {
         port: 8080,
