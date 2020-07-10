@@ -23,6 +23,7 @@ export class ArticleService {
         let queryBy = this.articleRepository.createQueryBuilder('article')
             .leftJoinAndSelect('article.comment', 'comment')
             .leftJoinAndSelect('article.tags', 'tag')
+            .leftJoinAndSelect('article.category', 'category')
             .andWhere('article.isDelete=:delete').setParameter('delete', false)
         // .leftJoinAndSelect('article.comment', 'comment')
 
@@ -158,6 +159,7 @@ export class ArticleService {
         let queryBy = this.articleRepository.createQueryBuilder('article')
             .leftJoinAndSelect('article.tags', 'tag')
             .leftJoinAndSelect("article.comment", "comment")
+            .leftJoinAndSelect('article.category', 'category')
             .orderBy('comment.create_time', 'DESC')
         // queryBy.leftJoinAndSelect('article.category', 'category')
         //     .orderBy('category.create_time', 'DESC')
