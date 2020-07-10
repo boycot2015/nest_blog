@@ -1,4 +1,7 @@
 
+const path = require('path')
+const merge = require('webpack-merge')
+const isDev = process.env.NODE_ENV
 export default {
     /*
     ** Nuxt rendering mode
@@ -27,9 +30,10 @@ export default {
         ]
     },
     router: { // 中间件允许您定义一个自定义函数运行在一个页面或一组页面渲染之前。
-        // scrollBehavior (to, from, savedPosition) {
-        //     return { x: 0, y: 0 }
-        // },
+        base: '/',
+        scrollBehavior (to, from, savedPosition) {
+            return { x: 0, y: 0 }
+        },
         routeNameSplitter: '/',
         middleware: 'headers',
         linkActiveClass: 'active-link'
@@ -85,6 +89,44 @@ export default {
     ** See https://nuxtjs.org/api/configuration-build/
     */
     build: {
+        /*
+        ** You can extend webpack config here
+        */
+        publicPath: '', // 打包的默认路径为 ‘_nuxt’ 或者可以指定cdn 域名
+        extend (config, ctx) {
+            // Run ESLint on save
+            if (ctx.isDev && ctx.isClient) {
+                config.module.rules.push({
+                    enforce: 'pre',
+                    test: /\.(js|vue)$/,
+                    loader: 'eslint-loader',
+                    exclude: /(node_modules)/
+                })
+            }
+        },
+        extractCSS: { allChunks: true }, // css 独立打包 link 的形式加载
+        filenames: { // css 和 js img 打包时指定文件夹
+            app: ({ isDev }) => isDev ? '[name].js' : '[chunkhash].js',
+            chunk: ({ isDev }) => isDev ? '[name].js' : '[chunkhash].js',
+            css: ({ isDev }) => isDev ? '[name].js' : '[contenthash].css',
+            img: ({ isDev }) => isDev ? '[path][name].[ext]' : '[hash:7].[ext]'
+        }
+    },
+    /*
+     ** You can extend webpack config here
+     */
+    extend (config, ctx) {
+        // console.log('extend', config, ctx)
+        config.resolve = merge(config.resolve, {
+            alias: {
+                components: path.resolve(__dirname, 'components'),
+                assets: path.resolve(__dirname, 'assets'),
+                pages: path.resolve(__dirname, 'pages'),
+                http: path.resolve(__dirname, 'http'),
+                utils: path.resolve(__dirname, 'utils'),
+                store: path.resolve(__dirname, 'store')
+            }
+        })
     },
     server: {
         port: 8080,
