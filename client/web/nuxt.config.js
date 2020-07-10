@@ -92,7 +92,7 @@ export default {
         /*
         ** You can extend webpack config here
         */
-        // publicPath: '', // 打包的默认路径为 ‘_nuxt’ 或者可以指定cdn 域名
+        publicPath: '.nuxt', // 打包的默认路径为 ‘_nuxt’ 或者可以指定cdn 域名
         extend (config, ctx) {
             // Run ESLint on save
             if (ctx.isDev && ctx.isClient) {
