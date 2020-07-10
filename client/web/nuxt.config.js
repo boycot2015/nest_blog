@@ -103,14 +103,14 @@ export default {
                     exclude: /(node_modules)/
                 })
             }
-        },
-        extractCSS: { allChunks: true }, // css 独立打包 link 的形式加载
-        filenames: { // css 和 js img 打包时指定文件夹
-            app: ({ isDev }) => isDev ? '[name].js' : '[chunkhash].js',
-            chunk: ({ isDev }) => isDev ? '[name].js' : '[chunkhash].js',
-            css: ({ isDev }) => isDev ? '[name].js' : '[contenthash].css',
-            img: ({ isDev }) => isDev ? '[path][name].[ext]' : '[hash:7].[ext]'
         }
+        // extractCSS: { allChunks: true }, // css 独立打包 link 的形式加载
+        // filenames: { // css 和 js img 打包时指定文件夹
+        //     app: ({ isDev }) => isDev ? '[name].js' : '[chunkhash].js',
+        //     chunk: ({ isDev }) => isDev ? '[name].js' : '[chunkhash].js',
+        //     css: ({ isDev }) => isDev ? '[name].js' : '[contenthash].css',
+        //     img: ({ isDev }) => isDev ? '[path][name].[ext]' : '[hash:7].[ext]'
+        // }
     },
     /*
      ** You can extend webpack config here
