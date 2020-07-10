@@ -209,7 +209,7 @@ const AdvancedSearchForm = (props) => {
             initialValues={{
                 name: '',
                 status: '',
-                category: ''
+                categoryId: ''
             }}
             onFinish={onFormSubmit}
         >

@@ -31,7 +31,7 @@ class ArticleEdit extends React.Component {
         await $api.article.getById({ params: { id: query.id } }),
         await $api.category.get()])
         if (res && res.success && detail && detail.success) {
-            const { id, title, content, tags, category } = detail.data
+            const { id, title, content, tags, categoryId } = detail.data
             let categoryOptions = filterTreeData((cateRes.data[0]), null)
             return {
                 loading: false,
@@ -48,7 +48,7 @@ class ArticleEdit extends React.Component {
                         label: el.value,
                         id: el.id
                     }))) || [],
-                    category: (category && category !== null && category.split(',')) || '',
+                    categoryId: (categoryId && categoryId !== null && categoryId.split(',')) || '',
                     total: res.data[1]
                 }
             }
@@ -59,7 +59,7 @@ class ArticleEdit extends React.Component {
                 articleForm: {
                     title: '',
                     content: '',
-                    category: '',
+                    categoryId: '',
                     tags: []
                 }
             }
@@ -82,12 +82,12 @@ class ArticleEdit extends React.Component {
     }
     categorySelect (value, arr) {
         let categoryName = arr.map(el => el.value).join('>')
-        this.setState({ articleForm: { ...this.state.articleForm, category: value.join(','), categoryName } })
+        this.setState({ articleForm: { ...this.state.articleForm, categoryId: value.join(','), categoryName } })
     }
     submit (status) {
-        let { tags, category } = this.state.articleForm
-        if (category && category instanceof Array) category = category.join(',')
-        let data = { ...this.state.articleForm, status, category, tags: tags.map(el => el.id) || [] }
+        let { tags, categoryId } = this.state.articleForm
+        if (categoryId && categoryId instanceof Array) categoryId = categoryId.join(',')
+        let data = { ...this.state.articleForm, status, categoryId, tags: tags.map(el => el.id) || [] }
         if (!data.title) {
             message.error('文章标题不能为空！')
             return true
@@ -168,7 +168,7 @@ class ArticleEdit extends React.Component {
                         <Cascader
                             options={this.state.categoryList}
                             // showSearch={{ filter }}
-                            defaultValue={this.state.articleForm.category ? [this.state.articleForm.category] : ''}
+                            defaultValue={this.state.articleForm.categoryId ? [this.state.articleForm.categoryId] : ''}
                             fieldNames={{ label: 'value', value: 'id' }}
                             placeholder={'选择上级分类'}
                             onChange={(value, selectedOptions) => this.categorySelect(value, selectedOptions)}

@@ -71,7 +71,7 @@ class ArticleAdd extends React.Component {
     }
     categorySelect (value, arr) {
         let categoryName = arr.map(el => el.value).join('>')
-        this.setState({ articleForm: { ...this.state.articleForm, category: value.join(','), categoryName } })
+        this.setState({ articleForm: { ...this.state.articleForm, categoryId: value.join(','), categoryName } })
     }
     submit (status) {
         let data = { ...this.state.articleForm, status }
