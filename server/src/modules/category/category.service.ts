@@ -12,23 +12,32 @@ export class CategoryService {
         // data.pageSize = data.pageSize || 10
         // 1. 准备工作：注入Repository，创建queryBuilder
         // 条件筛选和分页查询代码
-        let queryBy = this.categoryRepository.createQueryBuilder()
+        let queryBy = this.categoryRepository.createQueryBuilder('category')
+        .leftJoinAndSelect('category.article', 'article')
         // 2. 条件筛选查询，如名称、类型等，传入对应字段即可
         queryBy = queryBy.where(data as Partial<Category>)
 
         // 3. 时间范围筛选
-        if (data && data['update_time.start'] && data['update_time.end']) {
-            queryBy = queryBy.andWhere('update_time BETWEEN :start AND :end', {
+        if (data && data['category.update_time.start'] && data['update_time.end']) {
+            queryBy = queryBy.andWhere('category.update_time BETWEEN :start AND :end', {
                 start: data['update_time.start'],
                 end: data['update_time.end']
             })
         }
         // 普通排序
-        queryBy = queryBy.orderBy('update_time', 'DESC')
+        queryBy = queryBy.orderBy('category.update_time', 'DESC')
         // 5. 获取结果及(非分页的)查询结果总数
         // 或使用 .getMany() 不会返回总数
-
-        return await queryBy.getManyAndCount()
+        let res = await queryBy.getManyAndCount()
+        let resData :Array<Object> = []
+        res[0].map(el => {
+            if (el.article) {
+                const { article, ...othders } = el
+                resData.push({ articleNum: el.article.length, ...othders })
+            }
+        })
+        return Promise.resolve([resData, res[1]])
+        // return await queryBy.getManyAndCount()
         // return await this.articleRepository.query(data);
     }
     async create(data) {

@@ -46,11 +46,18 @@
             :key="item.id"
             class="article-list-item"
             >
-                <nuxt-link to="/" class="flexbox-h just-b">
+                <nuxt-link :to="'/article/view?id='+item.id" class="flexbox-h just-b">
                     <div class="flex2 wrap"><div class="img" :style="{backgroundImage:`url('${getImgUrl(item.content)}')`}"></div></div>
                     <div class="text flex3 tl">
                         <div class="title line-clamp2">{{ item.title }}</div>
-                        <div class="desc line-clamp4" v-html="item.content"></div>
+                        <div
+                        :style="{maxHeight: item.content.length > 120 && item.title.length < 30 ? '88px':'' }"
+                        :class="{'line-clamp4': item.content.length > 120 && item.title.length < 30 }"
+                        class="desc line-clamp3"
+                        v-html="item.content"
+                        >
+                        </div>
+                        <div class="time">{{ item.comment | getCommentNum }}条评论 - {{ new Date(item.createTime).getTime() | timeFilter }}</div>
                     </div>
                 </nuxt-link>
             </div>

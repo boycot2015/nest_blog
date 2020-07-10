@@ -1,19 +1,11 @@
 import axios from '@/api/axios'
 import url from './url'
 export default {
-    getById (configObj) {
-        let {
-            method = 'get',
-            params = {}
-        } = configObj
-        return axios({ url: url.getById, method, params })
+    getById (params) {
+        return axios.get(url.getById, { params })
     },
-    get (configObj) {
-        let {
-            method = 'get',
-            params = {}
-        } = (configObj && configObj) || {}
-        return axios({ url: url.get, method, params })
+    get (params) {
+        return axios.get(url.get, { params })
     },
     add (configObj) {
         let {

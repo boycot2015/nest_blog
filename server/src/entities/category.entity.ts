@@ -28,11 +28,11 @@ export class Category {
     })
     status: string; // 标签状态
 
-    // @OneToMany(
-    //     () => Article,
-    //     article => article.category
-    // )
-    // article: Array<Article>;
+    @OneToMany(
+        () => Article,
+        article => article.category
+    )
+    article: Array<Article>;
 
     @CreateDateColumn({
         type: 'datetime',

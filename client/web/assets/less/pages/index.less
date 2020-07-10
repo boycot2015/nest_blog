@@ -38,23 +38,29 @@
                 }
             }
             .text {
-                padding: 20px 20px 20px 0;
+                padding: 15px 20px 15px 0;
                 width: calc(100% - 355px);
                 text-align: justify;
+                position: relative;
                 .title {
                     font-size: 18px;
-                    height: 48px;
+                    // height: 48px;
                     line-height: 24px;
                     color: @c-333;
                 }
                 .desc {
                     margin-top: 5px;
-                    max-height: 88px;
+                    max-height: 68px;
                     font-size: 16px;
                     line-height: 22px;
                     color: @c-666;
                     overflow: hidden;
-                    overflow-x: auto;
+                }
+                .time {
+                    position: absolute;
+                    bottom: 15px;
+                    font-size: 14px;
+                    color: @c-999;
                 }
             }
         }

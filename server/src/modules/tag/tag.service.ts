@@ -10,7 +10,7 @@ export class TagService {
     async get(data) {
         // data.currentPage = data.currentPage || 1
         // data.pageSize = data.pageSize || 10
-        console.log(data, 'asdada')
+        // console.log(data, 'asdada')
         // 1. 准备工作：注入Repository，创建queryBuilder
         // 条件筛选和分页查询代码
         let queryBy = this.tagRepository.createQueryBuilder('tag')

@@ -30,7 +30,7 @@ export default {
         ]
     },
     router: { // 中间件允许您定义一个自定义函数运行在一个页面或一组页面渲染之前。
-        base: '/',
+        // base: './',
         scrollBehavior (to, from, savedPosition) {
             return { x: 0, y: 0 }
         },
@@ -60,6 +60,7 @@ export default {
     ** https://nuxtjs.org/guide/plugins
     */
     plugins: [
+        '@/plugins/filters',
         {
             src: '@/plugins/axios-api',
             ssr: true
@@ -92,7 +93,7 @@ export default {
         /*
         ** You can extend webpack config here
         */
-        publicPath: '.nuxt', // 打包的默认路径为 ‘_nuxt’ 或者可以指定cdn 域名
+        // publicPath: '', // 打包的默认路径为 ‘_nuxt’ 或者可以指定cdn 域名
         extend (config, ctx) {
             // Run ESLint on save
             if (ctx.isDev && ctx.isClient) {

@@ -4,7 +4,7 @@
         <div class="logo fl"><nuxt-link to="/"><img src="@/assets/img/logo.png" alt=""></nuxt-link></div>
         <div class="title flex1 tl fl">
             <nuxt-link to="/" :class="{'active': $route.path === '/'}">首页</nuxt-link>
-            <nuxt-link to="/time" :class="{'active': $route.path === '/time'}">时间轴</nuxt-link>
+            <nuxt-link to="/article/classes" :class="{'active': $route.path === '/article/classes'}">时间轴</nuxt-link>
             <nuxt-link to="/about" :class="{'active': $route.path === '/about'}">关于</nuxt-link>
         </div>
         <div class="notice" v-if="websiteConfig && websiteConfig.notice">
@@ -28,7 +28,10 @@
 export default {
     data () {
         return {
-            isNight: false
+            isNight: false,
+            menu: [{
+
+            }]
         }
     },
     mounted () {

@@ -2,7 +2,7 @@
   <div class="site-aside">
     <div class="title"><i v-if="icon" :class="'icon icon-'+icon"></i>{{ title }} &nbsp; {{ total ? [total] : '' }}</div>
     <ul class="list flexbox-h just-s" v-if="data && data.length">
-      <li v-for="item in data" class="list-item" :key="item.id">
+      <li v-for="item in data" class="list-item" :key="item.id" @click="onTagClick(item)">
         <span>
             {{ item[props['value']] }}
             {{ item[props['key']] ? '&nbsp;[' + item[props['key']] + ']' : '' }}
@@ -38,6 +38,15 @@ export default {
                 key: 'num',
                 value: 'value'
             })
+        }
+    },
+    methods: {
+        onTagClick (item) {
+            if (this.title.includes('分类')) {
+                this.$router.push('/article?category=' + item.id)
+            } else {
+                this.$router.push('/article?tag=' + item.id)
+            }
         }
     }
 }

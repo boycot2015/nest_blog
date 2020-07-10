@@ -50,6 +50,7 @@ module.exports = {
         }],
         'vue/multiline-html-element-content-newline': 0,
         'no-unused-vars': 'off',
-        'require-atomic-updates': 'off'
+        'require-atomic-updates': 'off',
+        'no-useless-escape': 'off'
     }
 }
