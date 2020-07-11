@@ -13,7 +13,7 @@
 <script>
 import { CommentTree } from '@/components/Comment'
 export default {
-    name: '',
+    name: 'view',
     components: {
         CommentTree
     },

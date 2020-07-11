@@ -65,7 +65,7 @@ export const mutations = {
                 categoryTotal: 0
             }
         }
-        console.log(state.asideConfig)
+        // console.log(state.asideConfig)
     }
 }
 

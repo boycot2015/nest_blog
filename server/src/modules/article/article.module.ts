@@ -4,6 +4,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { TagModule } from '../tag/tag.module';
+import { CategoryModule } from '../category/category.module';
 
 import { Article } from '../../entities/article.entity';
 
@@ -20,7 +21,7 @@ import { AuthService } from '../auth/auth.service';
         signOptions: {
             expiresIn: 3600
         }
-    }), TagModule],
+    }), TagModule, CategoryModule],
     exports: [ArticleService],
     controllers: [ArticleController],
     providers: [ArticleService, AuthService],

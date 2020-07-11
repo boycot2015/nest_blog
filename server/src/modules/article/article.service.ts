@@ -6,12 +6,14 @@ import { responseStatus, filterTreeData } from "../../utils";
 import * as dayjs from 'dayjs';
 import { TagService } from '../tag/tag.service';
 import { AuthService } from '../auth/auth.service';
+import { CategoryService } from '../category/category.service';
 
 @Injectable()
 export class ArticleService {
     constructor(@InjectRepository(Article)
     private readonly articleRepository: Repository<Article>,
         private readonly authService: AuthService,
+        private readonly categoryService: CategoryService,
         private readonly tagService: TagService
     ) { }
     async get(data) {
@@ -80,15 +82,17 @@ export class ArticleService {
         if (exist) {
             throw new HttpException('文章标题已存在', responseStatus.failed.code);
         }
-        let { tags } = data
+        let { tags, category } = data
         if (data.status === '1001') {
             Object.assign(data, {
                 updateTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
             });
         }
         tags = await this.tagService.findByIds(('' + tags).split(','))
+        category = await this.categoryService.getById(category.id)
         const newArticle = await this.articleRepository.create({
             ...data,
+            category,
             tags
         });
         return await this.articleRepository.save(newArticle);
@@ -102,12 +106,14 @@ export class ArticleService {
         if (!oldArticle) {
             throw new HttpException('查询文章不存在！', responseStatus.failed.code);
         }
-        let { tags } = data;
+        let { tags, category } = data;
 
         if (tags) {
             tags = await this.tagService.findByIds(('' + tags).split(','));
         }
-
+        if (category) {
+            category = await this.categoryService.getById(category.id);
+        }
         const newArticle = {
             ...data,
             updateTime:
@@ -120,6 +126,11 @@ export class ArticleService {
             Object.assign(newArticle, { tags });
         } else {
             Object.assign(newArticle, { tags: [] });
+        }
+        if (category) {
+            Object.assign(newArticle, { category });
+        } else {
+            Object.assign(newArticle, { category: null });
         }
         const { id, ...otherParams } = newArticle
         // const updatedArticle = await this.articleRepository.merge(
