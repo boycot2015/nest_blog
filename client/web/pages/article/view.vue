@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { CommentTree } from '@/components/Comment'
+import { CommentTree } from '@/components/comment'
 export default {
     name: '',
     components: {
