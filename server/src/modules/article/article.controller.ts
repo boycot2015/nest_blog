@@ -25,16 +25,16 @@ class GetArticle {
     status: string;
 
     @ApiProperty({
+        description: '文章分类',
+        required: false
+    })
+    categoryId: string;
+
+    @ApiProperty({
         description: '标签',
         required: false
     })
-    tags: Array<Tag>;
-
-    @ApiProperty({
-        description: '分类',
-        required: false
-    })
-    category: Category;
+    tagIds: string;
 }
 class ArticleForm {
     @ApiProperty({
@@ -86,16 +86,17 @@ class EditArticleForm {
     content: string;
 
     @ApiProperty({
-        description: '文章分类',
-        required: false
-    })
-    categoryId: string;
-
-    @ApiProperty({
         description: '标签',
         required: false
     })
-    tagIds: string;
+    tags: Array<Tag>;
+
+    @ApiProperty({
+        description: '分类',
+        required: true
+    })
+    category: Category;
+
     @ApiProperty({
         description: '状态',
         default: 1001,
