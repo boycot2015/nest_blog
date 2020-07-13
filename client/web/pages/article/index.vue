@@ -48,6 +48,19 @@ export default {
     components: {
         LoadingMore
     },
+    watch: {
+        $route (oldVal, newVal) {
+            if (oldVal.query.category !== newVal.category || oldVal.query.cate !== newVal.cate) {
+                this.pages = {
+                    current: 1,
+                    pageSize: 4
+                }
+                this.list = []
+                this.total = 0
+                this.getMoreData({ noMore: true })
+            }
+        }
+    },
     data () {
         return {
             loadingMore: false,
@@ -73,10 +86,10 @@ export default {
             if (((window.screen.height + scrollTop - 50) > (document.body.clientHeight)) && this.hasMore) {
                 this.pages.current++
                 this.loadingMore = true
-                this.getMoreData()
+                this.getMoreData({})
             }
         },
-        async getMoreData () {
+        async getMoreData ({ noMore }) {
             this.hasMore = false
             let res = await this.$api.article.get({ ...this.$route.query, ...this.pages })
             if (res && res.success) {
@@ -89,7 +102,7 @@ export default {
                 } else {
                     this.loadingMoreText = '我是有底线的'
                     this.hasMore = false
-                    this.loadingMore = true
+                    !noMore && (this.loadingMore = true)
                 }
             }
         }
