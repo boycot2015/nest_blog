@@ -1,7 +1,7 @@
 <template>
   <div class="root tc" ref="rootDom" :class="{'night': isNight}">
     <Header :class="{ 'fixed': isHeadFixed }" @on-night=" (val) => isNight = val"></Header>
-    <div class="root-main clearfix" :style="{marginTop: isHeadFixed ? '80px' : '20px'}">
+    <div class="root-main clearfix" :style="{paddingTop: isHeadFixed ? '80px' : '20px'}">
       <div class="root-main-container fl">
         <Nuxt />
       </div>

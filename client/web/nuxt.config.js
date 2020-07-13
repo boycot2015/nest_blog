@@ -62,6 +62,10 @@ export default {
     plugins: [
         '@/plugins/filters',
         {
+            src: '@/plugins/directives',
+            ssr: true
+        },
+        {
             src: '@/plugins/axios-api',
             ssr: true
         }

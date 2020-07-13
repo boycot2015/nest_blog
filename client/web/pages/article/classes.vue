@@ -1,10 +1,24 @@
 <template>
-  <div>{{ list }}</div>
+  <div class="classes-content">
+        <div class="classes-list flex3 tl">
+            <div
+            class="classes-list-item flexbox-h just-s"
+            v-for="item in list"
+            :key="item.id"
+            >
+            <div class="time-item flex1">
+                <div class="text tr">{{ new Date(item.createTime).toLocaleString() }}</div>
+                <div class="line"></div>
+            </div>
+            <p class="title flex3">{{ item.title }}</p>
+            </div>
+        </div>
+  </div>
 </template>
 
 <script>
 export default {
-    name: 'view',
+    name: 'articleList',
     data () {
         return {
             list: {}
@@ -14,7 +28,7 @@ export default {
 
     // },
     async asyncData ({ app, query }) {
-        let res = await app.$api.article.get({ ...query })
+        let res = await app.$api.article.get({ ...query, order: 'DESC' })
         if (res && res.success) {
             return {
                 list: res.data[0]

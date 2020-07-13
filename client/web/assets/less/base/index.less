@@ -124,3 +124,69 @@ li,ol,dl {
   border-radius: 10px;
   background: @white;
 }
+// 加载中样式
+.loading-box {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255,255,255,0.8);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+.loading-more-text {
+    // width: 102px;
+    font-size: 16px;
+    color: @c-666;
+    &::before {
+        font-family: iconfont;
+        content: '\e62f';
+        color: @c-666;
+        display: inline-block;
+        font-size: 20px;
+        margin-right: 10px;
+        animation: rotate 1s infinite;
+        @keyframes rotate {
+            12.5% {
+                transform: rotateZ(45deg);
+            }
+            25% {
+                transform: rotateZ(90deg);
+            }
+            37.5% {
+                transform: rotateZ(135deg);
+            }
+            50% {
+                transform: rotateZ(180deg);
+            }
+            62.5% {
+                transform: rotateZ(225deg);
+            }
+            75% {
+                transform: rotateZ(270deg);
+            }
+            87.5% {
+                transform: rotateZ(315deg);
+            }
+            100% {
+                transform: rotateZ(360deg);
+            }
+        }
+    }
+    &.no-more&::before {
+        display: none;
+    }
+}
+.loading-more {
+    margin-top: 20px;
+}
+.img {
+    background-size: cover;
+    background-position: center;
+    background-repeat: repeat;
+}
+

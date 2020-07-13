@@ -2,27 +2,31 @@
   <div class="container">
     <div>
       <Logo />
-      <h1 class="title">blog</h1>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--green"
-        >Documentation</a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--grey"
-        >GitHub</a>
-      </div>
+        <h1 class="title" v-loading="loading">blog</h1>
+        国庆节倒计时: <span v-countdown="new Date('2020-10-01 00:00:00').getTime() -new Date().getTime()" formatter="HH小时mm分ss秒"></span>
     </div>
   </div>
 </template>
 
 <script>
-export default {}
+export default {
+    data () {
+        return {
+            loading: true
+        }
+    },
+    asyncData ({ isDev, route, store, env, params, query, req, res, redirect, error }) {
+        // let loading = true
+        // return {
+        //     loading: false
+        // }
+    },
+    mounted () {
+        // setTimeout(() => {
+        //     this.loading = false
+        // }, 5000)
+    }
+}
 </script>
 
 <style>

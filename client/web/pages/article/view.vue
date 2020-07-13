@@ -1,5 +1,5 @@
 <template>
-    <div class="view bgc">
+    <div class="view bgc" v-loading="loading">
         <!-- {{ viewData }} -->
         <h3 class="title tl">{{ viewData.title }}</h3>
         <p class="time tl">{{ viewData.comment | getCommentNum }}条评论 - {{ new Date(viewData.createTime).getTime() | timeFilter }}</p>
@@ -11,15 +11,16 @@
 </template>
 
 <script>
-import { CommentTree } from '@/components/comment'
+import { CommentTree } from '@/components/Comment'
 export default {
-    name: 'view',
+    name: 'articleView',
     components: {
         CommentTree
     },
     data () {
         return {
-            viewData: {}
+            viewData: {},
+            loading: true
         }
     },
     // asyncData({isDev, route, store, env, params, query, req, res, redirect, error}) {
@@ -29,7 +30,8 @@ export default {
         let res = await app.$api.article.getById({ id: query.id })
         if (res && res.success) {
             return {
-                viewData: res.data
+                viewData: res.data,
+                loading: false
             }
         }
     }

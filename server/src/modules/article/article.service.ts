@@ -31,11 +31,22 @@ export class ArticleService {
 
         // 2. 条件筛选查询，如名称、类型等，传入对应字段即可
         // queryBy = queryBy.where(data as Partial<Article>)
-        const { current = 1, pageSize = 12, status, ...otherParams } = data;
+        const { current = 1, pageSize = 12, status, order, category, ...otherParams } = data;
         if (status) {
             queryBy.andWhere('article.status=:status').setParameter('status', status);
         }
-
+        if (category) {
+            let categoryIds = category.split(',');
+            queryBy.andWhere('article.categoryId=:category').setParameter('category', categoryIds[categoryIds.length - 1]);
+        }
+        // 普通排序
+        queryBy = queryBy
+        .orderBy('article.updateTime', 'DESC')
+        // .addOrderBy('article.create_time', 'DESC')
+        if (order) {
+            queryBy = queryBy
+            .orderBy('article.createTime', order || 'DESC')
+        }
         if (otherParams) {
             Object.keys(otherParams).forEach((key) => {
                 queryBy
@@ -44,10 +55,6 @@ export class ArticleService {
             });
         }
 
-        // 普通排序
-        queryBy = queryBy
-            .orderBy('article.updateTime', 'DESC')
-        //     .addOrderBy('article.create_time', 'DESC')
         // 分页
         queryBy = queryBy
             .skip(pageSize * (current - 1))
@@ -101,7 +108,7 @@ export class ArticleService {
      *  更新指定文章
      * @param data 
      */
-    async edit(data: Partial<Article>): Promise<Article> {
+    async edit(data): Promise<Article> {
         const oldArticle = await this.articleRepository.findOne({ id: data.id });
         if (!oldArticle) {
             throw new HttpException('查询文章不存在！', responseStatus.failed.code);
@@ -112,7 +119,9 @@ export class ArticleService {
             tags = await this.tagService.findByIds(('' + tags).split(','));
         }
         if (category) {
-            category = await this.categoryService.getById(category.id);
+            let categoryIds = category.split(',');
+            let lastId = parseInt(categoryIds[categoryIds.length - 1]);
+            category = await this.categoryService.getById(lastId);
         }
         const newArticle = {
             ...data,
