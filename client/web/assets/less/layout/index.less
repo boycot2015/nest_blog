@@ -165,9 +165,18 @@
                 }
             }
             .notice {
-                line-height: 32px;
+                line-height: 30px;
+                margin-right: 20px;
+                position: relative;
                 .name {
+                    position: relative;
+                }
+                &-content {
                     margin-left: 10px;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    max-width: 360px;
+                    display: inline-block;
                 }
             }
         }

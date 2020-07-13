@@ -7,8 +7,9 @@
             <nuxt-link to="/article/classes" :class="{'active': $route.path === '/article/classes'}">时间轴</nuxt-link>
             <nuxt-link to="/about" :class="{'active': $route.path === '/about'}">关于</nuxt-link>
         </div>
-        <div class="notice" v-if="websiteConfig && websiteConfig.notice">
-            <nuxt-link :to="websiteConfig.notice.link"><i class="icon-notice"></i><span class="name">{{ websiteConfig.notice.title }}</span></nuxt-link>
+        <div class="notice flexbox-h align-c" v-if="websiteConfig && websiteConfig.notice">
+            <i class="icon-notice"></i>
+            <nuxt-link class="notice-content tl flex1" :to="websiteConfig.notice.link"><div class="name" ref="textMove">{{ websiteConfig.notice.title }}</div></nuxt-link>
         </div>
         <div class="setting tr flexbox-h align-c just-s">
             <span>夜间模式</span>
@@ -50,10 +51,37 @@ export default {
                 this.isNight = false
             }
             this.$emit('on-night', this.isNight)
+            this.textMove()
         },
         onNightClick () {
             this.$emit('on-night', this.isNight = !this.isNight)
             this.isNight && window.localStorage.setItem('theme', this.isNight)
+        },
+        textMove () {
+            let oCon = this.$refs.textMove
+            if (oCon !== null) {
+                let _move = null
+                let step = -2
+                _move = setInterval(() => {
+                    this.autoRoll(oCon, step)
+                }, 1000)
+                if (oCon.textContent.length <= 12) {
+                    clearInterval(_move)
+                } else {
+                    oCon.textContent += oCon.textContent
+                    this.autoRoll(oCon, step)
+                }
+            }
+        },
+        autoRoll (oCon, step) {
+            if (oCon.offsetLeft < -oCon.offsetWidth * 2) {
+                oCon.style.left = 0
+            }
+            if (oCon.offsetLeft > 0) {
+                oCon.style.left = -oCon.offsetWidth / 2 + 'px'
+            }
+            oCon.style.left = oCon.offsetLeft + step + 'px'
+            console.log(oCon.offsetLeft, step)
         }
     }
 }
