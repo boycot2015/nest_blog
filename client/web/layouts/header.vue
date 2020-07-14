@@ -64,24 +64,23 @@ export default {
                 let step = -2
                 _move = setInterval(() => {
                     this.autoRoll(oCon, step)
-                }, 1000)
-                if (oCon.textContent.length <= 12) {
+                }, 80)
+                if (oCon.textContent.length <= 22) {
                     clearInterval(_move)
                 } else {
-                    oCon.textContent += oCon.textContent
+                    oCon.textContent += '' + oCon.textContent
                     this.autoRoll(oCon, step)
                 }
             }
         },
         autoRoll (oCon, step) {
-            if (oCon.offsetLeft < -oCon.offsetWidth * 2) {
+            if (oCon.offsetLeft < -oCon.offsetWidth / 2) {
                 oCon.style.left = 0
             }
             if (oCon.offsetLeft > 0) {
                 oCon.style.left = -oCon.offsetWidth / 2 + 'px'
             }
             oCon.style.left = oCon.offsetLeft + step + 'px'
-            console.log(oCon.offsetLeft, step)
         }
     }
 }

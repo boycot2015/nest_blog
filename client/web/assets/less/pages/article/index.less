@@ -7,48 +7,6 @@
     &-list-item {
         margin-bottom: 20px;
         font-size: 18px;
-        p.title {
-            background-color: @white;
-            padding: 10px;
-            margin-left: 20px;
-            border-radius: 4px;
-            position: relative;
-            box-shadow: 0 0 10px @c-e8;
-            &::before {
-                content: '';
-                position: absolute;
-                display: block;
-                left: -20px;
-                top: 50%;
-                margin-top: -10px;
-                height: 0;
-                width: 0px;
-                border-width: 10px 10px 10px 10px;
-                border-style: solid;
-                border-color: transparent @white transparent transparent;
-            }
-        }
-        .time-item {
-            padding: 10px;
-            flex-basis: 200px;
-            padding-right: 20px;
-            // margin-bottom: 30px;
-            font-size: 18px;
-            border-right: 1px solid @red;
-            position: relative;
-            &::after {
-                content: '';
-                position: absolute;
-                display: block;
-                right: -8px;
-                bottom: -17px;
-                height: 14px;
-                width: 14px;
-                // border: 4px solid @red;
-                background-color: @red;
-                border-radius: 14px;
-            }
-        }
     }
 }
 
@@ -70,6 +28,7 @@
         }
         .img {
             height: 180px;
+            background-color: @c-ccc;
             transition: all 0.3s;
             &:hover {
                 transform: scale(1.2);
@@ -85,6 +44,9 @@
                 // height: 48px;
                 line-height: 24px;
                 color: @c-333;
+                &:hover {
+                    color: @primary;
+                }
             }
             .desc {
                 margin-top: 5px;

@@ -1,17 +1,17 @@
 <template>
-    <div class="view bgc" v-loading="loading">
+    <div class="article-view bgc" v-loading="loading">
         <!-- {{ viewData }} -->
         <h3 class="title tl">{{ viewData.title }}</h3>
         <p class="time tl">{{ viewData.comment | getCommentNum }}条评论 - {{ new Date(viewData.createTime).getTime() | timeFilter }}</p>
         <div class="content" v-html="$options.filters.formatRichText(viewData.content)"></div>
         <div class="comment">
+            <h3 class="title">评论{{ viewData.comment.length ? `(${$options.filters.getCommentNum(viewData.comment)})`: '' }}</h3>
             <comment-tree :data="viewData.comment"></comment-tree>
         </div>
     </div>
 </template>
-
 <script>
-import { CommentTree } from '@/components/Comment'
+import { CommentTree } from '@/components/comment'
 export default {
     name: 'articleView',
     components: {
@@ -37,7 +37,3 @@ export default {
     }
 }
 </script>
-
-<style>
-
-</style>

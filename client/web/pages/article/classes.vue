@@ -10,7 +10,7 @@
                 <div class="text tr">{{ new Date(item.createTime).toLocaleString() }}</div>
                 <div class="line"></div>
             </div>
-            <p class="title flex3">{{ item.title }}</p>
+            <p class="title flex3" @click="$router.push(`/article/view?id=${item.id}`)">{{ item.title }}</p>
             </div>
         </div>
   </div>

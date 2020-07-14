@@ -1,6 +1,9 @@
 <template>
   <div class="site-aside">
-    <div class="title"><i v-if="icon" :class="'icon icon-'+icon"></i>{{ title }} &nbsp; {{ total ? [total] : '' }}</div>
+    <div class="title clearfix">
+        <i v-if="icon" :class="'icon icon-'+icon"></i>{{ title }} &nbsp; {{ total ? [total] : '' }}
+        <span class="more fr" v-if="showMore" @click="$router.push('/article')">全部 <i class="more icon-more"></i></span>
+    </div>
     <ul class="list flexbox-h just-s" v-if="data && data.length">
       <li v-for="item in data" class="list-item" :key="item.id" @click="onTagClick(item)">
         <span>
@@ -38,6 +41,10 @@ export default {
                 key: 'num',
                 value: 'value'
             })
+        },
+        showMore: {
+            type: Boolean,
+            default: true
         }
     },
     methods: {

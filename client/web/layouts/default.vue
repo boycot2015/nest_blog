@@ -2,11 +2,14 @@
   <div class="root tc" ref="rootDom" :class="{'night': isNight}">
     <Header :class="{ 'fixed': isHeadFixed }" @on-night=" (val) => isNight = val"></Header>
     <div class="root-main clearfix" :style="{paddingTop: isHeadFixed ? '80px' : '20px'}">
-      <div class="root-main-container fl">
-        <Nuxt />
-      </div>
+        <div class="root-main-container fl" :style="{width: sideWhiteRoute.includes($route.path) ? '1200px':''}">
+            <transition name="default" mode="out-in">
+                <Nuxt />
+            </transition>
+        </div>
       <div
       class="right fr"
+      v-if="!sideWhiteRoute.includes($route.path)"
       :class="{ 'fixed': isAsideFixed, 'active': isHeadFixed }"
       >
           <Aside
@@ -23,17 +26,24 @@
       </div>
     </div>
     <Footer></Footer>
+    <div class="top-btn" v-if="isAsideFixed" @click="onScrollToTop">回到顶部<i class="icon-top"></i></div>
   </div>
 </template>
 <script>
 import Header from './header'
 import Footer from './footer'
 import Aside from './aside'
+import config from '@/config'
+
 export default {
     components: {
         Header,
         Footer,
         Aside
+    },
+    transition: {
+        name: 'default',
+        mode: 'out-in'
     },
     data () {
         return {
@@ -42,7 +52,8 @@ export default {
             isHeadFixed: false,
             isAsideFixed: false,
             scrollObj: {},
-            isNight: false
+            isNight: false,
+            sideWhiteRoute: config.sideWhiteRoute
         }
     },
     computed: {
@@ -95,6 +106,25 @@ export default {
                 fn(this.scrollObj.value > 0)
                 beforeScrollTop = afterScrollTop
             })
+        },
+        onScrollToTop () {
+            let step = 50
+            let timer = setInterval(() => {
+                let scrollTop = window.scrollY
+                if (scrollTop < 100) {
+                    step = 5
+                } else if (scrollTop > 2500) {
+                    step = 500
+                } else {
+                    step = 50
+                }
+                if (scrollTop - step < 0) {
+                    step = 50
+                    window.scrollTo(0, 0)
+                    clearInterval(timer)
+                }
+                window.scrollTo(0, scrollTop - step)
+            }, 10)
         }
     }
 }

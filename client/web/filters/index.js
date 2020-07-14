@@ -130,6 +130,7 @@ export const getCommentNum = (val) => {
             num += getCommentNum(el.children)
         }
     })
+    num = num > 9999 ? '9999+' : num
     return num
 }
 

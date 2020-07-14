@@ -25,7 +25,9 @@ export default {
             }
         },
         unbind (el, binding) {
-            el.removeChild(loadingBox)
+            if (!binding.value && loadingBox) {
+                el.removeChild(loadingBox)
+            }
         }
     }
 }

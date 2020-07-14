@@ -1,3 +1,4 @@
+import config from '@/config'
 export const state = () => ({
     websiteConfig: '', // 网站信息及首页数据
     asideConfig: '', // 右侧公告数据
@@ -8,7 +9,8 @@ export const state = () => ({
     DetailInfoBooleans: {}, // 网站配置信息  对象
     visitors: '',
     importNoticeToken: false, // 重大通知标识
-    importNotice: []// 重大通知数组
+    importNotice: [], // 重大通知数组
+    aboutData: config.about || {} // 关于我页面数据
 })
 
 export const mutations = {
@@ -29,7 +31,7 @@ export const mutations = {
         state.newMsgNum = user.newMsgNum
     },
     setCommonData (state, [settingRes, homeRes]) {
-        if (settingRes.success && homeRes.success) {
+        if (settingRes && homeRes && settingRes.success && homeRes.success) {
             settingRes = settingRes.data[0][0]
             for (const key in settingRes) {
                 if (key === 'banner' ||
@@ -50,7 +52,7 @@ export const mutations = {
         }
     },
     setAsideData (state, [tagRes, categoryRes]) {
-        if (tagRes.success && categoryRes.success) {
+        if (tagRes && tagRes.success && categoryRes && categoryRes.success) {
             state.asideConfig = {
                 tagList: tagRes.data[0],
                 tagTotal: tagRes.data[1],

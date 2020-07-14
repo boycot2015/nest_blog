@@ -1,0 +1,46 @@
+.about {
+    width: 1024px;
+    margin: 0 auto;
+    .title {
+        margin-bottom: 20px;
+        height: 20px;
+        h3 {
+            font-size: 20px;
+            line-height: 20px;
+            color: @c-333;
+            padding-left: 10px;
+            border-left: 3px solid @primary;
+        }
+    }
+    .bg {
+        width: 100%;
+    }
+    .content {
+        // min-height: 400px;
+        margin-top: 20px;
+        .desc {
+            line-height: 26px;
+            font-size: 16px;
+            color: @c-333;
+            text-align:justify;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+        .list {
+            padding: 20px;
+            border-radius: 2px;
+            background-color: @c-e8;
+            &-item {
+                list-style: circle;
+                font-size: 14px;
+                line-height: 32px;
+                color: @c-666;
+            }
+            .name {
+                margin-right: 20px;
+                color: @c-333;
+                font-weight: bold;
+            }
+        }
+    }
+}

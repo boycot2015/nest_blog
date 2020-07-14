@@ -112,8 +112,8 @@
                     margin-right: 30px;
                     &.active {
                         padding-bottom: 10px;
-                        color: @red;
-                        border-bottom: 2px solid @red;
+                        color: @primary;
+                        border-bottom: 2px solid @primary;
                     }
                 }
             }
@@ -167,16 +167,21 @@
             .notice {
                 line-height: 30px;
                 margin-right: 20px;
-                position: relative;
-                .name {
-                    position: relative;
-                }
                 &-content {
+                    position: relative;
                     margin-left: 10px;
-                    white-space: nowrap;
                     overflow: hidden;
-                    max-width: 360px;
+                    width: 360px;
+                    height: 32px;
                     display: inline-block;
+                    .name {
+                        position: absolute;
+                        left: 0;
+                        top: 0;
+                        height: 100%;
+                        width: auto;
+                        white-space: nowrap;
+                    }
                 }
             }
         }
@@ -201,6 +206,12 @@
                 margin-right: 10px;
                 font-weight: bold;
                 &::after {
+                    color: @primary;
+                }
+            }
+            .more {
+                cursor: pointer;
+                &:hover {
                     color: @primary;
                 }
             }
@@ -245,6 +256,9 @@
                 }
             }
         }
+        .left {
+            margin-left: 120px;
+        }
         .right {
             .icon {
                 margin-right: 10px;
@@ -253,6 +267,21 @@
                 }
             }
         }
+        }
+    }
+    .top-btn {
+        position: fixed;
+        background-color: @c-999;
+        color: @white;
+        bottom: 120px;
+        right: calc(50% - 800px);
+        font-size: 18px;
+        bottom: 120px;
+        padding: 5px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        i {
+            margin-left: 10px;
         }
     }
 }
