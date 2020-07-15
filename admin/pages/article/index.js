@@ -145,18 +145,25 @@ const AdvancedSearchForm = (props) => {
                 name: 'status',
                 placeholder: '状态',
                 options: [{
-                    code: '',
-                    description: '全部'
+                    id: '',
+                    value: '全部'
                 }, {
-                    code: 1001,
-                    description: '已发布'
+                    id: 1001,
+                    value: '已发布'
                 }, {
-                    code: 1002,
-                    description: '待审核'
+                    id: 1002,
+                    value: '待审核'
                 }, {
-                    code: 1003,
-                    description: '审核不通过'
+                    id: 1003,
+                    value: '审核不通过'
                 }]
+            },
+            {
+                label: '标签',
+                type: 2,
+                name: 'tag',
+                placeholder: '标签',
+                options: props.state.tagList
             },
             {
                 label: '分类',
@@ -182,7 +189,14 @@ const AdvancedSearchForm = (props) => {
                         {el.type === 1 ? <Input placeholder={el.placeholder} /> :
                             el.type === 2 ?
                                 <Select placeholder="请选择" onChange={handleChange}>
-                                    {el.options.map(val => (<Option key={val.code} value={val.code}>{val.description}</Option>))}
+                                    {el.options.map(val => (
+                                        <Option
+                                            key={val.id}
+                                            value={val.id}
+                                        >
+                                            {val.description || val.value}
+                                        </Option>
+                                    ))}
                                 </Select> :
                                 el.type === 3 ? <Cascader
                                     fieldNames={{ label: 'value', value: 'id' }}
@@ -241,10 +255,11 @@ class Article extends React.Component {
         // 从query参数中回去id
         //通过process的browser属性判断处于何种环境：Node环境下为false,浏览器为true
         // 发送服务器请求
-        const [res, cateRes] = await Promise.all([
+        const [res, cateRes, tagRes] = await Promise.all([
             await $api.article.get({ current: 1, pageSize: 5 }),
-            await $api.category.get()])
-        if (res && res.success && cateRes && cateRes.success) {
+            await $api.category.get(),
+            await $api.tag.get()])
+        if (res && res.success && cateRes && cateRes.success && tagRes && tagRes.success) {
             return {
                 loading: false,
                 data: res.data[0],
@@ -254,7 +269,8 @@ class Article extends React.Component {
                     total: res.data[1],
                     pageSizeOptions: [5, 10, 20, 50]
                 },
-                categoryList: filterTreeData((cateRes.data[0]), null)
+                categoryList: filterTreeData((cateRes.data[0]), null),
+                tagList: tagRes.data[0]
             }
         } else {
             return {
@@ -266,7 +282,8 @@ class Article extends React.Component {
                     total: 999,
                     pageSizeOptions: [5, 10, 20, 50]
                 },
-                categoryList: []
+                categoryList: [],
+                tagList: [],
             }
         }
     }
@@ -303,16 +320,20 @@ class Article extends React.Component {
             if (this.state.queryData[key]) {
                 queryData[key] = this.state.queryData[key]
             }
+            if (key.includes('category') && this.state.queryData[key]) {
+                queryData[key] = this.state.queryData[key].join(',')
+            }
         }
         const params = { current, pageSize, ...queryData }
         this.getPageData(params)
     }
     async getPageData (params = {}) {
         const { current, pageSize } = params
-        const [res, cateRes] = await Promise.all([
+        const [res, cateRes, tagRes] = await Promise.all([
             await $api.article.get({ params }),
-            await $api.category.get()])
-        if (res && res.success && cateRes && cateRes.success) {
+            await $api.category.get(),
+            await $api.tag.get()])
+        if (res && res.success && cateRes && cateRes.success && tagRes && tagRes.success) {
             this.setState({
                 loading: false,
                 data: res.data[0],
@@ -321,8 +342,8 @@ class Article extends React.Component {
                     pageSize,
                     total: res.data[1]
                 },
-
-                categoryList: filterTreeData((cateRes.data[0]), null)
+                categoryList: filterTreeData((cateRes.data[0]), null),
+                tagList: tagRes.data[0]
 
             })
         } else {
@@ -334,7 +355,8 @@ class Article extends React.Component {
                     pageSize,
                     total: 0,
                 },
-                categoryList: []
+                categoryList: [],
+                tagList: []
             })
         }
     }

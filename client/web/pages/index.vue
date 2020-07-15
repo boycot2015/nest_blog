@@ -102,6 +102,7 @@ export default {
                 observeParents: true // 修改swiper的父元素时，自动初始化swiper
             },
             banner: '',
+            newLeast: [],
             loadingMore: false
         }
     },

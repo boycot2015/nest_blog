@@ -48,7 +48,7 @@ class ArticleEdit extends React.Component {
                         label: el.value,
                         id: el.id
                     }))) || [],
-                    categoryId: (categoryId && categoryId !== null && categoryId) || '',
+                    categoryId: (categoryId && categoryId !== null && categoryId.split(',')) || '',
                     total: res.data[1]
                 }
             }
@@ -77,7 +77,6 @@ class ArticleEdit extends React.Component {
         return callback(this.state.articleForm)
     }
     handleTagSelect (value, arr) {
-        console.log(value, arr, 'value, selectedOptions');
         this.setState({ articleForm: { ...this.state.articleForm, tags: arr } })
     }
     categorySelect (value, arr) {
@@ -168,6 +167,8 @@ class ArticleEdit extends React.Component {
                         <Cascader
                             options={this.state.categoryList}
                             // showSearch={{ filter }}
+                            // ['cc57eb05-81c2-4aa4-b295-1b08d95000b0 ', '347fa00b-64d0-47b7-87a5-95264d96e492']
+                            // this.state.articleForm.categoryId
                             defaultValue={this.state.articleForm.categoryId ? this.state.articleForm.categoryId : ''}
                             fieldNames={{ label: 'value', value: 'id' }}
                             placeholder={'选择上级分类'}

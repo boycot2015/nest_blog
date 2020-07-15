@@ -36,7 +36,7 @@ export default {
             current: 1,
             pageSize: 4
         }
-        console.log(params, route, 'params')
+        // console.log(params, route, 'params')
         let res = await app.$api.article.get({ ...query, ...params, ...pages })
         if (res && res.success) {
             return {

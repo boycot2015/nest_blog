@@ -117,7 +117,7 @@ export class ArticleService {
     }
     /**
      *  更新指定文章
-     * @param data 
+     * @param data
      */
     async edit(data): Promise<Article> {
         const oldArticle = await this.articleRepository.findOne({ id: data.id });
@@ -129,7 +129,7 @@ export class ArticleService {
         if (tags) {
             tags = await this.tagService.findByIds(('' + tags).split(','));
         }
-        if (categoryId) {
+        if (categoryId && categoryId !== null) {
             let categoryIds = categoryId.split(',');
             let lastId = categoryIds[categoryIds.length - 1];
             categoryId = await this.categoryService.getById(lastId);
@@ -202,15 +202,15 @@ export class ArticleService {
         let categoryId = []
         if (data.category !== null) {
             categoryId.push(data.category.id)
-        }
-        if (data.category.parentId !== null) {
-            categoryId.push(data.category.parentId)
-            let category = await this.categoryService.getById(data.category.parentId);
-            if (category.parentId !== null) {
-                categoryId.push(category.parentId)
+            if (data.category.parentId !== null) {
+                categoryId.unshift(data.category.parentId)
+                let category = await this.categoryService.getById(data.category.parentId);
+                if (category.parentId !== null) {
+                    categoryId.unshift(category.parentId)
+                }
             }
+            resData.categoryId = categoryId.join(',')
         }
-        resData.categoryId = categoryId.join(',')
         return Promise.resolve(resData)
     }
     // 设置文章状态
