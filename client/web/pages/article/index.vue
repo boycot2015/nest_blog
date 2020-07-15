@@ -22,7 +22,7 @@
                 </nuxt-link>
             </div>
         </div>
-        <loading-more v-if="loadingMore" :loading="loadingMore" :text="loadingMoreText"></loading-more>
+        <loading-more v-if="loadingMore" :loading="loadingMore" :show-img="showImg" :has-more="hasMore" :text="loadingMoreText"></loading-more>
     </div>
 </template>
 
@@ -42,6 +42,10 @@ export default {
             return {
                 list: res.data[0],
                 total: res.data[1],
+                loadingMoreText: res.data[0].length ? '努力加载中...' : '没有更多数据了~',
+                loadingMore: !res.data[0].length,
+                hasMore: res.data[0].length,
+                showImg: !res.data[0].length,
                 ...pages
             }
         }
@@ -55,12 +59,14 @@ export default {
             loadingMore: false,
             loadingMoreText: '努力加载中...',
             hasMore: true,
+            canQuery: true, // 滚动判断是否可以加载数据
             list: [],
             total: 0,
             pages: {
                 current: 1,
                 pageSize: 4
             },
+            showImg: false,
             getImgUrl
         }
     },
@@ -72,25 +78,27 @@ export default {
         scrollBottom (e) {
         // 滚动到页面底部时，请求前一天的文章内容
             let scrollTop = e.target.scrollingElement.scrollTop
-            if (((window.screen.height + scrollTop - 50) > (document.body.clientHeight)) && this.hasMore) {
+            if (((window.screen.height + scrollTop - 50) > (document.body.clientHeight)) && this.canQuery) {
                 this.pages.current++
                 this.loadingMore = true
                 this.getMoreData({})
             }
         },
         async getMoreData ({ noMore }) {
-            this.hasMore = false
+            this.canQuery = false
             let res = await this.$api.article.get({ ...this.$route.query, ...this.pages })
             if (res && res.success) {
                 this.list = this.list.concat(res.data[0])
                 this.total = res.data[1]
                 if (this.total > this.pages.current * this.pages.pageSize) {
                     this.loadingMore = false
-                    this.loadingMoreText = '努力加载中...'
+                    this.canQuery = true
                     this.hasMore = true
+                    this.loadingMoreText = '努力加载中...'
                 } else {
                     this.loadingMoreText = '我是有底线的'
                     this.hasMore = false
+                    this.canQuery = true
                     !noMore && (this.loadingMore = true)
                 }
             }

@@ -1,9 +1,64 @@
 <template>
-  <div class="loading-more">
-       <span class="loading-more-text" :class="{'no-more': !showLoading}">{{ text }}</span>
+  <div class="loading-more" :class="{'bgc img': showImg}">
+        <img v-if="showImg" src="@/assets/img/img-null.png" alt="">
+        <p class="loading-more-text" :class="{'no-more': !hasMore}">{{ text }}</p>
   </div>
 </template>
-
+<style lang="less" scoped>
+.loading-more-text {
+    // width: 102px;
+    font-size: 16px;
+    color: @c-666;
+    &::before {
+        font-family: iconfont;
+        content: '\e62f';
+        color: @c-666;
+        display: inline-block;
+        font-size: 20px;
+        margin-right: 10px;
+        animation: rotate 1s infinite;
+        @keyframes rotate {
+            12.5% {
+                transform: rotateZ(45deg);
+            }
+            25% {
+                transform: rotateZ(90deg);
+            }
+            37.5% {
+                transform: rotateZ(135deg);
+            }
+            50% {
+                transform: rotateZ(180deg);
+            }
+            62.5% {
+                transform: rotateZ(225deg);
+            }
+            75% {
+                transform: rotateZ(270deg);
+            }
+            87.5% {
+                transform: rotateZ(315deg);
+            }
+            100% {
+                transform: rotateZ(360deg);
+            }
+        }
+    }
+    &.no-more&::before {
+        display: none;
+    }
+}
+.loading-more {
+    margin-top: 20px;
+    &.img {
+        padding: 200px 0;
+        margin-top: 0;
+    }
+    &.bgc {
+        background-color: @white;
+    }
+}
+</style>
 <script>
 export default {
     name: 'LoadingMore',
@@ -15,6 +70,14 @@ export default {
         loading: {
             type: Boolean,
             default: false
+        },
+        hasMore: {
+            type: [Boolean, Number],
+            default: true
+        },
+        showImg: {
+            type: Boolean,
+            default: false
         }
     },
     data () {
@@ -23,8 +86,8 @@ export default {
         }
     },
     watch: {
-        text (val) {
-            val && (this.showLoading = false)
+        hasMore (val) {
+            !val && (this.showLoading = false)
         }
     }
 }
