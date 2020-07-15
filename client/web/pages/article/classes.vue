@@ -24,11 +24,12 @@ export default {
             list: {}
         }
     },
+    // watchQuery: ['category'],
     // asyncData({isDev, route, store, env, params, query, req, res, redirect, error}) {
 
     // },
     async asyncData ({ app, query }) {
-        let res = await app.$api.article.get({ ...query, order: 'DESC' })
+        let res = await app.$api.article.get({ ...query, pageSize: 1000, order: 'DESC' })
         if (res && res.success) {
             return {
                 list: res.data[0]

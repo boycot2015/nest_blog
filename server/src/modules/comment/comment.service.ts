@@ -119,9 +119,9 @@ export class CommentService {
                 点击进行回复</a></div>`
             }, (err, res) => {
                 if (res) {
-                    console.log('发送成功！')
+                    console.log('邮件发送成功！')
                 } else {
-                    console.log(err, '发送失败！')
+                    console.log(err, '邮件发送失败！')
                 }
             })
             return responseStatus.success.message

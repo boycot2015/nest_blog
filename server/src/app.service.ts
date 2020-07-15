@@ -10,8 +10,8 @@ export class AppService {
     getHello(): string {
         return 'Hello World!';
     }
-    async getDatas(): Promise<object> {
-        const res = await this.articleService.getAll()
+    async getDatas(params): Promise<object> {
+        const res = await this.articleService.getAll(params)
         const config = await this.settingService.get({})
         let activity = JSON.parse(config[0][0].activity)
         let deadline = new Date(activity.time).getTime()

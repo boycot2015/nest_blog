@@ -25,7 +25,7 @@ export class AppController {
     }
     @Get('datas')
     // @UseGuards(AuthGuard())
-    async datas(): Promise<object> {
-        return await this.appService.getDatas();
+    async datas(data = {}): Promise<object> {
+        return await this.appService.getDatas(data);
     }
 }

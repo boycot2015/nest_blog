@@ -36,7 +36,7 @@ export default {
         },
         routeNameSplitter: '/',
         middleware: 'headers',
-        linkActiveClass: 'active-link'
+        linkActiveClass: 'active'
     },
     loading: {
         color: '#ff9900',

@@ -52,7 +52,12 @@ export default {
             if (this.title.includes('分类')) {
                 this.$router.push('/article?category=' + item.id)
             } else {
-                this.$router.push('/article?tag=' + item.id)
+                this.$router.push({
+                    path: '/article',
+                    query: {
+                        tag: [item.id]
+                    }
+                })
             }
         }
     }

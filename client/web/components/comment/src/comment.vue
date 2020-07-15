@@ -4,7 +4,7 @@
             <div class="avatar fl" :style="{ backgroundColor: item.avatar }">{{ item.name.slice(0,1).toLocaleUpperCase() }}</div>
             <div class="userinfo fl tl">
                 <div class="username">{{ item.name }}</div>
-                <div class="desc ">{{ item.content }}</div>
+                <div class="desc " v-html="item.content"></div>
             </div>
             <template v-if="item.children && item.children.length">
                 <comment-tree :data="item.children" class="comment-tree-children fl"></comment-tree>

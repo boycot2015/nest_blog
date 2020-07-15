@@ -14,16 +14,24 @@
         .article-list-item,
         .classes-content,
         .article-main,
+        .about,
         .site-footer {
             background-color: @c-000 !important;
             color: @white !important;
             box-shadow: none;
-            .title,a,p,span,pre,li,ol {
+            .title,a,p,span,pre,li,ol,h3,h4 {
                 background-color: @c-000 !important;
                 color: @white;
             }
             pre {
                 background-color: @c-333 !important;
+                color: @white;
+            }
+        }
+        .about {
+            .list,.list li,.list li span,pre {
+                background-color: @c-333 !important;
+                color: @white;
             }
         }
         .root-main-container,

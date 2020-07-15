@@ -24,14 +24,12 @@ export class ArticleService {
         // 条件筛选和分页查询代码
         let queryBy = this.articleRepository.createQueryBuilder('article')
             .leftJoinAndSelect('article.comment', 'comment')
-            .leftJoinAndSelect('article.tags', 'tag')
             .leftJoinAndSelect('article.category', 'category')
             .andWhere('article.isDelete=:delete').setParameter('delete', false)
-        // .leftJoinAndSelect('article.comment', 'comment')
 
         // 2. 条件筛选查询，如名称、类型等，传入对应字段即可
         // queryBy = queryBy.where(data as Partial<Article>)
-        const { current = 1, pageSize = 12, status, order, category, ...otherParams } = data;
+        const { current = 1, pageSize = 12, status, order, category, tag, ...otherParams } = data;
         if (status) {
             queryBy.andWhere('article.status=:status').setParameter('status', status);
         }
@@ -39,13 +37,17 @@ export class ArticleService {
             let categoryIds = category.split(',');
             queryBy.andWhere('article.categoryId=:category').setParameter('category', categoryIds[categoryIds.length - 1]);
         }
+        if (tag) {
+            let tagId = ('' + tag).split(',');
+            queryBy.leftJoinAndSelect('article.tags', 'tag').andWhere('tag.id = :id', { id: tagId })
+        } else {
+            queryBy.leftJoinAndSelect('article.tags', 'tag')
+        }
         // 普通排序
-        queryBy = queryBy
-        .orderBy('article.updateTime', 'DESC')
+        queryBy = queryBy.orderBy('article.updateTime', 'DESC')
         // .addOrderBy('article.create_time', 'DESC')
         if (order) {
-            queryBy = queryBy
-            .orderBy('article.createTime', order || 'DESC')
+            queryBy = queryBy.orderBy('article.createTime', order || 'DESC')
         }
         if (otherParams) {
             Object.keys(otherParams).forEach((key) => {
@@ -67,10 +69,15 @@ export class ArticleService {
     /**
      * 获取所以文章
      */
-    async getAll() {
+    async getAll(data) {
         let queryBy = this.articleRepository.createQueryBuilder('article')
+        const { order } = data
         queryBy = queryBy.leftJoinAndSelect('article.comment', 'comment')
             .orderBy('article.updateTime', 'ASC')
+        if (order) {
+            queryBy = queryBy
+            .orderBy('article.createTime', order || 'DESC')
+        }
         // 获取结果及(非分页的)查询结果总数
         // 或使用 .getMany() 不会返回总数
         return await queryBy.getManyAndCount()
@@ -89,7 +96,7 @@ export class ArticleService {
         if (exist) {
             throw new HttpException('文章标题已存在', responseStatus.failed.code);
         }
-        let { tags, category = null } = data
+        let { tags = [], category = null } = data
         if (data.status === '1001') {
             Object.assign(data, {
                 updateTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),

@@ -31,12 +31,13 @@ import { LoadingMore } from '@/components/LoadingMore'
 import { getImgUrl } from '@/utils'
 export default {
     name: 'articleIndex',
-    async asyncData ({ app, params, query }) {
+    async asyncData ({ app, params, query, route }) {
         let pages = {
             current: 1,
             pageSize: 4
         }
-        let res = await app.$api.article.get({ ...query, ...pages })
+        console.log(params, route, 'params')
+        let res = await app.$api.article.get({ ...query, ...params, ...pages })
         if (res && res.success) {
             return {
                 list: res.data[0],
@@ -48,19 +49,7 @@ export default {
     components: {
         LoadingMore
     },
-    watch: {
-        $route (oldVal, newVal) {
-            if (oldVal.query.category !== newVal.category || oldVal.query.cate !== newVal.cate) {
-                this.pages = {
-                    current: 1,
-                    pageSize: 4
-                }
-                this.list = []
-                this.total = 0
-                this.getMoreData({ noMore: true })
-            }
-        }
-    },
+    watchQuery: ['category', 'tag'],
     data () {
         return {
             loadingMore: false,
