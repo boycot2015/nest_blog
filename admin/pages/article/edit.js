@@ -48,7 +48,7 @@ class ArticleEdit extends React.Component {
                         label: el.value,
                         id: el.id
                     }))) || [],
-                    categoryId: (categoryId && categoryId !== null && categoryId.split(',')) || '',
+                    categoryId: (categoryId && categoryId !== null && categoryId) || '',
                     total: res.data[1]
                 }
             }
@@ -168,7 +168,7 @@ class ArticleEdit extends React.Component {
                         <Cascader
                             options={this.state.categoryList}
                             // showSearch={{ filter }}
-                            defaultValue={this.state.articleForm.categoryId ? [this.state.articleForm.categoryId] : ''}
+                            defaultValue={this.state.articleForm.categoryId ? this.state.articleForm.categoryId : ''}
                             fieldNames={{ label: 'value', value: 'id' }}
                             placeholder={'选择上级分类'}
                             onChange={(value, selectedOptions) => this.categorySelect(value, selectedOptions)}
