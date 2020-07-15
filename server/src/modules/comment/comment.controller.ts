@@ -64,6 +64,12 @@ export class CommentForm {
 
     })
     email: string;
+    @ApiProperty({
+        description: '文章id',
+        required: true
+
+    })
+    articleId: string;
 }
 
 export class CommentState {

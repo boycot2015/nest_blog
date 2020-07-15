@@ -18,7 +18,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { responseStatus } from "../../utils";
 import { createWriteStream } from 'fs';
 import { join } from 'path';
-import { WebConfig } from '../../../config/inex';
+import { WebConfig } from '../../../config';
 import { FileService } from './file.service';
 import { MinioService } from '../minio/minio.service';
 

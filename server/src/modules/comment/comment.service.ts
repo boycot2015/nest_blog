@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { Comment } from "../../entities/comment.entity";
 import { sendMail, responseStatus } from "../../utils";
 import { ArticleService } from '../article/article.service';
-import { WebConfig } from '../../../config/inex';
+import { WebConfig } from '../../../config';
 
 @Injectable()
 export class CommentService {
@@ -71,6 +71,7 @@ export class CommentService {
         if (!comment) {
             throw new HttpException("参数为空", responseStatus.failed.code);
         }
+        
         const hasComment = await this.commentRepository.findOne({ 'name': comment.name, 'content': comment.content })
         if (hasComment) {
             throw new HttpException("评论已存在,请勿重复评论！", responseStatus.failed.code);
@@ -80,8 +81,8 @@ export class CommentService {
             }
             const commenter = await this.commentRepository.findOne({ 'name': comment.name, 'email': comment.email })
             insertCommentData.avatar = commenter && commenter.avatar ? commenter.avatar : colors[Math.floor(Math.random() * (colors.length - 1))]
+            let parentCommenter = { name: '', content: '', email: '' }
             if (comment.parentId && comment.parentId !== null) {
-                let parentCommenter = { name: '', content: '' }
                 parentCommenter = await this.commentRepository.findOne({ id: comment.parentId })
                 console.log(parentCommenter, comment.parentId, 'parentCommenter')
                 if (parentCommenter) {
@@ -97,12 +98,23 @@ export class CommentService {
             await this.commentRepository.save(newCommentData)
             sendMail({
                 ...WebConfig.emailOption(),
-                from: comment.email,
-                html: `<div style="font-size: 16px;color: #333; text-align:center">
-                你收到一条新的评论，
+                to: parentCommenter.email ? parentCommenter.email : WebConfig.emailOption().to,
+                from: comment.parentId && comment.parentId !== null ? comment.email : WebConfig.emailOption().from,
+                html: `<div
+                style="font-size: 18px;
+                color: #333;
+                text-align:center;
+                min-height: 160px;
+                padding: 20px;
+                border-radius: 5px;
+                background: #e8e8e8;">
+                你收到一条来自
+                ${comment.email}
+                的评论，
                 <a
                 target="_blank"
-                style="font-size: 18px;color: red"
+                style="font-size: 18px;
+                color: red;"
                 href="${WebConfig.clientHostName()}/article/view?id=${comment.articleId}">
                 点击进行回复</a></div>`
             }, (err, res) => {

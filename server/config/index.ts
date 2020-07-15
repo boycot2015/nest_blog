@@ -1,14 +1,14 @@
 export class WebConfig {
     static hostName() {
-        return 'http://localhost:4000'
+        return 'http://www.boycot.top'
     }
     static clientHostName() {
-        return 'http://localhost:3001'
+        return 'http://www.boycot.top'
     }
     static emailOption() {
         return {
             from: 'boycot2017@163.com',
-            to: 'boycot001@163.com',
+            to: 'boycot2017@163.com',
             subject: '新的评论',
             text: '',
             html: ''
