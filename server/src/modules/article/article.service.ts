@@ -96,19 +96,21 @@ export class ArticleService {
         if (exist) {
             throw new HttpException('文章标题已存在', responseStatus.failed.code);
         }
-        let { tags = [], category = null } = data
+        let { tags = [], categoryId = null } = data
         if (data.status === '1001') {
             Object.assign(data, {
                 updateTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
             });
         }
         tags = await this.tagService.findByIds(('' + tags).split(','))
-        if (category) {
-            category = await this.categoryService.getById(category)
+        if (categoryId) {
+            let categoryIds = categoryId.split(',');
+            let lastId = parseInt(categoryIds[categoryIds.length - 1]);
+            categoryId = await this.categoryService.getById(lastId);
         }
         const newArticle = await this.articleRepository.create({
             ...data,
-            category,
+            category: categoryId,
             tags
         });
         return await this.articleRepository.save(newArticle);
@@ -122,15 +124,15 @@ export class ArticleService {
         if (!oldArticle) {
             throw new HttpException('查询文章不存在！', responseStatus.failed.code);
         }
-        let { tags, category } = data;
+        let { tags, categoryId } = data;
 
         if (tags) {
             tags = await this.tagService.findByIds(('' + tags).split(','));
         }
-        if (category) {
-            let categoryIds = category.split(',');
+        if (categoryId) {
+            let categoryIds = categoryId.split(',');
             let lastId = parseInt(categoryIds[categoryIds.length - 1]);
-            category = await this.categoryService.getById(lastId);
+            categoryId = await this.categoryService.getById(lastId);
         }
         const newArticle = {
             ...data,
@@ -145,8 +147,8 @@ export class ArticleService {
         } else {
             Object.assign(newArticle, { tags: [] });
         }
-        if (category) {
-            Object.assign(newArticle, { category });
+        if (categoryId) {
+            Object.assign(newArticle, { category: categoryId });
         } else {
             Object.assign(newArticle, { category: null });
         }
