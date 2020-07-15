@@ -76,10 +76,10 @@ export class ArticleService {
         return await queryBy.getManyAndCount()
     }
     /**
-     * 创建文章
+     * 创建文章 create(data: Partial<Article>): Promise<Article>
      * @param data
      */
-    async create(data: Partial<Article>): Promise<Article> {
+    async create(data): Promise<any> {
         // article.id = this.articles.length + 1
         // this.articles.push(article)
         // return Promise.resolve('操作成功');
@@ -89,14 +89,16 @@ export class ArticleService {
         if (exist) {
             throw new HttpException('文章标题已存在', responseStatus.failed.code);
         }
-        let { tags, category } = data
+        let { tags, category = null } = data
         if (data.status === '1001') {
             Object.assign(data, {
                 updateTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
             });
         }
         tags = await this.tagService.findByIds(('' + tags).split(','))
-        category = await this.categoryService.getById(category.id)
+        if (category) {
+            category = await this.categoryService.getById(category)
+        }
         const newArticle = await this.articleRepository.create({
             ...data,
             category,
