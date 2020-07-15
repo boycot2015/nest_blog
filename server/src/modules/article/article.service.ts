@@ -105,7 +105,7 @@ export class ArticleService {
         tags = await this.tagService.findByIds(('' + tags).split(','))
         if (categoryId) {
             let categoryIds = categoryId.split(',');
-            let lastId = parseInt(categoryIds[categoryIds.length - 1]);
+            let lastId = categoryIds[categoryIds.length - 1];
             categoryId = await this.categoryService.getById(lastId);
         }
         const newArticle = await this.articleRepository.create({
@@ -131,7 +131,7 @@ export class ArticleService {
         }
         if (categoryId) {
             let categoryIds = categoryId.split(',');
-            let lastId = parseInt(categoryIds[categoryIds.length - 1]);
+            let lastId = categoryIds[categoryIds.length - 1];
             categoryId = await this.categoryService.getById(lastId);
         }
         const newArticle = {
