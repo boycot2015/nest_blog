@@ -198,17 +198,19 @@ export class ArticleService {
         // console.log(await queryBy.getOne(), 'queryBy.getOne()')
         let data = await queryBy.getOne()
         data.comment = filterTreeData(data.comment, null)
-        let resData = {...data, categoryId: [] }
+        let resData = { ...data, categoryId: '' }
+        let categoryId = []
         if (data.category !== null) {
-            resData.categoryId.push(data.category.id)
+            categoryId.push(data.category.id)
         }
         if (data.category.parentId !== null) {
-            resData.categoryId.push(data.category.parentId)
+            categoryId.push(data.category.parentId)
             let category = await this.categoryService.getById(data.category.parentId);
             if (category.parentId !== null) {
-                resData.categoryId.push(category.parentId)
+                categoryId.push(category.parentId)
             }
         }
+        resData.categoryId = categoryId.join(',')
         return Promise.resolve(resData)
     }
     // 设置文章状态
