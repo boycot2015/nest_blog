@@ -17,6 +17,7 @@ export default class MyDocument extends Document {
                 </Head>
                 <body className="custom_class">
                     <link rel="stylesheet/less" type="text/css" href="./static/css/color.less" />
+                    <link rel="stylesheet/less" type="text/css" href="./static/less/theme/index.less" />
                     {/* <!--这里link放在哪，style生成在哪里，注意样式被覆盖--> */}
                     <Main />
                     <NextScript />

@@ -22,5 +22,15 @@ export default {
     },
     status (data) {
         return axios.post(url.status, data)
+    },
+    batchDelete (data) {
+        return axios({
+            method: 'post',
+            url: url.batchDelete,
+            params: data
+        })
+    },
+    batchStatus (data) {
+        return axios.post(url.batchStatus, data)
     }
 }

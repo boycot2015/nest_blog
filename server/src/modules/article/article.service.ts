@@ -24,6 +24,7 @@ export class ArticleService {
         // 条件筛选和分页查询代码
         let queryBy = this.articleRepository.createQueryBuilder('article')
             .leftJoinAndSelect('article.comment', 'comment')
+            // .andWhere('comment.status = :status', { status: 1001 })
             .leftJoinAndSelect('article.category', 'category')
             .andWhere('article.isDelete=:delete').setParameter('delete', false)
 
@@ -73,6 +74,7 @@ export class ArticleService {
         let queryBy = this.articleRepository.createQueryBuilder('article')
         const { order } = data
         queryBy = queryBy.leftJoinAndSelect('article.comment', 'comment')
+            // .andWhere('comment.status = :status', { status: 1001 })
             .orderBy('article.updateTime', 'ASC')
         if (order) {
             queryBy = queryBy
@@ -165,7 +167,7 @@ export class ArticleService {
      * @param id 
      */
     async delete(id) {
-        console.log(id, 'iddddddd')
+        // console.log(id, 'iddddddd')
         const res = await this.articleRepository.findOne({ id: +id })
         if (res) {
             await this.articleRepository.save({ ...res, isDelete: true })

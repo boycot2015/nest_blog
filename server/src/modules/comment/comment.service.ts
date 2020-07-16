@@ -17,16 +17,20 @@ export class CommentService {
         // return Promise.resolve(this.Comment);
         data.current = data.current || 1
         data.pageSize = data.pageSize || 10
-        console.log(data, 'asdada')
+        // console.log(data, 'asdada')
         // 1. 准备工作：注入Repository，创建queryBuilder
         // 条件筛选和分页查询代码
         let queryBy = this.commentRepository.createQueryBuilder('comment')
         // queryBy.leftJoinAndSelect('comment.article', 'comment')
         // 2. 条件筛选查询，如名称、类型等，传入对应字段即可
         // .where(data as Partial<Comment>)
-        const { current = 1, pageSize = 10, status, ...otherParams } = data;
+        const { current = 1, pageSize = 10, status, keyWords, ...otherParams } = data;
         if (status) {
             queryBy.andWhere('comment.status=:status').setParameter('status', status);
+        }
+        if (keyWords) {
+            queryBy.andWhere(`concat(comment.name,comment.content) LIKE :keyWords`)
+            .setParameter(`keyWords`, `%${keyWords}%`);
         }
 
         if (otherParams) {
@@ -143,6 +147,23 @@ export class CommentService {
             return responseStatus.success.message
         }
     }
+    async batchDelete(ids) {
+        // Comment.id = this.Comment.length + 1
+        // this.Comment.push(Comment);
+        // return Promise.resolve('操作成功！');
+        if (!ids) {
+            throw new HttpException("参数为空", responseStatus.failed.code);
+        }
+        ids = ids.split(',')
+        const hasComment = await this.commentRepository.findByIds(ids)
+        // console.log(hasComment)
+        if (!hasComment) {
+            throw new HttpException("评论不存在！", responseStatus.failed.code);
+        } else {
+            await this.commentRepository.remove(hasComment)
+            return responseStatus.success.message
+        }
+    }
     async setStatus({ id, status }) {
         if (!id || !status) {
             throw new HttpException("参数为空", responseStatus.failed.code);
@@ -153,6 +174,24 @@ export class CommentService {
             throw new HttpException("评论不存在！", responseStatus.failed.code);
         }
         const updatedComment = { ...existComment, status }
+        await this.commentRepository.save(updatedComment)
+        return responseStatus.success.message
+    }
+    // 批量修改状态
+    async batchStatus({ ids, status }) {
+        if (!ids || !status) {
+            throw new HttpException("参数为空", responseStatus.failed.code);
+        }
+        ids = ids.split(',')
+        let existComment = await this.commentRepository.findByIds(ids)
+        // console.log(existComment)
+        if (!existComment) {
+            throw new HttpException("评论不存在！", responseStatus.failed.code);
+        }
+        let updatedComment = []
+        existComment.map(el => {
+            updatedComment.push({...el, status: status})
+        })
         await this.commentRepository.save(updatedComment)
         return responseStatus.success.message
     }

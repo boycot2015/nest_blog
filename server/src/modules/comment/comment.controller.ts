@@ -86,6 +86,20 @@ export class CommentState {
     status: string;
 }
 
+export class CommentBatchState {
+    @ApiProperty({
+        description: '评论ids',
+        required: true
+    })
+    ids: string;
+
+    @ApiProperty({
+        description: '状态',
+        required: false
+    })
+    status: string;
+}
+
 @ApiTags('评论信息')
 @Controller('comment')
 export class CommentController {
@@ -120,11 +134,27 @@ export class CommentController {
     public delete(@Query('id') id: number) {
         return this.commentService.delete(id)
     }
+
+    @Post('/delete/batch')
+    @ApiOperation({ summary: '批量删除评论' })
+    @ApiQuery({ name: 'ids', description: '评论ids', required: true })
+    @UseGuards(AuthGuard())
+    public batchDelete(@Query('ids') ids: string) {
+        return this.commentService.batchDelete(ids)
+    }
+
     @Post('/status')
     @ApiOperation({ summary: '更改评论状态' })
     @ApiQuery({ name: 'id', description: '评论id', required: true })
     @UseGuards(AuthGuard())
     public status(@Body() commentStatus: CommentState) {
         return this.commentService.setStatus(commentStatus)
+    }
+
+    @Post('/status/batch')
+    @ApiOperation({ summary: '批量更改评论状态' })
+    @UseGuards(AuthGuard())
+    public batchStatus(@Body() commentStatus: CommentBatchState) {
+        return this.commentService.batchStatus(commentStatus)
     }
 }

@@ -1,15 +1,15 @@
 import React, { useState, Fragment } from 'react';
+import _ from 'lodash';
 import {
     Form, Row, Col, Input,
-    Select, Table, Tag,
-    message, Modal,
+    Select, Table, Badge,
+    message, Modal, Switch,
     Button, Cascader
 } from 'antd';
+import {
+    ExclamationCircleOutlined
+} from '@ant-design/icons';
 import Head from 'next/head';
-import Router, { withRouter } from 'next/router'
-import { Editor as BraftEditor } from '@/components/Editor'
-import Base64 from 'js-base64'
-import { copyCode } from '@/utils'
 
 
 const { Option, OptGroup } = Select;
@@ -48,6 +48,21 @@ const columns = (props) => {
                 </div>,
         },
         {
+            title: '评论状态',
+            dataIndex: 'status',
+            key: 'status',
+            width: 200,
+            height: 80,
+            ellipsis: 2,
+            align: 'center',
+            rowKey: record => record.dataIndex,
+            render: status =>
+                <div className={'ellipsis'}>
+                    <Badge status={status === 1001 ? 'success' : status === 1002 ? 'warning' : 'error'} />
+                    <span>{status === 1001 ? '审核通过' : status === 1002 ? '待审核' : '审核不通过'}</span>
+                </div>,
+        },
+        {
             title: '创建时间',
             dataIndex: 'createTime',
             key: 'createTime',
@@ -68,7 +83,8 @@ const columns = (props) => {
             align: 'center',
             render: (text, record) => (
                 <span>
-                    <a style={{ marginRight: 16 }} onClick={() => props.handleView(text)}>查看</a>
+                    <a style={{ marginRight: (userinfo && userinfo.administrator) || record.status === 1002 ? 16 : 0 }} onClick={() => props.handleView(text)}>查看</a>
+                    {record.status === 1002 ? <a style={{ marginRight: 16 }} onClick={() => props.handleAuth(record)}>审核</a> : null}
                     {userinfo && userinfo.administrator && <a style={{ marginRight: 16 }} onClick={() => props.handleDelete(record)}>删除</a>}
                 </span>
             ),
@@ -83,10 +99,10 @@ const AdvancedSearchForm = (props) => {
     const getFields = () => {
         const children = [
             {
-                label: '标题',
+                label: '关键词',
                 type: 1,
-                name: 'title',
-                placeholder: '标题'
+                name: 'keyWords',
+                placeholder: '关键词'
             },
             {
                 label: '状态',
@@ -98,32 +114,13 @@ const AdvancedSearchForm = (props) => {
                     description: '全部'
                 }, {
                     code: 1001,
-                    description: '已发布'
+                    description: '已通过'
                 }, {
                     code: 1002,
                     description: '待审核'
                 }, {
                     code: 1003,
                     description: '审核不通过'
-                }]
-            },
-            {
-                label: '分类',
-                type: 2,
-                name: 'category',
-                placeholder: '分类',
-                options: [{
-                    code: '',
-                    description: '全部'
-                }, {
-                    code: 1001,
-                    description: '前端'
-                }, {
-                    code: 1002,
-                    description: '后台'
-                }, {
-                    code: 10010,
-                    description: 'linux'
                 }]
             }];
         let node = []
@@ -185,6 +182,36 @@ const AdvancedSearchForm = (props) => {
                         重置
                 </Button>
                 </Col>
+                <Col span={8} style={{ textAlign: 'right' }}>
+                    {/* <Button
+                        type="primary" style={{ marginRight: 10 }}
+                        onClick={props.handleRowSelectionChange}>
+                        多选
+                    </Button> */}
+                    <Form.Item label="多选" style={{ width: !props.rowSelection ? 100 : 300, marginLeft: 10 }}>
+                        <Switch
+                            style={{ marginRight: 10 }}
+                            checked={!!props.rowSelection}
+                            onChange={props.handleRowSelectionChange} />
+                        {props.rowSelection ?
+                            <Button style={{ marginRight: 10 }}
+                                disabled={!(props.rowSelection &&
+                                    props.rowSelection.selectedRowKeys &&
+                                    props.rowSelection.selectedRowKeys.length)}
+                                type="primary" onClick={props.handleBatchDelete}>
+                                {/* {console.log(props.rowSelection)} */}
+                                批量删除
+                            </Button> : null}
+                        {props.rowSelection ?
+                            <Button style={{ marginRight: 10 }}
+                                disabled={!(props.rowSelection &&
+                                    props.rowSelection.selectedRowKeys &&
+                                    props.rowSelection.selectedRowKeys.length)}
+                                type="primary" onClick={props.handleBatchStatus}>
+                                批量审核
+                            </Button> : null}
+                    </Form.Item>
+                </Col>
             </Row>
         </Form>
     );
@@ -197,7 +224,6 @@ class Article extends React.Component {
         // 从query参数中回去id
         //通过process的browser属性判断处于何种环境：Node环境下为false,浏览器为true
         // 发送服务器请求
-        let articleListData = []
         const res = await $api.comment.get({ current: 1, pageSize: 10 })
         if (res && res.success) {
             return {
@@ -234,7 +260,8 @@ class Article extends React.Component {
         hasData: true,
         modalVisible: false,
         reviewData: {},
-        userinfo: this.props.userinfo
+        userinfo: this.props.userinfo,
+        rowSelection: undefined
     }
     async handlerFormSubmit (values, isPage) {
         isPage && this.setState({ loading: true, pageData: values })
@@ -294,17 +321,83 @@ class Article extends React.Component {
         })
         this.setModalVisible(true)
     }
-    // 删除评论
-    handleDelete (item) {
-        $api.comment.delete({ id: item.id }).then(res => {
-            if (res && res.success) {
-                message.success(res.data)
-                this.getPageData({ pageSize: 10, current: 1 })
-            } else {
-                res && message.error(res.message)
+
+    // 审核
+    handleAuth (item, isBatch) {
+        const { pageData, queryData } = this.state
+        const { pageSize, current } = pageData
+        let api = isBatch ? 'batchStatus' : 'status'
+        let params = { status: 1001 }
+        isBatch ? (params.ids = item.join(',')) : (params.id = item.id)
+        Modal.confirm({
+            title: '温馨提示',
+            icon: <ExclamationCircleOutlined />,
+            maskClosable: true,
+            centered: true,
+            content: '确认审核,审核通过后可展示在评论区',
+            okText: '审核通过',
+            cancelText: '审核不通过',
+            onOk: () => {
+                $api.comment[api]({ ...params }).then(res => {
+                    if (res && res.success) {
+                        message.success(res.data)
+                        this.setState({ reset: true, rowSelection: undefined })
+                        this.getPageData({ pageSize, current, ...queryData })
+                    } else {
+                        res && message.error(res.message)
+                    }
+                })
+            },
+            onCancel: () => {
+                params.status = 1003
+                $api.comment[api]({ ...params }).then(res => {
+                    if (res && res.success) {
+                        message.success(res.data)
+                        this.setState({ reset: true, rowSelection: undefined })
+                        this.getPageData({ pageSize, current, ...queryData })
+                    } else {
+                        res && message.error(res.message)
+                    }
+                })
             }
         })
     }
+    // 删除评论
+    handleDelete (item, isBatch) {
+        const { pageData, queryData } = this.state
+        const { pageSize, current } = pageData
+        let api = isBatch ? 'batchDelete' : 'delete'
+        isBatch ? (params.ids = _.map(item, 'id').join(',')) : (params.id = item.id)
+        Modal.confirm({
+            title: '温馨提示',
+            icon: <ExclamationCircleOutlined />,
+            content: '确认删除？',
+            maskClosable: true,
+            centered: true,
+            okText: '确认',
+            cancelText: '取消',
+            onOk: () => {
+                $api.comment[api]({ ...params }).then(res => {
+                    if (res && res.success) {
+                        message.success(res.data)
+                        this.setState({ reset: true, rowSelection: undefined })
+                        this.getPageData({ pageSize, current, ...queryData })
+                    } else {
+                        res && message.error(res.message)
+                    }
+                })
+            }
+        })
+    }
+    // 批量删除
+    handleBatchDelete () {
+        this.handleDelete(this.state.rowSelection.selectedRowKeys, true)
+    }
+    // 批量修改状态
+    handleBatchStatus () {
+        this.handleAuth(this.state.rowSelection.selectedRowKeys, true)
+    }
+
     setArticle (callback) {
         return callback(this.state.reviewData)
     }
@@ -314,20 +407,81 @@ class Article extends React.Component {
     setModalVisible (modalVisible) {
         this.setState({ modalVisible });
     }
+    /**
+       * @name: 手动选中复选框
+       * @msg: 
+       * @param {type} 
+       * @return: 
+       */
+    onSelect = (record, selected) => {
+        let mySelectedRows = this.state.rowSelection.selectedRows;
+        if (selected) {
+            mySelectedRows.push(record);
+        } else {
+            _.remove(mySelectedRows, (o) => { return o.id === record.id });
+        }
+        const selectedRowKeys = _.map(mySelectedRows, 'id');
+        this.setState({
+            rowSelection: {
+                ...this.state.rowSelection,
+                selectedRowKeys,
+                selectedRows: mySelectedRows
+            }
+        })
+    }
+
+    onSelectAll = (selected, selectedRows, changeRows) => {
+        let mySelectedRows = this.state.rowSelection.selectedRows;
+        const changeRowKeys = _.map(changeRows, 'id');
+        if (selected) {
+            // 先连接再进行一次去重
+            mySelectedRows = _.uniqBy(_.concat(mySelectedRows, changeRows), 'id')
+        } else {
+            // 先判断包含再移除
+            _.remove(mySelectedRows, (o) => { return _.includes(changeRowKeys, o.id) })
+            // mySelectedRows = []
+        }
+        const selectedRowKeys = _.map(mySelectedRows, 'id')
+        this.setState({
+            rowSelection: {
+                ...this.state.rowSelection,
+                selectedRowKeys,
+                selectedRows: mySelectedRows
+            }
+        })
+    }
+    onSelectionChange (selectedRowKeys, selectedRows) {
+        console.log(selectedRowKeys, selectedRows, 'onSelectionChange');
+    }
+    handleRowSelectionChange = enable => {
+        this.setState({
+            rowSelection: enable ? {
+                selectedRowKeys: [],
+                selectedRows: [],
+                onChange: this.onSelectionChange.bind(this),
+                onSelect: this.onSelect.bind(this),
+                onSelectAll: this.onSelectAll.bind(this)
+            } : undefined
+        })
+    }
     render () {
-        const { ...state } = this.state
+        const { selectedRows, ...state } = this.state
         return (
             <Fragment>
                 <Head>
-                    <title>文件列表</title>
+                    <title>评论列表</title>
                 </Head>
-                <h3 className='text-gray-600 text-lg leading-4 mb-5 divide-x border-solid border-l-4 pl-2 border-orange-f9'>文件列表</h3>
-                {/* <AdvancedSearchForm setParentState={this.handlerFormSubmit.bind(this)} /> */}
+                <h3 className='text-gray-600 text-lg leading-4 mb-5 divide-x border-solid border-l-4 pl-2 border-orange-f9'>评论列表</h3>
+                <AdvancedSearchForm {...state}
+                    setParentState={this.handlerFormSubmit.bind(this)}
+                    handleBatchDelete={this.handleBatchDelete.bind(this)}
+                    handleBatchStatus={this.handleBatchStatus.bind(this)}
+                    handleRowSelectionChange={this.handleRowSelectionChange.bind(this)} />
                 <Table
                     {...this.state}
                     className="comment-table"
-                    scroll={{ y: 555 }}
-                    rowKey={(record, index) => index}
+                    scroll={{ y: 510 }}
+                    rowKey={(record, index) => record.id}
                     dataSource={state.hasData ? this.state.data : null}
                     columns={columns(this)}
                     handleDelete={(val) => this.handleDelete(val)}
@@ -343,6 +497,7 @@ class Article extends React.Component {
                 <Modal
                     title="评论详情"
                     width={600}
+                    centered
                     footer={null}
                     visible={this.state.modalVisible}
                     onOk={() => this.setModalVisible(false)}

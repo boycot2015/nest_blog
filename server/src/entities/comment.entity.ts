@@ -39,10 +39,11 @@ export class Comment {
     userAgent: string;
 
     @Column('enum', {
-        enum: [1001, 1002],
-        select: true
+        enum: [1001, 1002, 1003],
+        select: true,
+        default: 1002 // 默认待审核
     })
-    status: string; // 标签状态
+    status: string; // 评论状态
 
     @Column({ type: 'text', default: null, select: true })
     email: string;

@@ -5,5 +5,6 @@ export default {
     add: prefix + '/add', // 新增评论
     edit: prefix + '/edit', // 编辑评论
     delete: prefix + '/delete', // 删除评论
-    status: prefix + '/status', // 更改评论状态
+    batchDelete: prefix + '/delete/batch', // 批量删除评论
+    batchStatus: prefix + '/status/batch', // 批量更改评论状态
 }

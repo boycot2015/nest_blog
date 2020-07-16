@@ -4,8 +4,8 @@
         <div class="logo fl"><nuxt-link to="/"><img src="@/assets/img/logo.png" alt=""></nuxt-link></div>
         <div class="title flex1 tl fl">
             <nuxt-link to="/" exact>首页</nuxt-link>
-            <nuxt-link to="/article" exact>列表</nuxt-link>
-            <nuxt-link to="/article/classes">时间轴</nuxt-link>
+            <nuxt-link to="/article">列表</nuxt-link>
+            <nuxt-link to="/classes">时间轴</nuxt-link>
             <nuxt-link to="/about">关于</nuxt-link>
             <!-- :class="{'active': $route.path === '/about'}" -->
         </div>
@@ -33,7 +33,30 @@ export default {
         return {
             isNight: false,
             menu: [{
-
+                path: '/',
+                name: 'index',
+                query: {
+                }
+            },
+            {
+                path: '/article',
+                name: 'article',
+                query: {
+                    category: '',
+                    tag: ''
+                }
+            },
+            {
+                path: '/article/classes',
+                name: 'classes',
+                query: {
+                }
+            },
+            {
+                path: '/about',
+                name: 'about',
+                query: {
+                }
             }]
         }
     },
