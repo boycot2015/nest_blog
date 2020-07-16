@@ -137,10 +137,10 @@ export class CommentController {
 
     @Post('/delete/batch')
     @ApiOperation({ summary: '批量删除评论' })
-    @ApiQuery({ name: 'ids', description: '评论ids', required: true })
+    // @ApiQuery({ name: 'ids', description: '评论ids', required: true })
     @UseGuards(AuthGuard())
-    public batchDelete(@Query('ids') ids: string) {
-        return this.commentService.batchDelete(ids)
+    public batchDelete(@Body() data) {
+        return this.commentService.batchDelete(data)
     }
 
     @Post('/status')

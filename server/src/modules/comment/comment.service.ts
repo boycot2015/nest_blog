@@ -70,7 +70,7 @@ export class CommentService {
         else throw new HttpException("评论不存在！", 404);
     }
     async addComment(comment) {
-        let colors = ['magenta', 'red', 'volcano', 'orange', 'gold', 'lime',
+        const colors = ['magenta', 'red', 'volcano', 'orange', 'gold', 'lime',
             'green', 'cyan', 'blue', 'geekblue', 'blue', 'purple'];
         if (!comment) {
             throw new HttpException("参数为空", responseStatus.failed.code);
@@ -80,7 +80,7 @@ export class CommentService {
         if (hasComment) {
             throw new HttpException("评论已存在,请勿重复评论！", responseStatus.failed.code);
         } else {
-            let insertCommentData = {
+            const insertCommentData = {
                 ...comment
             }
             const commenter = await this.commentRepository.findOne({ 'name': comment.name, 'email': comment.email })
@@ -147,7 +147,7 @@ export class CommentService {
             return responseStatus.success.message
         }
     }
-    async batchDelete(ids) {
+    async batchDelete({ ids }) {
         // Comment.id = this.Comment.length + 1
         // this.Comment.push(Comment);
         // return Promise.resolve('操作成功！');
@@ -168,7 +168,7 @@ export class CommentService {
         if (!id || !status) {
             throw new HttpException("参数为空", responseStatus.failed.code);
         }
-        let existComment = await this.commentRepository.findOne({ id })
+        const existComment = await this.commentRepository.findOne({ id })
         // console.log(hasComment)
         if (!existComment) {
             throw new HttpException("评论不存在！", responseStatus.failed.code);
@@ -183,12 +183,12 @@ export class CommentService {
             throw new HttpException("参数为空", responseStatus.failed.code);
         }
         ids = ids.split(',')
-        let existComment = await this.commentRepository.findByIds(ids)
+        const existComment = await this.commentRepository.findByIds(ids)
         // console.log(existComment)
         if (!existComment) {
             throw new HttpException("评论不存在！", responseStatus.failed.code);
         }
-        let updatedComment = []
+        const updatedComment = []
         existComment.map(el => {
             updatedComment.push({...el, status: status})
         })

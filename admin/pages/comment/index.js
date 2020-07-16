@@ -366,8 +366,9 @@ class Article extends React.Component {
     handleDelete (item, isBatch) {
         const { pageData, queryData } = this.state
         const { pageSize, current } = pageData
+        let params = {}
         let api = isBatch ? 'batchDelete' : 'delete'
-        isBatch ? (params.ids = _.map(item, 'id').join(',')) : (params.id = item.id)
+        isBatch ? (params.ids = item.join(',')) : (params.id = item.id)
         Modal.confirm({
             title: '温馨提示',
             icon: <ExclamationCircleOutlined />,
