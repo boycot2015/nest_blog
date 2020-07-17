@@ -49,15 +49,15 @@ class ArticleView extends React.Component {
             content: ''
         }
     }
-    handleReview (id) {
-        $api.article.getById({ params: { id } }).then(res => {
-            if (res && res.success) {
-                this.setState({ reviewData: res.data })
-            } else {
-                res && message.error(res.message)
-            }
-        })
-    }
+    // handleReview (id) {
+    //     $api.article.getById({ params: { id } }).then(res => {
+    //         if (res && res.success) {
+    //             this.setState({ reviewData: res.data })
+    //         } else {
+    //             res && message.error(res.message)
+    //         }
+    //     })
+    // }
     setArticle (callback) {
         return callback(this.state.reviewData)
     }

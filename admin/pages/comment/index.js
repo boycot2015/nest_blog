@@ -348,17 +348,21 @@ class Article extends React.Component {
                     }
                 })
             },
-            onCancel: () => {
+            onCancel: (e) => {
+                // console.log(e.triggerCancel, 'icon: <ExclamationCircleOutlined />,');
+                if (e.triggerCancel) return // 点击遮罩层关闭弹框不执行操作
                 params.status = 1003
                 $api.comment[api]({ ...params }).then(res => {
                     if (res && res.success) {
                         message.success(res.data)
                         this.setState({ reset: true, rowSelection: undefined })
                         this.getPageData({ pageSize, current, ...queryData })
+                        return Promise.resolve(true)
                     } else {
                         res && message.error(res.message)
                     }
                 })
+                return Promise.resolve()
             }
         })
     }
@@ -451,15 +455,15 @@ class Article extends React.Component {
             }
         })
     }
-    onSelectionChange (selectedRowKeys, selectedRows) {
-        console.log(selectedRowKeys, selectedRows, 'onSelectionChange');
-    }
+    // onSelectionChange (selectedRowKeys, selectedRows) {
+    //   console.log(selectedRowKeys, selectedRows, 'onSelectionChange');
+    // }
     handleRowSelectionChange = enable => {
         this.setState({
             rowSelection: enable ? {
                 selectedRowKeys: [],
                 selectedRows: [],
-                onChange: this.onSelectionChange.bind(this),
+                // onChange: this.onSelectionChange.bind(this),
                 onSelect: this.onSelect.bind(this),
                 onSelectAll: this.onSelectAll.bind(this)
             } : undefined

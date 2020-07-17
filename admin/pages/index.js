@@ -49,16 +49,16 @@ class Home extends React.Component {
         ...this.props
     }
     getOption () {
-        const option = {
+        const option1 = {
             title: {
-                text: '近30天文章发布及访问记录',
+                text: '近30天文章发布记录',
                 // subtext: '数据统计'
             },
             tooltip: {
                 trigger: 'axis'
             },
             legend: {
-                data: ['发布', '访问']
+                // data: ['发布', '访问']
             },
             toolbox: {
                 show: false,
@@ -84,12 +84,12 @@ class Home extends React.Component {
             yAxis: {
                 type: 'value',
                 axisLabel: {
-                    formatter: '{value} 篇/人次'
+                    formatter: '{value} 篇'
                 }
             },
             series: [
                 {
-                    name: '发布',
+                    // name: '发布',
                     type: 'line',
                     smooth: true,
                     // data: [11, 11, 15, 13, 12, 13, 10],
@@ -105,9 +105,26 @@ class Home extends React.Component {
                             { type: 'average', name: '平均值' }
                         ]
                     }
-                },
+                }
+            ]
+        };
+        const option2 = {
+            ...option1,
+            title: {
+                text: '近30天文章访问记录'
+            },
+            legend: {
+                // data: ['访问']
+            },
+            yAxis: {
+                type: 'value',
+                axisLabel: {
+                    formatter: '{value} 人次'
+                }
+            },
+            series: [
                 {
-                    name: '访问',
+                    // name: '访问',
                     type: 'line',
                     smooth: true,
                     data: (this.state.datas.visitorData && this.state.datas.visitorData.data.map(el => el.value)) || [],
@@ -138,8 +155,8 @@ class Home extends React.Component {
                     }
                 }
             ]
-        };
-        return option;
+        }
+        return [option1, option2];
     }
     componentDidMount () {
         setTimeout(() => {
@@ -199,21 +216,27 @@ class Home extends React.Component {
                 </div>
                 <h3 className='text-gray-600 text-lg leading-4 mb-6 mt-5 divide-x border-solid border-l-4 pl-2 border-orange-f9'>文章发布记录统计</h3>
                 <Row gutter={16}>
-                    <Col span={24}>
+                    <Col span={12}>
                         {/* <Statistic title="发布记录" value={112893} /> */}
                         <Skeleton loading={loading} buttonActive>
                             <ReactEcharts
-                                option={this.getOption()}
+                                option={this.getOption()[0]}
                                 style={{ height: '340px' }}
                                 className='react_for_echarts' />
                         </Skeleton>
                     </Col>
-                    {/* <Col span={12}>
-                        <Statistic title="浏览记录" value={112893} precision={2} />
+                    <Col span={12}>
+                        {/* <Statistic title="浏览记录" value={112893} precision={2} />
                         <Button style={{ marginTop: 16 }} type="primary">
                             Recharge
-                        </Button>
-                    </Col> */}
+                        </Button> */}
+                        <Skeleton loading={loading} buttonActive>
+                            <ReactEcharts
+                                option={this.getOption()[1]}
+                                style={{ height: '340px' }}
+                                className='react_for_echarts' />
+                        </Skeleton>
+                    </Col>
                 </Row>
             </Fragment>
         );
