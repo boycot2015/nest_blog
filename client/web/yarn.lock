@@ -3248,10 +3248,10 @@ dom-serializer@0:
     domelementtype "^2.0.1"
     entities "^2.0.0"
 
-dom7@^3.0.0-alpha.5:
-  version "3.0.0-alpha.5"
-  resolved "https://registry.yarnpkg.com/dom7/-/dom7-3.0.0-alpha.5.tgz#9db8d5f0b28248c3fa07651306ce8dd08ad6d623"
-  integrity sha512-8qnd76DAkn12DSOPCu5EtGiWwMDsagt1lb8zC50UfZ1sfLHixM510RXiQc4DTQsEAi/i3BjD3es7awqUCB+IjQ==
+dom7@^3.0.0-alpha.7:
+  version "3.0.0-alpha.7"
+  resolved "https://registry.yarnpkg.com/dom7/-/dom7-3.0.0-alpha.7.tgz#3b4ba156a83fa37fb3fa34b8ab40a1a41a56feb1"
+  integrity sha512-3epkQPsKsbk2Dixqqgm2DT/KzhiAPByjDK7emu6owwFLbM5UoiqWKgdsH+6PpMEgoeR6Ex/bW1UbOe0FWZU0zg==
   dependencies:
     ssr-window "^3.0.0-alpha.1"
 
@@ -8289,12 +8289,12 @@ svgo@^1.0.0:
     unquote "~1.1.1"
     util.promisify "~1.0.0"
 
-swiper@^6.0.1:
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/swiper/-/swiper-6.0.1.tgz#6b20fd9b396b8a58d08a790e2d657833ed3f5a6f"
-  integrity sha512-HnqrOPkxtuui4/7zx2XCAA0VUdrEiZobxEHlM1lAmLTmTOgSO1ohAG2qfnHujYkWu04Mc6ZkPwHQWukftA9cbA==
+swiper@^6.0.4:
+  version "6.0.4"
+  resolved "https://registry.yarnpkg.com/swiper/-/swiper-6.0.4.tgz#d3889383369e780e8d905e6aaf78a43dc3690176"
+  integrity sha512-D+DBxgg81+uocgsvhmdzrpr4GHzhAt2yImArqzunrC80y7+/yCEAq/EJw1VASD+CBFNacF4F8FEIqJMLyDFM0g==
   dependencies:
-    dom7 "^3.0.0-alpha.5"
+    dom7 "^3.0.0-alpha.7"
     ssr-window "^3.0.0-alpha.4"
 
 table@^5.2.3:

@@ -1,43 +1,45 @@
 <template>
     <div class="home-container">
         <div class="banner" v-if="banner">
-            <swiper :options="swiperOption" ref="mySwiper">
-                <swiper-slide
-                v-for="item in banner"
-                :key="item.id"
-                >
-                <nuxt-link
-                :to="item.link"
-                v-if="item.link && !item.link.includes('http://')"
-                >
+            <div
+            v-swiper:mySwiper="swiperOption"
+            ref="mySwiper"
+            class="swiper"
+            >
+                <div class="swiper-wrapper">
                     <div
-                    class="img"
-                    :title="item.title"
-                    :style="{
-                        backgroundImage: `url('${item.url}')`
-                    }"
-                    ></div>
-                </nuxt-link>
-                <a
-                :href="item.link"
-                v-else
-                target="_blank"
-                >
-                    <div
-                    class="img"
-                    :title="item.title"
-                    :style="{
-                        backgroundImage: `url('${item.url}')`
-                    }"
-                    ></div>
-
-                </a>
-                </swiper-slide>
-                <!-- <div class="swiper-scrollbar" slot="scrollbar"></div>
-                <div class="swiper-button-next" slot="next"></div>
-                <div class="swiper-button-prev" slot="prev"></div> -->
-                <div class="swiper-pagination" slot="pagination"></div>
-            </swiper>
+                    class="swiper-slide"
+                    v-for="item in banner"
+                    :key="item.id"
+                    >
+                    <nuxt-link
+                    :to="item.link"
+                    v-if="item.link && !item.link.includes('http://')"
+                    >
+                        <div
+                        class="img"
+                        :title="item.title"
+                        :style="{
+                            backgroundImage: `url('${item.url}')`
+                        }"
+                        ></div>
+                    </nuxt-link>
+                    <a
+                    :href="item.link"
+                    v-else
+                    target="_blank"
+                    >
+                        <div
+                        class="img"
+                        :title="item.title"
+                        :style="{
+                            backgroundImage: `url('${item.url}')`
+                        }"
+                        ></div>
+                    </a></div>
+                </div>
+            <div class="swiper-pagination"></div>
+        </div>
         </div>
         <!-- {{ $store.state.websiteConfig.newLeast }} -->
         <div class="article-list">
@@ -67,8 +69,9 @@
 
 <script>
 import { getImgUrl } from '@/utils'
-import 'swiper/swiper-bundle.css'
-import { Swiper, SwiperSlide, directive } from 'vue-awesome-swiper'
+// import 'swiper/swiper-bundle.css'
+// Swiper, SwiperSlide,
+// import { directive } from 'vue-awesome-swiper'
 export default {
     name: '',
     data () {
@@ -106,13 +109,13 @@ export default {
             loadingMore: false
         }
     },
-    components: {
-        Swiper,
-        SwiperSlide
-    },
-    directives: {
-        swiper: directive
-    },
+    // components: {
+    //     Swiper,
+    //     SwiperSlide
+    // },
+    // directives: {
+    //     swiper: directive
+    // },
     computed: {
         swiper () {
             return this.$refs.mySwiper.$swiper

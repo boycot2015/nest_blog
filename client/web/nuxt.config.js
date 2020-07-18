@@ -50,6 +50,7 @@ export default {
          * 配置全局 css
          */
         // './assets/less/base/variable.less',
+        { src: 'swiper/swiper-bundle.css' },
         './assets/less/index.less'
     ],
     styleResources: {
@@ -68,6 +69,11 @@ export default {
         {
             src: '@/plugins/axios-api',
             ssr: true
+        },
+        {
+            src: '~/plugins/vue-swiper.js',
+            mode: 'client',
+            ssr: false
         }
     ],
     /*
