@@ -1,4 +1,4 @@
-import CommentTree from './src/comment'
+import CommentTree from './src/index'
 export {
     CommentTree
 }

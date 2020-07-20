@@ -26,7 +26,12 @@ export default {
             { hid: 'description', name: 'description', content: process.env.npm_package_description || '' }
         ],
         link: [
+            { rel: 'stylesheet', href: 'https://cdn.bootcss.com/Swiper/3.4.2/css/swiper.min.css' },
             { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+        ],
+        script: [
+            // { src: 'https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js' },
+            { src: 'https://cdn.bootcss.com/Swiper/3.4.2/js/swiper.min.js' }
         ]
     },
     router: { // 中间件允许您定义一个自定义函数运行在一个页面或一组页面渲染之前。
@@ -50,7 +55,7 @@ export default {
          * 配置全局 css
          */
         // './assets/less/base/variable.less',
-        { src: 'swiper/swiper-bundle.css' },
+        // { src: 'swiper/swiper-bundle.css' },
         './assets/less/index.less'
     ],
     styleResources: {
@@ -71,10 +76,14 @@ export default {
             ssr: true
         },
         {
-            src: '~/plugins/vue-swiper.js',
-            mode: 'client',
+            src: '@/plugins/vue2editor',
             ssr: false
         }
+        // {
+        //     src: '~/plugins/vue-swiper.js',
+        //     mode: 'client',
+        //     ssr: false
+        // }
     ],
     /*
     ** Auto import components

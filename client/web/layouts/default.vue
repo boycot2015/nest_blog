@@ -1,7 +1,7 @@
 <template>
   <div class="root tc" ref="rootDom" :class="{'night': isNight}">
     <Header :class="{ 'fixed': isHeadFixed }" @on-night=" (val) => isNight = val"></Header>
-    <div class="root-main clearfix" :style="{paddingTop: isHeadFixed ? '80px' : '20px'}">
+    <div class="root-main clearfix" :style="{paddingTop: isHeadFixed ? '100px' : '20px'}">
         <div class="root-main-container fl" :style="{width: sideWhiteRoute.includes($route.path) ? '1200px':''}">
             <transition name="default" mode="out-in">
                 <Nuxt />
@@ -97,7 +97,7 @@ export default {
                 var afterScrollTop = document.scrollingElement.scrollTop
                 this.scrollObj.scrollTop = document.scrollingElement.scrollTop
                 this.scrollObj.value = afterScrollTop - beforeScrollTop
-                if (afterScrollTop >= 60) {
+                if (afterScrollTop >= 80) {
                     this.isAsideFixed = true
                 } else {
                     this.isAsideFixed = false
