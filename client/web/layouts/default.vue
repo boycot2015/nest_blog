@@ -1,7 +1,8 @@
 <template>
   <div class="root tc" ref="rootDom" :class="{'night': isNight}">
-    <Header :class="{ 'fixed': isHeadFixed }" @on-night=" (val) => isNight = val"></Header>
-    <div class="root-main clearfix" :style="{paddingTop: isHeadFixed ? '100px' : '20px'}">
+    <Header :class="{ 'fixed': isHeadFixed, 'unfixed': scrollObj.value > 0 }" @on-night=" (val) => isNight = val"></Header>
+    <div class="root-main clearfix" >
+        <!-- :style="{paddingTop: isHeadFixed || (scrollObj.value > 0) ? '100px' : '20px'}" -->
         <div class="root-main-container fl" :style="{width: sideWhiteRoute.includes($route.path) ? '1200px':''}">
             <transition name="default" mode="out-in">
                 <Nuxt />

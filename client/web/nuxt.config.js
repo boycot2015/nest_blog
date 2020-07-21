@@ -19,6 +19,7 @@ export default {
     */
     head: {
         title: process.env.npm_package_name || '',
+        titleTemplate: '博客系统 - %s',
         meta: [
             { charset: 'utf-8' },
             { name: 'referrer', content: 'no-referrer' },
@@ -44,7 +45,7 @@ export default {
         linkActiveClass: 'active'
     },
     loading: {
-        color: '#ff9900',
+        color: '#00a2ff',
         height: '2px'
     },
     /*
@@ -74,6 +75,10 @@ export default {
         {
             src: '@/plugins/axios-api',
             ssr: true
+        },
+        {
+            src: '@/plugins/components',
+            ssr: false
         }
         // {
         //     src: '@/plugins/vue2editor',

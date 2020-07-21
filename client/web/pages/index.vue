@@ -72,7 +72,17 @@ import { getImgUrl } from '@/utils'
 // Swiper, SwiperSlide,
 // import { Swiper, directive } from 'vue-awesome-swiper'
 export default {
-    name: '',
+    name: 'home',
+    head () {
+        return {
+            title: this.title || '博客首页',
+            meta: [
+                { charset: 'utf-8' },
+                { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+                { hid: '博客首页', name: 'home', content: '首页展示最新动态,标签以及分类查询' }
+            ]
+        }
+    },
     data () {
         return {
             swiperOption: {

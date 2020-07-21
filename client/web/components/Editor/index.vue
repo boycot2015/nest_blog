@@ -72,8 +72,8 @@ export default {
                     'head', // 标题
                     'bold', // 粗体
                     'fontSize', // 字号
-                    'lineFontSize', // 段落字号
-                    'lineHeight', // 行高
+                    // 'lineFontSize', // 段落字号
+                    // 'lineHeight', // 行高
                     'fontName', // 字体
                     'italic', // 斜体
                     'underline', // 下划线

@@ -50,7 +50,7 @@
     }
     &-main {
         margin:0 auto ;
-        padding-top: 20px;
+        padding-top: 100px;
         padding-bottom: 120px;
         width: 1200px;
         position: relative;
@@ -82,18 +82,29 @@
     }
     .site {
         &-header {
-            width: 100%;
             background-color: @white;
             box-shadow: 0 0 10px @c-e8;
-            transition: all 0.5s;
             transform: translateY(0px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 10000;
+            animation: down 0.5s;
             &.fixed {
-                position: fixed;
-                width: 100%;
-                top: 0;
-                left: 0;
-                z-index: 10000;
                 animation: down 0.5s;
+            }
+            &.unfixed {
+                animation: up 0.5s;
+                transform: translateY(-80px);
+            }
+            @keyframes up {
+                0% {
+                    transform: translateY(0px);
+                }
+                100% {
+                    transform: translateY(-80px);
+                }
             }
             @keyframes down {
                 0% {

@@ -20,7 +20,7 @@ export default {
         },
         update (el, binding, vnode) {
             // console.log(binding.value, 'loading')
-            if (!binding.value) {
+            if (!binding.value && loadingBox) {
                 el.removeChild(loadingBox)
             }
         },

@@ -7,7 +7,7 @@
     <nuxt-link to="/">返回首页</nuxt-link>
   </div>
 </template>
-<style lang="css">
+<style lang="css" scoped>
 .error {
   display: flex;
   /* height: 100vh; */
