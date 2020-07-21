@@ -11,7 +11,7 @@
     </div>
 </template>
 <script>
-import { CommentTree } from '@/components/comment'
+import { CommentTree } from '@/components/Comment'
 export default {
     name: 'articleView',
     components: {

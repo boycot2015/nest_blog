@@ -1,8 +1,14 @@
 <template>
     <div class="home-container">
-        <div class="banner" v-if="banner">
-            <swiper :options="swiperOption" ref="mySwiper">
-                <swiper-slide
+        <!-- v-swiper:mySwiper="swiperOption" -->
+        <div
+        ref="mySwiper"
+        class="banner mySwiper"
+        v-if="banner.length"
+        >
+            <div class="swiper-wrapper">
+                <div
+                class="swiper-slide"
                 v-for="item in banner"
                 :key="item.id"
                 >
@@ -30,14 +36,9 @@
                         backgroundImage: `url('${item.url}')`
                     }"
                     ></div>
-
-                </a>
-                </swiper-slide>
-                <!-- <div class="swiper-scrollbar" slot="scrollbar"></div>
-                <div class="swiper-button-next" slot="next"></div>
-                <div class="swiper-button-prev" slot="prev"></div> -->
-                <div class="swiper-pagination" slot="pagination"></div>
-            </swiper>
+                </a></div>
+            </div>
+            <div class="swiper-pagination"></div>
         </div>
         <!-- {{ $store.state.websiteConfig.newLeast }} -->
         <div class="article-list">
@@ -67,8 +68,9 @@
 
 <script>
 import { getImgUrl } from '@/utils'
-import 'swiper/swiper-bundle.css'
-import { Swiper, SwiperSlide, directive } from 'vue-awesome-swiper'
+// import 'swiper/swiper-bundle.css'
+// Swiper, SwiperSlide,
+// import { Swiper, directive } from 'vue-awesome-swiper'
 export default {
     name: '',
     data () {
@@ -80,24 +82,27 @@ export default {
                 loop: true,
                 // 设定初始化时slide的索引
                 initialSlide: 0,
+                // freeMode: true,
                 // 自动播放
-                autoplay: {
-                    delay: 1500,
-                    stopOnLastSlide: false,
-                    disableOnInteraction: false
-                },
+                // autoplay: {
+                //     delay: 3000,
+                //     stopOnLastSlide: false,
+                //     disableOnInteraction: false
+                // },
+                autoplay: 4000,
+                paginationClickable: true,
+                autoplayDisableOnInteraction: false,
                 // 滑动速度
-                speed: 800,
+                // speed: 1000,
                 // 滑动方向
                 direction: 'horizontal',
                 // 小手掌抓取滑动
                 grabCursor: true,
                 // 分页器设置
-                pagination: {
-                    el: '.swiper-pagination',
-                    clickable: true,
-                    type: 'bullets'
-                },
+                pagination: '.swiper-pagination',
+                slidesPerView: 2,
+                centeredSlides: true,
+                spaceBetween: -60,
                 observer: true, // 修改swiper自己或子元素时，自动初始化swiper
                 observeParents: true // 修改swiper的父元素时，自动初始化swiper
             },
@@ -106,17 +111,17 @@ export default {
             loadingMore: false
         }
     },
-    components: {
-        Swiper,
-        SwiperSlide
-    },
-    directives: {
-        swiper: directive
-    },
+    // components: {
+    //     Swiper,
+    //     SwiperSlide
+    // },
+    // directives: {
+    //     swiper: directive
+    // },
     computed: {
-        swiper () {
-            return this.$refs.mySwiper.$swiper
-        },
+        // swiper () {
+        //     return this.$refs.mySwiper.$swiper
+        // },
         getImgUrl () {
             return getImgUrl
         }
@@ -128,6 +133,11 @@ export default {
         }
     },
     created () {
+    },
+    mounted () {
+        this.$nextTick(() => {
+            new window.Swiper('.mySwiper', this.swiperOption)
+        })
     }
 }
 </script>

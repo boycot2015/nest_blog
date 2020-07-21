@@ -160,7 +160,7 @@ export const formatRichText = (html) => { // 控制小程序中图片大小
     // newContent = newContent.replace(/\<span style=/gi, '<p style="text-align:justify;margin: 8px 0; padding: 0 15px; font-size: 16px; background: #e8e8e8;border-radius: 4px;"')
     // code换行
     newContent = newContent.replace(/\<pre/gi, '<pre style="white-space: pre-wrap;word-wrap: break-word;background: #e8e8e8;padding: 10px;margin-top: 10px;border-radius: 5px;"')
-    newContent = newContent.replace(/\<img/gi, '<img referrer="never" style="width:100%;height:auto;display:inline-block;margin:5rpx auto;vertical-align: middle;"')
+    newContent = newContent.replace(/\<img/gi, '<img referrer="never" style="width:100%;max-width: 800px;height: auto;display: block;margin: 5px auto;vertical-align: middle;"')
     return newContent
 }
 
