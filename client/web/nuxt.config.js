@@ -74,11 +74,11 @@ export default {
         {
             src: '@/plugins/axios-api',
             ssr: true
-        },
-        {
-            src: '@/plugins/vue2editor',
-            ssr: false
         }
+        // {
+        //     src: '@/plugins/vue2editor',
+        //     ssr: false
+        // }
         // {
         //     src: '~/plugins/vue-swiper.js',
         //     mode: 'client',
