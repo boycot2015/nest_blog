@@ -1,45 +1,44 @@
 <template>
     <div class="home-container">
-        <div class="banner" v-if="banner">
-            <div
-            v-swiper:mySwiper="swiperOption"
-            ref="mySwiper"
-            class="swiper"
-            >
-                <div class="swiper-wrapper">
+        <!-- v-swiper:mySwiper="swiperOption" -->
+        <div
+        ref="mySwiper"
+        class="banner mySwiper"
+        v-if="banner.length"
+        >
+            <div class="swiper-wrapper">
+                <div
+                class="swiper-slide"
+                v-for="item in banner"
+                :key="item.id"
+                >
+                <nuxt-link
+                :to="item.link"
+                v-if="item.link && !item.link.includes('http://')"
+                >
                     <div
-                    class="swiper-slide"
-                    v-for="item in banner"
-                    :key="item.id"
-                    >
-                    <nuxt-link
-                    :to="item.link"
-                    v-if="item.link && !item.link.includes('http://')"
-                    >
-                        <div
-                        class="img"
-                        :title="item.title"
-                        :style="{
-                            backgroundImage: `url('${item.url}')`
-                        }"
-                        ></div>
-                    </nuxt-link>
-                    <a
-                    :href="item.link"
-                    v-else
-                    target="_blank"
-                    >
-                        <div
-                        class="img"
-                        :title="item.title"
-                        :style="{
-                            backgroundImage: `url('${item.url}')`
-                        }"
-                        ></div>
-                    </a></div>
-                </div>
+                    class="img"
+                    :title="item.title"
+                    :style="{
+                        backgroundImage: `url('${item.url}')`
+                    }"
+                    ><img :src="item.url" :title="item.title" alt=""></div>
+                </nuxt-link>
+                <a
+                :href="item.link"
+                v-else
+                target="_blank"
+                >
+                    <div
+                    class="img"
+                    :title="item.title"
+                    :style="{
+                        backgroundImage: `url('${item.url}')`
+                    }"
+                    ><img :src="item.url" :title="item.title" alt=""></div>
+                </a></div>
+            </div>
             <div class="swiper-pagination"></div>
-        </div>
         </div>
         <!-- {{ $store.state.websiteConfig.newLeast }} -->
         <div class="article-list">
@@ -71,9 +70,19 @@
 import { getImgUrl } from '@/utils'
 // import 'swiper/swiper-bundle.css'
 // Swiper, SwiperSlide,
-// import { directive } from 'vue-awesome-swiper'
+// import { Swiper, directive } from 'vue-awesome-swiper'
 export default {
-    name: '',
+    name: 'home',
+    head () {
+        return {
+            title: this.title || '博客首页',
+            meta: [
+                { charset: 'utf-8' },
+                { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+                { hid: '博客首页', name: 'home', content: '首页展示最新动态,标签以及分类查询' }
+            ]
+        }
+    },
     data () {
         return {
             swiperOption: {
@@ -83,24 +92,27 @@ export default {
                 loop: true,
                 // 设定初始化时slide的索引
                 initialSlide: 0,
+                // freeMode: true,
                 // 自动播放
-                autoplay: {
-                    delay: 1500,
-                    stopOnLastSlide: false,
-                    disableOnInteraction: false
-                },
+                // autoplay: {
+                //     delay: 3000,
+                //     stopOnLastSlide: false,
+                //     disableOnInteraction: false
+                // },
+                autoplay: 4000,
+                paginationClickable: true,
+                autoplayDisableOnInteraction: false,
                 // 滑动速度
-                speed: 800,
+                // speed: 1000,
                 // 滑动方向
                 direction: 'horizontal',
                 // 小手掌抓取滑动
                 grabCursor: true,
                 // 分页器设置
-                pagination: {
-                    el: '.swiper-pagination',
-                    clickable: true,
-                    type: 'bullets'
-                },
+                pagination: '.swiper-pagination',
+                slidesPerView: 2,
+                centeredSlides: true,
+                spaceBetween: -60,
                 observer: true, // 修改swiper自己或子元素时，自动初始化swiper
                 observeParents: true // 修改swiper的父元素时，自动初始化swiper
             },
@@ -117,9 +129,9 @@ export default {
     //     swiper: directive
     // },
     computed: {
-        swiper () {
-            return this.$refs.mySwiper.$swiper
-        },
+        // swiper () {
+        //     return this.$refs.mySwiper.$swiper
+        // },
         getImgUrl () {
             return getImgUrl
         }
@@ -131,6 +143,11 @@ export default {
         }
     },
     created () {
+    },
+    mounted () {
+        this.$nextTick(() => {
+            new window.Swiper('.mySwiper', this.swiperOption)
+        })
     }
 }
 </script>

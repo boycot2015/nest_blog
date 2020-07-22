@@ -19,6 +19,16 @@
 <script>
 export default {
     name: 'articleList',
+    head () {
+        return {
+            title: this.title || '时间轴',
+            meta: [
+                { charset: 'utf-8' },
+                { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+                { hid: '时间轴', name: 'articleList', content: '记录近期发布的文章' }
+            ]
+        }
+    },
     data () {
         return {
             list: {}

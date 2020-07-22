@@ -37,6 +37,9 @@ export class Users {
     })
     status: object; // 用户状态
 
+    @Column({ type: 'text', charset: 'utf8mb4', default: null, select: true })
+    websiteId: string; // 网站id
+
     @CreateDateColumn({
         type: 'datetime',
         comment: '创建时间',

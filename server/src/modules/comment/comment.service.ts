@@ -72,8 +72,9 @@ export class CommentService {
     async addComment(comment) {
         const colors = ['magenta', 'red', 'volcano', 'orange', 'gold', 'lime',
             'green', 'cyan', 'blue', 'geekblue', 'blue', 'purple'];
-        if (!comment) {
-            throw new HttpException("参数为空", responseStatus.failed.code);
+        if (!comment || (comment && (!comment.articleId || !comment.name || !comment.email || !comment.content))) {
+            let str = comment && !comment.articleId ? 'articleId': !comment.content ? 'content': !comment.name ? 'name' : 'email';
+            throw new HttpException(str + "参数为空", responseStatus.failed.code);
         }
         
         const hasComment = await this.commentRepository.findOne({ 'name': comment.name, 'content': comment.content })

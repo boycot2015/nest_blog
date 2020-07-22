@@ -31,6 +31,16 @@ import { LoadingMore } from '@/components/LoadingMore'
 import { getImgUrl } from '@/utils'
 export default {
     name: 'articleIndex',
+    head () {
+        return {
+            title: this.title || '博客列表',
+            meta: [
+                { charset: 'utf-8' },
+                { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+                { hid: '博客详情', name: 'articleView', content: '博客详情' }
+            ]
+        }
+    },
     async asyncData ({ app, params, query, route }) {
         let pages = {
             current: 1,
@@ -53,7 +63,8 @@ export default {
     components: {
         LoadingMore
     },
-    watchQuery: ['category', 'tag'],
+    watchQuery: true,
+    // ['category', 'tag']
     data () {
         return {
             loadingMore: false,
