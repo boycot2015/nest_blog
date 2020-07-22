@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Query, UseGuards } from '@nestjs/common';
 import { SettingService } from './setting.service';
 import { ApiTags, ApiQuery, ApiProperty, ApiOperation } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
+import { User } from '../users/user.decorator';
 export class QueryDt {
     @ApiProperty({
         description: '当前页数',
@@ -48,6 +49,11 @@ class SettingVo {
         required: false
     })
     notice: string
+    // @ApiProperty({
+    //     description: '设置id',
+    //     required: true
+    // })
+    // id: string
 }
 @ApiTags('网站基本信息配置')
 @Controller('setting')
@@ -57,19 +63,20 @@ export class SettingController {
     // @UseGuards(AuthGuard())
     @ApiOperation({ summary: '获取设置信息' })
     get(@Query() data: QueryDt) {
-        return this.settingService.get(data)
+        return this.settingService.get({ ...data })
     }
     @Post('/add')
     @UseGuards(AuthGuard())
     @ApiOperation({ summary: '新增设置信息' })
-    add(@Body() data: SettingVo) {
-        return this.settingService.add(data)
+    add(@User() user, @Body() data: SettingVo) {
+        return this.settingService.add({ ...data, user })
     }
     @Post('/edit')
     @UseGuards(AuthGuard())
     @ApiOperation({ summary: '编辑设置信息' })
-    edit(@Body() data: QueryDt) {
-        return this.settingService.edit(data)
+    edit(@User() user, @Body() data: SettingVo ) {
+        // console.log(user, data, 'user')
+        return this.settingService.edit({ ...data, user })
     }
     @Post('/delete')
     @UseGuards(AuthGuard())

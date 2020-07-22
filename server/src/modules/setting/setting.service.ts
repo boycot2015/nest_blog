@@ -4,14 +4,21 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Setting } from "../../entities/setting.entity";
 import { aesDecrypt, responseStatus } from "../../utils";
-import { AuthService } from '../auth/auth.service';
+import { UsersService } from '../users/users.service';
 @Injectable()
 export class SettingService {
     constructor(@InjectRepository(Setting)
-    private readonly settingRepository: Repository<Setting>) { }
+    private readonly settingRepository: Repository<Setting>,
+    private readonly usersService: UsersService) { }
     async get(data) {
-        // data.currentPage = data.currentPage || 1
-        // data.pageSize = data.pageSize || 10
+        if (!data.current) {
+            if (data.websiteId) {
+                console.log(data.websiteId, 'websiteId')
+                return this.settingRepository.findOne(data.websiteId)
+            } else {
+                return this.settingRepository.findOne(1)
+            }
+        }
         // 1. 准备工作：注入Repository，创建queryBuilder
         // 条件筛选和分页查询代码
         let queryBy = this.settingRepository.createQueryBuilder()
@@ -28,6 +35,10 @@ export class SettingService {
         // 普通排序
         queryBy = queryBy.orderBy('update_time', 'DESC')
         // 5. 获取结果及(非分页的)查询结果总数
+        const { current = 1, pageSize = 10, status, ...otherParams } = data;
+        queryBy = queryBy
+            .skip(pageSize * (current - 1))
+            .take(pageSize)
         // 或使用 .getMany() 不会返回总数
 
         return await queryBy.getManyAndCount()
@@ -38,7 +49,8 @@ export class SettingService {
         if (!banner || !notice) {
             throw new HttpException(`参数为空！`, 400);
         }
-        await this.settingRepository.save({ banner, notice, siteConfig, theme, activity });
+        let res = await this.settingRepository.save({ banner, notice, siteConfig, theme, activity });
+        await this.usersService.editUser({...data.user, websiteId: res.id })
         return responseStatus.success.message
     }
     async edit(data) {

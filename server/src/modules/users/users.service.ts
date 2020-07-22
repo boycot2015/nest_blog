@@ -112,7 +112,8 @@ export class UsersService {
                 cipher: '123456',
                 password: '',
                 email: '',
-                administrator: false
+                administrator: false,
+                websiteId: null
             }
             insertUserData.password = aesDecrypt(user.password, insertUserData.cipher)
             const isRightPwd = await this.usersRepository.findOne({ 'username': user.username, 'password': user.password })
@@ -140,7 +141,8 @@ export class UsersService {
                 cipher: '123456',
                 password: '',
                 email: '',
-                status: {}
+                status: {},
+                websiteId: null
             }
             insertUserData.password = aesDecrypt(user.password, insertUserData.cipher)
             insertUserData.avatar = user.avatar
@@ -148,6 +150,7 @@ export class UsersService {
             insertUserData.cipher = user.password
             insertUserData.email = user.email
             insertUserData.status = user.status
+            insertUserData.websiteId = user.websiteId || null
             const updatedUser = { ...existUser, ...insertUserData }
             await this.usersRepository.save(updatedUser)
             return responseStatus.success.message

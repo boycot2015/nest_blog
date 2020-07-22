@@ -22,7 +22,7 @@
                     :style="{
                         backgroundImage: `url('${item.url}')`
                     }"
-                    ></div>
+                    ><img :src="item.url" :title="item.title" alt=""></div>
                 </nuxt-link>
                 <a
                 :href="item.link"
@@ -35,7 +35,7 @@
                     :style="{
                         backgroundImage: `url('${item.url}')`
                     }"
-                    ></div>
+                    ><img :src="item.url" :title="item.title" alt=""></div>
                 </a></div>
             </div>
             <div class="swiper-pagination"></div>

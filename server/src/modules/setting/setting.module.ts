@@ -4,10 +4,12 @@ import { SettingService } from './setting.service';
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { Setting } from '../../entities/setting.entity';
 import { PassportModule } from '@nestjs/passport';
+import { UsersModule } from '../users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthService } from '../auth/auth.service';
 @Module({
     imports: [TypeOrmModule.forFeature([Setting]),
+    UsersModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
         secretOrPrivateKey: 'secretKey',
