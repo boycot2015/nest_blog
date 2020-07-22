@@ -75,7 +75,8 @@ const NormalLoginForm = (props) => {
                     登录
                 </Button>
             </Form.Item>
-            未注册？<a href="/register">注册</a>
+            <span style={{color: 'white'}}>未注册？</span><span onClick={() => Router.push('/register')} style={{color: 'red'}}>注册</span>
+            <p style={{color: 'white'}}>游客账号：test, 密码：123456. 也可以进行注册，注册的账号也是游客模式，需要开通权限请评论留言通知，谢谢！</p>
         </Form>
     );
 };

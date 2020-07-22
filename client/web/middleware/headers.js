@@ -6,13 +6,13 @@ export default async function ({ app, redirect, route, req, res, store }) {
     // if (!app.$cookies.get('userinfo')) {
     //     app.$cookies.remove('userinfo')
     // }
-    // let visitors = true
-    // if (req && axios.defaults) { // 设置域名访问
-    //     axios.defaults.headers.origin = req.host || 'pc.f.test.limofang.cn'
-    // }
     // if (token && req && axios.defaults) { // 设置axios的全局token
     //     axios.defaults.headers.Authorization = token
     //     axios.defaults.headers.Refresh = token.split('.')[2]
+    // }
+    // let visitors = true
+    // if (req && axios.defaults) { // 设置域名访问
+    //     axios.defaults.headers.origin = req.host || 'pc.f.test.limofang.cn'
     // }
     // 处理需要登录的页面
     // if (store.state.visitors === '') { // 获取网站信息
@@ -44,7 +44,9 @@ export default async function ({ app, redirect, route, req, res, store }) {
     // }
     if (!store.state.websiteConfig) {
         // let data = await app.$api.setting.get()
-        let [settingRes, homeRes] = await Promise.all([app.$api.setting.get(), app.$api.home.datas()])
+        let user = store.state.authUser
+        user = user !== null ? user : {}
+        let [settingRes, homeRes] = await Promise.all([app.$api.setting.get({ websiteId: user.websiteId }), app.$api.home.datas()])
         store.commit('setCommonData', [settingRes, homeRes])
     }
     if (!store.state.asideConfig) {

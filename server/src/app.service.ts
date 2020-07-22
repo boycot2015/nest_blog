@@ -12,11 +12,11 @@ export class AppService {
     }
     async getDatas(params): Promise<object> {
         const res = await this.articleService.getAll(params)
-        const config = await this.settingService.get({})
-        let activity = JSON.parse(config[0][0].activity)
+        const config = await this.settingService.get(params)
+        // console.log(config, 'config')
+        let activity = JSON.parse(config.activity)
         let deadline = new Date(activity.time).getTime()
         let deadTitle = activity.name
-        // console.log(config, 'config')
         let newLeast = res[0].filter(el => el.status + '' === '1001')
         newLeast = newLeast.length > 4 ? newLeast.slice(-4) : newLeast
         let data = {

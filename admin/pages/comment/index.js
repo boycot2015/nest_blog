@@ -152,7 +152,7 @@ const AdvancedSearchForm = (props) => {
 
     const onFormSubmit = values => {
         props.setParentState(values)
-        console.log(values, 'onFormSubmit')
+        // console.log(values, 'onFormSubmit')
     };
     return (
         <Form
@@ -346,12 +346,14 @@ class Article extends React.Component {
                     } else {
                         res && message.error(res.message)
                     }
+                }).catch(err => {
+                    message.error(err)
                 })
             },
             onCancel: (e) => {
-                // console.log(e.triggerCancel, 'icon: <ExclamationCircleOutlined />,');
                 if (e.triggerCancel) return // 点击遮罩层关闭弹框不执行操作
                 params.status = 1003
+                // console.log( params, 'icon: <ExclamationCircleOutlined />,');
                 $api.comment[api]({ ...params }).then(res => {
                     if (res && res.success) {
                         message.success(res.data)
@@ -361,6 +363,8 @@ class Article extends React.Component {
                     } else {
                         res && message.error(res.message)
                     }
+                }).catch(err => {
+                    message.error(err)
                 })
                 return Promise.resolve()
             }

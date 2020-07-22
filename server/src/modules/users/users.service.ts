@@ -185,4 +185,17 @@ export class UsersService {
         await this.usersRepository.save(updatedUser)
         return responseStatus.success.message
     }
+    async setWebsiteId({ id, websiteId }) {
+        if (!id || !websiteId) {
+            throw new HttpException("参数为空", responseStatus.failed.code);
+        }
+        let existUser = await this.usersRepository.findOne({ id })
+        // console.log(hasUser)
+        if (!existUser) {
+            throw new HttpException("用户不存在！", responseStatus.failed.code);
+        }
+        const updatedUser = { ...existUser, websiteId }
+        await this.usersRepository.save(updatedUser)
+        return responseStatus.success.message
+    }
 }

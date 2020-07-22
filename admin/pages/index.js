@@ -17,12 +17,12 @@ class Home extends React.Component {
     constructor(props) {
         super(props)
     }
-    static async getInitialProps ({ $api }) {
+    static async getInitialProps ({ $api, userinfo }) {
         // 从query参数中回去id
         //通过process的browser属性判断处于何种环境：Node环境下为false,浏览器为true
         // 发送服务器请求
-        const res = await $api.home.datas()
-        // console.log(res, 'res.data')
+        console.log(userinfo, 'res.data')
+        const res = await $api.home.datas(userinfo)
         if (res && res.success) {
             return {
                 loading: true,

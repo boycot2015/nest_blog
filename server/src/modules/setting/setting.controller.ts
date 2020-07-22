@@ -65,6 +65,12 @@ export class SettingController {
     get(@Query() data: QueryDt) {
         return this.settingService.get({ ...data })
     }
+    @Get('/get/page')
+    // @UseGuards(AuthGuard())
+    @ApiOperation({ summary: '获取设置信息' })
+    getByPage(@Query() data: QueryDt) {
+        return this.settingService.getByPage({ ...data })
+    }
     @Post('/add')
     @UseGuards(AuthGuard())
     @ApiOperation({ summary: '新增设置信息' })

@@ -1,8 +1,8 @@
 import axios from '@/api/axios'
 import url from './url'
 export default {
-    datas (data) {
-        return axios.get(url.datas, data)
+    datas (params) {
+        return axios.get(url.datas, { params })
     },
     get (params) {
         return axios.get(url.get, { params })

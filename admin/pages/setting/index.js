@@ -5,6 +5,7 @@ import {
 } from '@ant-design/colors';
 import { ColorPicker } from '@/components/ColorPicker';
 import Head from 'next/head';
+import Router, { withRouter } from 'next/router'
 import {
     Modal, Menu, ConfigProvider,
     Button, Form, Input, Radio,
@@ -198,12 +199,12 @@ class Setting extends React.Component {
             siteConfig: {},
             theme: {},
             activity: {},
-            id: userinfo.websiteId || 1
+            id: userinfo.websiteId || ''
         }
         let res = await $api.setting.get({ websiteId: data.id })
         if (res && res.success) {
             if (res.data) {
-                data = res.data
+                data = { ...res.data, id: data.id }
                 for (const key in data) {
                     if (!key.includes('id') && !key.includes('createTime') && !key.includes('updateTime')) {
                         if (key.includes('banner')) {
@@ -401,6 +402,11 @@ class Setting extends React.Component {
         // console.log('onOk: ', data)
         $api.setting[api](data).then(res => {
             if (res && res.success) {
+                if (res.data && res.data.id) {
+                    message.success('网站配置发生变化，请重新登录！')
+                    Router.push('/login')
+                    return
+                }
                 $api.setting.get({ websiteId: data.id }).then(res => {
                     if (res && res.success) {
                         message.success(res.message)

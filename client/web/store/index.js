@@ -32,7 +32,7 @@ export const mutations = {
     },
     setCommonData (state, [settingRes, homeRes]) {
         if (settingRes && homeRes && settingRes.success && homeRes.success) {
-            settingRes = settingRes.data[0][0]
+            settingRes = settingRes.data
             for (const key in settingRes) {
                 if (key === 'banner' ||
                     key === 'theme' ||

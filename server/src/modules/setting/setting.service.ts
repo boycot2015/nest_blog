@@ -11,14 +11,14 @@ export class SettingService {
     private readonly settingRepository: Repository<Setting>,
     private readonly usersService: UsersService) { }
     async get(data) {
-        if (!data.current) {
-            if (data.websiteId) {
-                console.log(data.websiteId, 'websiteId')
-                return this.settingRepository.findOne(data.websiteId)
-            } else {
-                return this.settingRepository.findOne(1)
-            }
+        console.log(data.websiteId, 'websiteId')
+        if (data.websiteId) {
+            return await this.settingRepository.findOne(data.websiteId)
+        } else {
+            return await this.settingRepository.findOne(1)
         }
+    }
+    async getByPage (data) {
         // 1. 准备工作：注入Repository，创建queryBuilder
         // 条件筛选和分页查询代码
         let queryBy = this.settingRepository.createQueryBuilder()
@@ -42,7 +42,6 @@ export class SettingService {
         // 或使用 .getMany() 不会返回总数
 
         return await queryBy.getManyAndCount()
-        // return await this.articleRepository.query(data);
     }
     async add(data) {
         const { banner, notice, siteConfig, theme, activity } = data
@@ -50,8 +49,8 @@ export class SettingService {
             throw new HttpException(`参数为空！`, 400);
         }
         let res = await this.settingRepository.save({ banner, notice, siteConfig, theme, activity });
-        await this.usersService.editUser({...data.user, websiteId: res.id })
-        return responseStatus.success.message
+        await this.usersService.setWebsiteId({ ...data.user, websiteId: res.id })
+        return res
     }
     async edit(data) {
         const { id, banner, notice, siteConfig, theme, activity } = data

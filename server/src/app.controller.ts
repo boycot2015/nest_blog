@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, UseGuards, Query } from '@nestjs/common';
 import { AppService } from './app.service';
 import { ApiTags, ApiQuery, ApiProperty, ApiOperation } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
@@ -25,7 +25,7 @@ export class AppController {
     }
     @Get('datas')
     // @UseGuards(AuthGuard())
-    async datas(data = {}): Promise<object> {
+    async datas(@Query() data): Promise<object> {
         return await this.appService.getDatas(data);
     }
 }

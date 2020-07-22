@@ -84,7 +84,7 @@ export default {
         },
         textMove () {
             let oCon = this.$refs.textMove
-            if (oCon !== null) {
+            if (oCon && oCon !== null) {
                 let _move = null
                 let step = -2
                 _move = setInterval(() => {
