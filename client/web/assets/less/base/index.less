@@ -95,6 +95,27 @@ li,ol,dl {
 .flex4 {
   flex: 4;
 }
+input:focus,
+button:focus {
+    outline: 1px dotted;
+    outline: 5px auto @primary;
+}
+input {
+    height: 32px;
+    width: 180px;
+    padding-left: 10px;
+    border: 1px solid @c-ccc;
+}
+button {
+    height: 32px;
+    width: 100px;
+    background-color: @primary;
+    color: @white;
+    font-size: 14px;
+    border-radius: 3px;
+    text-align: center;
+    line-height: 32px;
+}
 .clearfix:before,.clearfix:after{content:""; display:table;}
 .clearfix:after{clear:both;}
 

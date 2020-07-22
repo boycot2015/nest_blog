@@ -188,42 +188,36 @@ class Setting extends React.Component {
     constructor(props) {
         super(props)
     }
-    static async getInitialProps ({ $api }) {
+    static async getInitialProps ({ $api, userinfo }) {
         // 从query参数中回去id
         //通过process的browser属性判断处于何种环境：Node环境下为false,浏览器为true
         // 发送服务器请求
-        let res = await $api.setting.get()
+        let data = {
+            banner: [],
+            notice: {},
+            siteConfig: {},
+            theme: {},
+            activity: {},
+            id: userinfo.websiteId || 1
+        }
+        let res = await $api.setting.get({ websiteId: data.id })
         if (res && res.success) {
-            let data = {
-                banner: [],
-                notice: {},
-                siteConfig: {},
-                theme: {},
-                activity: {},
-                id: ''
-            }
-            if (res && res.data[0].length) {
-                data.banner = res.data[0][0].banner !== null ? JSON.parse(res.data[0][0].banner) : []
-                data.notice = res.data[0][0].notice !== null ? JSON.parse(res.data[0][0].notice) : {}
-                data.siteConfig = res.data[0][0].siteConfig !== null ? JSON.parse(res.data[0][0].siteConfig) : {}
-                data.theme = res.data[0][0].theme !== null ? JSON.parse(res.data[0][0].theme) : {}
-                data.activity = res.data[0][0].activity !== null ? JSON.parse(res.data[0][0].activity) : {}
-                data.id = res.data[0][0].id
+            if (res.data) {
+                data = res.data
+                for (const key in data) {
+                    if (!key.includes('id') && !key.includes('createTime') && !key.includes('updateTime')) {
+                        if (key.includes('banner')) {
+                            data[key] = data[key] !== null ? JSON.parse(data[key]) : []
+                        } else {
+                            data[key] = data[key] !== null ? JSON.parse(data[key]) : {}
+                        }
+                    }
+                }
                 selectedTheme = data.theme
-            }
-            return {
-                data
             }
         }
         return {
-            data: {
-                banner: [],
-                notice: {},
-                siteConfig: {},
-                theme: {},
-                activity: {},
-                id: ''
-            }
+            data
         }
     }
     state = {
@@ -404,13 +398,13 @@ class Setting extends React.Component {
             activity: JSON.stringify(this.state.data.activity),
             id: this.state.data.id
         }
-        console.log('onOk: ', data)
+        // console.log('onOk: ', data)
         $api.setting[api](data).then(res => {
             if (res && res.success) {
-                $api.setting.get().then(res => {
+                $api.setting.get({ websiteId: data.id }).then(res => {
                     if (res && res.success) {
                         message.success(res.message)
-                        let data = (res.data && res.data[0].length && res.data[0]) || [{
+                        let data = (res.data) || [{
                             banner: '[]',
                             notice: '{}',
                             siteConfig: '{}',
@@ -418,15 +412,15 @@ class Setting extends React.Component {
                             theme: '{}'
                         }]
                         this.setState({
-                            banner: data && JSON.parse(data[0].banner),
-                            notice: data && JSON.parse(data[0].notice),
-                            theme: data && JSON.parse(data[0].theme) || {},
-                            siteConfig: data && JSON.parse(data[0].siteConfig) || {},
-                            activity: data && JSON.parse(data[0].activity) || {},
-                            id: data && data[0].id || ''
+                            banner: data && JSON.parse(data.banner),
+                            notice: data && JSON.parse(data.notice),
+                            theme: data && JSON.parse(data.theme) || {},
+                            siteConfig: data && JSON.parse(data.siteConfig) || {},
+                            activity: data && JSON.parse(data.activity) || {}
+                            // id: data && data.id || 1
                         })
                         // 设置全局样式
-                        setCookie(this.props.ctx, 'themeColor', data[0].theme)
+                        setCookie(this.props.ctx, 'themeColor', data.theme)
                     }
                 })
             }
