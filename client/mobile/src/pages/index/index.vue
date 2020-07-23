@@ -24,7 +24,7 @@
 				@click="onNoticeClick(homeData.notice)"
 				class="notice-content u-flex-3"
 			>
-				<text ref="textMove" class="text">{{homeData.notice.title}}</text>
+				<text ref="textMove" class="text" v-html="homeData.notice.title"></text>
 			</view>
 			<uni-icons type="closeempty" @tap="showNotice = false" color="#666" size="20"></uni-icons>
 		</view>
@@ -54,10 +54,10 @@
 </template>
 <style scoped lang="scss">
 	.swiper {
-		height: 300upx;
+		height: 400upx;
 		uni-image {
 			width: 100%;
-			height: 300upx;
+			height: 400upx;
 		}
 	}
 	.notice{
@@ -89,6 +89,7 @@
 <script>
 	import { getCommentNum } from '@/utils'
     export default {
+        name: 'index',
         data() {
             return {
                 title: 'Hello',
@@ -107,7 +108,12 @@
                     },
                 ],
                 homeData: {
-                    newLeast: []
+                    banner: [],
+                    notice: {},
+                    siteConfig: {},
+                    theme: {},
+                    newLeast: [],
+                    id: ''
                 },
 				getCommentNum,
 				indicatorDots: true,
@@ -127,28 +133,37 @@
         },
 		onPullDownRefresh() {
 			this.initData()
-		},
+        },
+        computed: {
+            userInfo () {
+                // console.log(this.$store.state)
+                return this.$store.state.userInfo || {}
+            }
+        },
+        watch: {
+            $route (to, from) {
+                if (from.path === '/pages/login/login') {
+                    uni.showLoading({
+                        title: '加载中...'
+                    })
+                    this.initData()
+                }
+            }
+        },
         methods: {
             async initData() {
-                let [configRes, listRes] = await Promise.all([await this.$api.setting.get(), await this.$api.home.datas()])
-                let homeData = {
-                    banner: [],
-                    notice: {},
-                    siteConfig: {},
-                    theme: {},
-                    id: ''
-                }
+                let [configRes, listRes] = await Promise.all([await this.$api.setting.get({ websiteId: this.userInfo.websiteId }), await this.$api.home.datas()])
+                let homeData = {}
                 if (configRes && configRes.success) {
-                    if (configRes.data && configRes.data[0].length) {
-                        homeData.banner = configRes.data[0][0].banner !== null ? JSON.parse(configRes.data[0][0].banner) : []
-                        homeData.notice = configRes.data[0][0].notice !== null ? JSON.parse(configRes.data[0][0].notice) : {}
-                        homeData.siteConfig = configRes.data[0][0].siteConfig !== null ? JSON.parse(configRes.data[0][0].siteConfig) : {}
-                        homeData.theme = configRes.data[0][0].theme !== null ? JSON.parse(configRes.data[0][0].theme) : {}
-                        homeData.id = configRes.data[0][0].id
+                    if (configRes.data) {
+                        homeData.banner = configRes.data.banner !== null ? JSON.parse(configRes.data.banner) : []
+                        homeData.notice = configRes.data.notice !== null ? JSON.parse(configRes.data.notice) : {}
+                        homeData.siteConfig = configRes.data.siteConfig !== null ? JSON.parse(configRes.data.siteConfig) : {}
+                        homeData.theme = configRes.data.theme !== null ? JSON.parse(configRes.data.theme) : {}
+                        homeData.id = configRes.data.id
                     }
-                    // console.log(homeData, listRes.data, 'homeData.banner')
                     this.bannerlist = homeData.banner
-					this.homeData = homeData
+                    this.homeData = homeData
                 }
 				if (listRes && listRes.success) {
                     this.homeData.newLeast = listRes.data.newLeast
@@ -162,19 +177,20 @@
             },
             handleView (item) {
 				uni.navigateTo({
-					url: '/pages/article/view?id='+ item.id
+					url: '/pages/articles/view?id='+ item.id
 				})
             },
 			handleBannerClick (item) {
-				console.log(item.link.includes('http'), 'e.url')
+                item = Object.assign({}, item)
+                item.link = item.link.replace('article', 'articles')
 				item.link.includes('http') && uni.navigateTo({
 					url: '/pages/webview?url='+ item.link
 				})
 				!item.link.includes('http') &&
 				uni.navigateTo({
-					url: item.link
+					url: '/pages' + item.link
 				})
-				this.$router.push('/pages/webview?url='+ item.link)
+				// this.$router.push('/pages/webview?url='+ item.link)
 			},
 			textMove () {
 				let oCon = this.$refs.textMove.$el

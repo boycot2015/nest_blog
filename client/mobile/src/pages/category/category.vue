@@ -24,7 +24,7 @@
 				<block v-if="categoryChildren.length">
 					<view
 					class="category-item u-text-center"
-					v-for="(item, index) in categoryChildren"
+					v-for="(item) in categoryChildren"
 					:key="item.id"
 					@tap="onChildClick(item)"
 					>
@@ -54,6 +54,7 @@
 
 <script>
 	export default {
+        name: 'category',
 		data() {
 			return {
 				categoryList: [],
@@ -90,7 +91,7 @@
 				item.parentId !== null && getApp().globalData.category.push(item.parentId)
 				getApp().globalData.category.push(item.id)
 				uni.switchTab({
-					url: '/pages/article/index?category=' + item.id
+					url: '/pages/articles/index?category=' + item.id
 				})
 			}
 		}

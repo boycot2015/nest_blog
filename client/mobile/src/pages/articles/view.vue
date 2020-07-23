@@ -223,6 +223,7 @@
 	import minActionSheet from '@/components/min-action-sheet/min-action-sheet'
 	import emoji from '@/components/m-emoji/emoji.js'
 	export default {
+        name: 'articleView',
 		components: {
 			CommentTree,
 			minActionSheet
@@ -252,7 +253,7 @@
 		onLoad(query) {
 			uni.showLoading({
 			    title: '加载中...'
-			})
+            })
 			this.init(query)
 		},
 		watch: {
@@ -280,11 +281,12 @@
 							):''
 						}
 					}
+                    document.title = this.viewData.title || '详情'
 					uni.hideLoading()
 					this.showLoading = false
 					setTimeout(function() {
 						uni.stopPullDownRefresh()
-					}, 500)
+                    }, 500)
 				} else {
 					uni.showToast({
 					    title: '加载失败！',

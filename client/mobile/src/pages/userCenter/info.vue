@@ -53,6 +53,7 @@ image {
 		mapMutations  
 	} from 'vuex'
 	export default {
+        name: 'userInfo',
 		data() {
 			return {
 				userInfo: {}

@@ -1,7 +1,8 @@
 {
 	"pages": [
 		{
-			"path": "pages/index/index",
+            "path": "pages/index/index",
+            "name": "index",
 			"style": {
 				"navigationBarTitleText": "博客首页",
 				"enablePullDownRefresh": true,
@@ -25,6 +26,7 @@
 			}
 		}
 	    ,{
+            "name": "userCenter",
             "path" : "pages/userCenter/userCenter",
             "style" : {
 				"navigationBarTitleText": "个人中心",
@@ -33,7 +35,7 @@
 			}
 		}
 		,{
-            "path" : "pages/article/index",
+            "path" : "pages/articles/index",
             "style" : {
 				"navigationBarTitleText": "博客列表",
 				"titleNView": false,
@@ -41,19 +43,20 @@
 			}
 		}
 		,{
-            "path" : "pages/article/view",
+            "path" : "pages/articles/view",
             "style" : {
 				"navigationBarTitleText": "详情",
 				"enablePullDownRefresh": true
 			}
         }
         ,{
+            "name": "category",
             "path" : "pages/category/category",
             "style" : {
-				// "titleNView": false,
 				"navigationBarTitleText": "分类"
 			}
         },{
+            "name": "webview",
             "path" : "pages/webview",
             "style" : {
 				"titleNView": false,
@@ -61,12 +64,14 @@
 			}
         }
         ,{
+            "name": "login",
             "path" : "pages/login/login",
             "style" : {
 				"titleNView": false
 			}
         }
         ,{
+            "name": "userInfo",
             "path" : "pages/userCenter/info",
             "style" : {
 				"navigationBarTitleText": "个人信息"
@@ -90,7 +95,7 @@
 	        "selectedIconPath": "/static/index-1.png",
 	        "text": "首页"
 	    }, {
-	        "pagePath": "pages/article/index",
+	        "pagePath": "pages/articles/index",
 	        "iconPath": "/static/hot-0.png",
 	        "selectedIconPath": "/static/hot-1.png",
 	        "text": "列表"
@@ -110,7 +115,7 @@
 		 "autoscan": true,
 		 "custom": {
 			"^u-(.*)": "uview-ui/components/u-$1/u-$1.vue",
-			"uni-(.*)": "@/components/uni-$1/uni-$1.vue" // 匹配components目录内的vue文件
+			"uni-(.*)": "@/components/uni-$1/uni-$1.vue"
 		 }
 	}
 }

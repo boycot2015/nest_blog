@@ -44,6 +44,7 @@
 	} from 'vuex'
 
 	export default {
+        name: 'login',
 		data() {
 			return {
 				isLogin: true
@@ -80,7 +81,7 @@
 								uni.navigateBack()
 							} else {
 								uni.switchTab({
-									url: '/pages/userCenter/userCenter'
+									url: '/pages/index/index'
 								})
 							}
 						} else {

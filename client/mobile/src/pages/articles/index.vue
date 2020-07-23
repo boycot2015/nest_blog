@@ -24,6 +24,7 @@
 
 <script>
 	export default {
+        name: 'articles',
 		data() {
 			return {
 				viewList: [],
@@ -103,7 +104,7 @@
 			},
 			goDetail (item) {
 				uni.navigateTo({
-					url: '/pages/article/view?id='+ item.id
+					url: '/pages/articles/view?id='+ item.id
 				})
 				// this.$router.push('/pages/webview?url='+ item.link)
 			},

@@ -6,7 +6,7 @@ Vue.use(Vuex)
 const state = {
 	login: false,
 	token: '',
-	userInfo: localStorage.getItem('userinfo') || {}
+	userInfo: localStorage.getItem('userinfo') && JSON.parse(localStorage.getItem('userinfo')) || {}
 }
 const mutations = {
 	login(state, provider) {
