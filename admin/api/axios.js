@@ -86,6 +86,7 @@ service.interceptors.response.use(
                             query: { ...Router.query, redirect: Router.pathname }
                         })
                     }
+                    message.error(info.message)
                 }
                 return info
             } else {

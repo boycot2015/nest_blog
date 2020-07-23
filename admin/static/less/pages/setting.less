@@ -75,6 +75,32 @@
             width: 300px;
             margin-right: 10px;
         }
+        &.banner {
+            position: relative;
+            .icon {
+                &-left,
+                &-right {
+                    position: absolute;
+                    top: 50%;
+                    font-size: 22px;
+                    margin-top: -11px;
+                    padding: 10px;
+                    color: @white;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    background: rgba(0, 0, 0, 0.6);
+                    &:hover {
+                        background: rgba(0,0,0,0.3);
+                    }
+                }
+                &-left {
+                    left: 20px;
+                }
+                &-right {
+                    right: 20px;
+                }
+            }
+        }
     }
     .theme-box {
         width: 100%;

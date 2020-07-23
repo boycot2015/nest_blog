@@ -29,7 +29,7 @@ let selectedTheme = {} // 当前主题配置
 
 // 轮播图弹框
 const BannerOptionsForm = ({ visible, initProps, onSubmit, handleUpload, onCancel, handleDelete }) => {
-    const { playWay = 0, title, link, url } = initProps
+    const { playWay = 1, title, link, url } = initProps
     const [form] = Form.useForm();
     setTimeout(() => {
         form.setFieldsValue({
@@ -44,7 +44,8 @@ const BannerOptionsForm = ({ visible, initProps, onSubmit, handleUpload, onCance
             maskClosable={false}
             width={660}
             centered
-            closable={false}
+            onCancel={onCancel}
+            closable={true}
             footer={
                 [
                     <Button type="primary" key="submit" onClick={() => {
@@ -64,6 +65,7 @@ const BannerOptionsForm = ({ visible, initProps, onSubmit, handleUpload, onCance
                         form.resetFields();
                     }}>删除</Button>
                 ]
+                // null
             }
         >
             <Form
@@ -83,7 +85,7 @@ const BannerOptionsForm = ({ visible, initProps, onSubmit, handleUpload, onCance
                         customRequest={(option) => handleUpload(option)}
                         showUploadList={false}
                     >
-                        <div className="text-lg h-40" style={{ margin: '0 auto', height: 160 }}>
+                        <div className="text-lg h-40" style={{ margin: '0 auto', height: 160, width: 612 }}>
                             <img src={url} style={{ height: '100%', margin: '0 auto' }} />
                         </div>
                     </Upload>
@@ -110,6 +112,24 @@ const BannerOptionsForm = ({ visible, initProps, onSubmit, handleUpload, onCance
                     </Radio.Group>
                 </Form.Item>
             </Form>
+            {/* <div className="action-sheet footer tc">
+                <Button type="primary" key="submit" onClick={() => {
+                    form
+                        .validateFields()
+                        .then(async values => {
+                            await onSubmit(values);
+                            form.resetFields();
+                        })
+                        .catch(info => {
+                            console.log('Validate Failed:', info);
+                        })
+                }}>保存</Button>
+                <Button key="back" onClick={onCancel}>取消</Button>,
+                <Button type="primary" key="delete" ghost onClick={() => {
+                    handleDelete();
+                    form.resetFields();
+                }}>删除</Button>
+            </div> */}
         </Modal>
     );
 };
@@ -188,6 +208,14 @@ const ThemeForm = ({ visible, onSubmit, onCancel, handleColorChange, handleBgCol
 class Setting extends React.Component {
     constructor(props) {
         super(props)
+        this.next = this.next.bind(this);
+        this.prev = this.prev.bind(this);
+    }
+    next () {
+        this.slider.slick.slickNext();
+    }
+    prev () {
+        this.slider.slick.slickPrev();
     }
     static async getInitialProps ({ $api, userinfo }) {
         // 从query参数中回去id
@@ -472,14 +500,15 @@ class Setting extends React.Component {
                         </h3>
                         <div
                             style={{ height: 270 }}
-                            className={'section border p-2 border-dashed border-orange-f9'}>
+                            className={'section banner border p-2 border-dashed border-orange-f9'}>
                             <Carousel
                                 autoplay
-                                arrows={true}
-                            // slidecount={this.state.data.banner.length}
-                            // nextArrow={<RightOutlined />}
-                            // prevArrow={<LeftOutlined />}
-                            // effect="silde"
+                                ref={el => (this.slider = el)}
+                                // arrows={true}
+                                // slidecount={this.state.data.banner.length}
+                                // nextArrow={<RightOutlined />}
+                                // prevArrow={<LeftOutlined />}
+                                effect="silde"
                             >
                                 {this.state.data.banner.length ?
                                     this.state.data.banner.map(item => (
@@ -500,6 +529,8 @@ class Setting extends React.Component {
                                             </div>
                                     </Dragger>}
                             </Carousel>
+                            <LeftOutlined className="icon-left" onClick={this.prev} />
+                            <RightOutlined className="icon-right" onClick={this.next} />
                         </div>
                     </div>
                     <div className="flex flex-col justify-between lg:flex-row">
