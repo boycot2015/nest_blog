@@ -15,7 +15,7 @@ export const getCommentNum = (val) => {
  * @param {Object} str
  */
 export const getImgUrl = (str) => {
-    let data = 'https://img11.360buyimg.com/n7/jfs/t1/94448/29/2734/524808/5dd4cc16E990dfb6b/59c256f85a8c3757.jpg'
+    let data = require('../assets/img/pic-error.jpg')
     str.replace(/<img [^>]*src=['"]([^'"]+)[^>]*>/, function (match, capture) {
         data = capture
     })

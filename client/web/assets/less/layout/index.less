@@ -205,6 +205,36 @@
                     }
                 }
             }
+            .search-box {
+                position: relative;
+                height: 32px;
+                line-height: 32px;
+                border-radius: 32px;
+                overflow: hidden;
+                input {
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    border-radius: 32px;
+                    padding: 0 15px 0 30px;
+                    color: @c-333;
+                    background-color: @c-e8;
+                    border-color: @c-e8;
+                    width: 32px;
+                    opacity: 0;
+                    transition: all .5s;
+                    &:hover,
+                    &:focus {
+                        opacity: 1;
+                        width: 180px;
+                    }
+                }
+                .icon {
+                    position: absolute;
+                    left: 8px;
+                    top: 0;
+                    line-height: 32px;
+                }
+            }
         }
         &-aside {
         width: 300px;
@@ -262,7 +292,7 @@
         &-footer {
         width: 100%;
         height: 100px;
-        position: absolute;
+        position: fixed;
         bottom: 0;
         left: 0;
         line-height: 24px;
@@ -295,7 +325,7 @@
         background-color: @c-999;
         color: @white;
         bottom: 120px;
-        right: calc(50% - 800px);
+        right: calc(50px);
         font-size: 18px;
         bottom: 120px;
         padding: 5px 10px;

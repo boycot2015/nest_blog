@@ -2,7 +2,7 @@
   <div class="site-header">
       <div class="site-header-content w1200 flexbox-h align-c just-b">
         <div class="logo fl"><nuxt-link to="/"><img src="@/assets/img/logo.png" alt=""></nuxt-link></div>
-        <div class="title flex1 tl fl">
+        <div class="title tl fl">
             <nuxt-link to="/" exact>首页</nuxt-link>
             <nuxt-link to="/article">列表</nuxt-link>
             <nuxt-link to="/classes">时间轴</nuxt-link>
@@ -12,6 +12,17 @@
         <div class="notice flexbox-h align-c" v-if="websiteConfig && websiteConfig.notice">
             <i class="icon-notice"></i>
             <nuxt-link class="notice-content tl flex1" :to="websiteConfig.notice.link"><div class="name" ref="textMove">{{ websiteConfig.notice.title }}</div></nuxt-link>
+        </div>
+        <div class="search-box fl">
+            <input
+            type="text"
+            @keyup="onSearch"
+            maxlength="50"
+            v-model="keyWord"
+            id="keyWord"
+            placeholder="请输入关键词..."
+            >
+            <label for="keyWord" class="icon-search icon"></label>
         </div>
         <div class="setting tr flexbox-h align-c just-s">
             <span>夜间模式</span>
@@ -57,7 +68,8 @@ export default {
                 name: 'about',
                 query: {
                 }
-            }]
+            }],
+            keyWord: ''
         }
     },
     mounted () {
@@ -86,10 +98,10 @@ export default {
             let oCon = this.$refs.textMove
             if (oCon && oCon !== null) {
                 let _move = null
-                let step = -2
+                let step = -1
                 _move = setInterval(() => {
                     this.autoRoll(oCon, step)
-                }, 80)
+                }, 60)
                 if (oCon.textContent.length <= 22) {
                     clearInterval(_move)
                 } else {
@@ -106,6 +118,12 @@ export default {
                 oCon.style.left = -oCon.offsetWidth / 2 + 'px'
             }
             oCon.style.left = oCon.offsetLeft + step + 'px'
+        },
+        onSearch (e) {
+            // console.log(e.keyCode, 'e.keyCode')
+            if (e.keyCode === 13 && this.keyWord) {
+                this.$router.push('/article?title=' + this.keyWord)
+            }
         }
     }
 }

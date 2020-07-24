@@ -112,10 +112,11 @@ export default {
             let step = 50
             let timer = setInterval(() => {
                 let scrollTop = window.scrollY
-                if (scrollTop < 100) {
-                    step = 5
-                } else if (scrollTop > 2500) {
-                    step = 500
+                // if (scrollTop < 100) {
+                //     step = 5
+                // } else
+                if (scrollTop > 1500) {
+                    step = 800
                 } else {
                     step = 50
                 }
