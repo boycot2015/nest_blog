@@ -7,25 +7,28 @@ import day from 'dayjs'
 const timeFilter = (value, fstr = 'YYYY-MM-DD HH:mm:ss') => {
     value = value.toString()
     if (value) {
-        let strArr = ['秒前', '分钟前', '小时前', '天前', '周前', '月前']
+        let strArr = ['秒前', '分钟前', '小时前', '天前', '周前', '月前', '年前']
         let now = new Date().getTime() - value
         let mins = 60 * 1000
         let hours = 60 * 60 * 1000
         let days = 60 * 60 * 24 * 1000
         let weeks = 60 * 60 * 24 * 7 * 1000
-        let months = 60 * 60 * 24 * 7 * 30 * 1000
+        let months = 60 * 60 * 24 * 30 * 1000
+        let years = 60 * 60 * 24 * 365 * 1000
         if (now <= mins) {
             return Math.ceil(now / 1000) + strArr[0]
-        } else if (now > mins && now <= hours ) {
+        } else if (now > mins && now <= hours) {
             return Math.floor(now / mins) + strArr[1]
         } else if (now > hours && now <= days) {
             return Math.floor(now / hours) + strArr[2]
         } else if (now > days && now <= weeks) {
             return Math.floor(now / days) + strArr[3]
-        }  else if (now > weeks && now <= months) {
+        } else if (now > weeks && now <= months) {
             return Math.floor(now / weeks) + strArr[4]
-        }  else if (now > months) {
+        } else if (now > months && now <= years) {
             return Math.floor(now / months) + strArr[5]
+        } else if (now > years) {
+            return Math.floor(now / years) + strArr[6]
         } else {
             if (value.length === 13) {
                 return day(Number(value)).format(fstr)
