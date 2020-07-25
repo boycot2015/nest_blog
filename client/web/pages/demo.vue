@@ -1,15 +1,21 @@
 <template>
   <div class="container">
     <div>
-      <Logo />
+        <time-canvas :width="300" :height="100" :x="30" :y="30" :radius="1"></time-canvas>
+        <Logo />
         <h1 class="title" v-loading="loading">blog</h1>
-        国庆节倒计时: <span v-countdown="new Date('2020-10-01 00:00:00').getTime() -new Date().getTime()" formatter="HH小时mm分ss秒"></span>
+        国庆节倒计时: <span v-countdown="new Date('2020-10-01 00:00:00').getTime()" formatter="HH小时mm分ss秒"></span>
     </div>
   </div>
 </template>
 
 <script>
+import { TimeCanvas } from '@/components/TimeCanvas'
 export default {
+    components: {
+        TimeCanvas
+    },
+    layout: 'error-layout',
     data () {
         return {
             loading: true

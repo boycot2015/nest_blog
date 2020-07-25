@@ -10,9 +10,13 @@
         </div>
       <div
       class="right fr"
-      v-if="!sideWhiteRoute.includes($route.path)"
+      v-show="!sideWhiteRoute.includes($route.path)"
       :class="{ 'fixed': isAsideFixed, 'active': isHeadFixed }"
       >
+      <div class="clock">
+          <h3 class="title">北京时间</h3>
+            <time-canvas :width="300" :height="100" color="#00a2ff" :x="30" :y="30"></time-canvas>
+      </div>
           <Aside
           title="标签"
           :data="tagList"
@@ -35,12 +39,13 @@ import Header from './header'
 import Footer from './footer'
 import Aside from './aside'
 import config from '@/config'
-
+import { TimeCanvas } from '@/components/TimeCanvas'
 export default {
     components: {
         Header,
         Footer,
-        Aside
+        Aside,
+        TimeCanvas
     },
     transition: {
         name: 'default',
