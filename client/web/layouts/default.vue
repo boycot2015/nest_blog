@@ -13,10 +13,17 @@
       v-show="!sideWhiteRoute.includes($route.path)"
       :class="{ 'fixed': isAsideFixed, 'active': isHeadFixed }"
       >
-      <div class="clock">
-          <h3 class="title">北京时间</h3>
-            <time-canvas :width="300" :height="100" color="#00a2ff" :x="30" :y="30"></time-canvas>
-      </div>
+            <div class="clock">
+                <h3 class="title">北京时间</h3>
+                    <time-canvas :width="300" :height="100" color="#00a2ff" :x="30" :y="30"></time-canvas>
+            </div>
+            <div class="weather">
+                <h3 class="title">天气 · {{ weather.citynm }}</h3>
+                <div class="body">
+                    <i class="icon" :class="`icon-weather-${weather.icon}`"></i>
+                    <span class="name">{{ weather.weather }} | {{ weather.temperature }}</span>
+                </div>
+            </div>
           <Aside
           title="标签"
           :data="tagList"
@@ -59,6 +66,9 @@ export default {
             isAsideFixed: false,
             scrollObj: {},
             isNight: false,
+            weather: {}, // 天气
+            weathers: [], // 一周的天气
+            weatherIcons: config.weatherIcons,
             sideWhiteRoute: config.sideWhiteRoute
         }
     },
@@ -94,6 +104,7 @@ export default {
                 this.isHeadFixed = true
             }
         })
+        this.getWeather()
     },
     methods: {
         scroll (fn) {
@@ -132,6 +143,30 @@ export default {
                 }
                 window.scrollTo(0, scrollTop - step)
             }, 10)
+        },
+        getWeather () {
+            // ?app=weather.future&weaid=1&&appkey=10003&sign=b59bc3ef6191eb9f747dd4e83c99f2a4&format=json
+            let _this = this
+            config.getUserIP((ip) => {
+                _this.$api.setting.weather({
+                    app: 'weather.future',
+                    weaid: ip || 1,
+                    appkey: 10003,
+                    sign: 'b59bc3ef6191eb9f747dd4e83c99f2a4',
+                    format: 'json'
+                }).then(res => {
+                    if (res && res.success === '1') {
+                        _this.weather = res.result[0]
+                        _this.weathers = res.result
+                        _this.weatherIcons.map(el => {
+                            if (_this.weather.weather.includes(el.name)) {
+                                _this.weather.icon = el.value
+                            }
+                        })
+                        console.log(_this.weather, 'weather')
+                    }
+                })
+            })
         }
     }
 }

@@ -1,10 +1,7 @@
 .root {
     min-height: 100vh;
     position: relative;
-    background-color: @c-f8;
-    background: url('../../img/3body.jpg') no-repeat;
-    background-size: contain;
-    background-repeat: repeat-y;
+    // background-color: @c-f8;
     &.night {
         // background-color: @c-000 !important;
         color: @white !important;
@@ -22,7 +19,7 @@
         .site-footer {
             background-color: @c-000 !important;
             color: @white !important;
-            box-shadow: none;
+            box-shadow: none !important;;
             transition: all 0.2s;
             .title,a,p,span,pre,li,ol,h3,h4 {
                 background-color: @c-000 !important;
@@ -106,6 +103,7 @@
                 z-index: 9;
                 top: 100px;
             }
+            .weather,
             .clock {
                 border: 1px solid @c-e8;
                 border-radius: 3px;
@@ -118,6 +116,16 @@
                     line-height: 50px;
                     font-weight: 400;
                     border-bottom: 1px solid @c-e8;
+                }
+            }
+            .weather {
+                .name {
+                    font-size: 20px;
+                    vertical-align: middle;
+                }
+                .icon {
+                    display: inline-block;
+                    vertical-align: middle;
                 }
             }
         }

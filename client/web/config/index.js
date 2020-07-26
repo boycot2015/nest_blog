@@ -37,6 +37,76 @@ const config = {
             value: '收到新评论时，会邮件通知管理员；评论通过后，会邮件通知被评论人'
         }
         ]
+    },
+    weatherIcons: [
+        {
+            name: '晴',
+            value: 'sunny'
+        },
+        {
+            name: '多云',
+            value: 'cloudy'
+        },
+        {
+            name: '小雨',
+            value: 'rain'
+        },
+        {
+            name: '夜间多云',
+            value: 'night'
+        },
+        {
+            name: '中雨',
+            value: 'heavy-rain'
+        },
+        {
+            name: '暴雨',
+            value: 'rainstorm'
+        },
+        {
+            name: '雪',
+            value: 'snow'
+        },
+        {
+            name: '雷阵雨',
+            value: 'thunder'
+        },
+        {
+            name: '阴',
+            value: 'overcast'
+        }
+    ],
+    getUserIP (onNewIP) { //  获取本机电脑ip
+        // compatibility for firefox and chrome
+        var MyPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection
+        var pc = new MyPeerConnection({
+            iceServers: []
+        })
+        var noop = function () {}
+        var localIPs = {}
+        var ipRegex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/g
+        var key
+        function iterateIP (ip) {
+            if (!localIPs[ip]) onNewIP(ip)
+            localIPs[ip] = true
+        }
+        // create a bogus data channel
+        pc.createDataChannel('')
+        // create offer and set local description
+        pc.createOffer().then(function (sdp) {
+            sdp.sdp.split('\n').forEach(function (line) {
+                if (!line.includes('candidate')) return
+                line.match(ipRegex).forEach(iterateIP)
+            })
+            pc.setLocalDescription(sdp, noop, noop)
+        }).catch(function (reason) {
+            // An error occurred, so handle the failure to connect
+        })
+        // sten for candidate events
+        pc.onicecandidate = function (ice) {
+            if (!ice || !ice.candidate || !ice.candidate.candidate || !ice.candidate.candidate.match(ipRegex)) return
+            ice.candidate.candidate.match(ipRegex).forEach(iterateIP)
+        }
     }
 }
 /**

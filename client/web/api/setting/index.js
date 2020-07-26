@@ -9,5 +9,8 @@ export default {
     },
     get (params) {
         return axios.get(url.get, { params })
+    },
+    weather (params) {
+        return axios.get(url.weather, { params })
     }
 }

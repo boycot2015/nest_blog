@@ -5,5 +5,6 @@ export default {
     getById: prefix + '/get/byId', // 根据id获取用户详情
     add: prefix + '/add', // 新增用户
     edit: prefix + '/edit', // 编辑用户
-    status: prefix + '/status' // 更改用户状态
+    status: prefix + '/status', // 更改用户状态
+    weather: 'http://api.k780.com' // 获取天气接口api
 }
