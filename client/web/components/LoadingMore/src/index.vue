@@ -8,11 +8,11 @@
 .loading-more-text {
     // width: 102px;
     font-size: 16px;
-    color: @c-666;
+    color: @primary;
     &::before {
         font-family: iconfont;
         content: '\e62f';
-        color: @c-666;
+        color: @primary;
         display: inline-block;
         font-size: 20px;
         margin-right: 10px;

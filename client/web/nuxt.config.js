@@ -163,7 +163,7 @@ export default {
     axios: {
         retry: { retries: 3 },
         // 开发模式下开启debug
-        debug: process.env._ENV !== 'production',
+        // debug: process.env._ENV !== 'production',
         // 设置不同环境的请求地址
         // baseURL:
         //     process.env._ENV === 'production'

@@ -21,12 +21,12 @@
                     :height="100"
                     color="#00a2ff"
                     :x="30"
-                    :y="30"
+                    :y="38"
                     ></time-canvas>
             </div>
             <div class="weather">
-                <h3 class="title">天气 · {{ weather.citynm }}</h3>
-                <div class="body">
+                <h3 class="title">天气 <i v-if="weather.weather">·</i> {{ weather.citynm }}</h3>
+                <div class="body" v-if="weather.weather">
                     <i class="icon" :class="`icon-weather-${weather.icon}`"></i>
                     <span class="name">{{ weather.weather }} | {{ weather.temperature }}</span>
                 </div>
