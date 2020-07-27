@@ -1,5 +1,8 @@
 import config from '@/config'
 export const state = () => ({
+    currentTime: new Date(),
+    weathers: [], // 一周天气列表
+    weather: '', // 当日天气
     websiteConfig: '', // 网站信息及首页数据
     asideConfig: '', // 右侧公告数据
     authUser: null, // 用户信息
@@ -68,6 +71,23 @@ export const mutations = {
             }
         }
         // console.log(state.asideConfig)
+    },
+    setWeather (state, res) {
+        state.weather = res.result[0]
+        state.weathers = res.result
+        state.weatherIcons = config.weatherIcons
+        state.weatherIcons.map(el => {
+            if (state.weather.weather.includes(el.name)) {
+                state.weather.icon = el.value
+            }
+        })
+        state.weathers.map(el => {
+            state.weatherIcons.map(val => {
+                if (el.weather.includes(val.name)) {
+                    el.icon = val.value
+                }
+            })
+        })
     }
 }
 

@@ -13,9 +13,16 @@
       v-show="!sideWhiteRoute.includes($route.path)"
       :class="{ 'fixed': isAsideFixed, 'active': isHeadFixed }"
       >
-            <div class="clock">
+            <div class="clock" v-loading:abs="loading">
                 <h3 class="title">北京时间</h3>
-                    <time-canvas :width="300" :height="100" color="#00a2ff" :x="30" :y="30"></time-canvas>
+                    <time-canvas
+                    :width="300"
+                    :time="currentTime"
+                    :height="100"
+                    color="#00a2ff"
+                    :x="30"
+                    :y="30"
+                    ></time-canvas>
             </div>
             <div class="weather">
                 <h3 class="title">天气 · {{ weather.citynm }}</h3>
@@ -23,6 +30,35 @@
                     <i class="icon" :class="`icon-weather-${weather.icon}`"></i>
                     <span class="name">{{ weather.weather }} | {{ weather.temperature }}</span>
                 </div>
+                <div
+                ref="weatherSwiper"
+                class="list weatherSwiper"
+                v-if="weathers.length"
+                >
+                    <div class="swiper-wrapper">
+                        <div
+                        class="swiper-slide list-item tc"
+                        v-for="item in weathers"
+                        :key="item.id"
+                        >
+                            <i class="icon" :class="`icon-weather-${item.icon}`"></i>
+                            <p class="week">{{ item.week }}</p>
+                            <!-- {{ new Date(item.days).getDate() }}| -->
+                            <p class="name">{{ item.temperature }}</p>
+                        </div>
+                    </div>
+                    <!-- <div class="swiper-pagination"></div> -->
+                </div>
+                <!-- <ul class="list clearfix">
+                    <li
+                    class="list-item fl clearfix tc"
+                    v-for="item in weathers"
+                    :key="item.id"
+                    >
+                        <i class="icon" :class="`icon-weather-${item.icon}`"></i>
+                        <p class="name">{{ new Date(item.days).getDate() }}|{{ item.temperature }}</p>
+                    </li>
+                </ul> -->
             </div>
           <Aside
           title="标签"
@@ -62,13 +98,42 @@ export default {
         return {
             // categoryList: [],
             // tagList: [],
+            swiperOption: {
+                // 是一个组件自有属性，如果notNextTick设置为true，组件则不会通过NextTick来实例化swiper，也就意味着你可以在第一时间获取到swiper对象，假如你需要刚加载遍使用获取swiper对象来做什么事，那么这个属性一定要是true
+                // notNextTick: true,
+                // 循环
+                loop: false,
+                // 设定初始化时slide的索引
+                initialSlide: 1,
+                // freeMode: true,
+                // 自动播放
+                // autoplay: {
+                //     delay: 3000,
+                //     stopOnLastSlide: false,
+                //     disableOnInteraction: false
+                // },
+                autoplay: false,
+                paginationClickable: true,
+                autoplayDisableOnInteraction: false,
+                // 滑动速度
+                // speed: 1000,
+                // 滑动方向
+                direction: 'horizontal',
+                // 小手掌抓取滑动
+                grabCursor: true,
+                // 分页器设置
+                pagination: '.swiper-pagination',
+                slidesPerView: 3,
+                centeredSlides: false,
+                // spaceBetween: -60,
+                observer: true, // 修改swiper自己或子元素时，自动初始化swiper
+                observeParents: true // 修改swiper的父元素时，自动初始化swiper
+            },
             isHeadFixed: false,
             isAsideFixed: false,
             scrollObj: {},
             isNight: false,
-            weather: {}, // 天气
-            weathers: [], // 一周的天气
-            weatherIcons: config.weatherIcons,
+            loading: true,
             sideWhiteRoute: config.sideWhiteRoute
         }
     },
@@ -84,6 +149,20 @@ export default {
         },
         tagTotal () {
             return this.$store.state.asideConfig.tagTotal
+        },
+        weather () {
+            // console.log(this.$store.state, 'state')
+            let weather = this.$store.state.weather
+            return weather
+        },
+        weathers () { // 一周的天气
+            return this.$store.state.weathers
+        },
+        weatherIcons () { // 天气图标库
+            return this.$store.state.weatherIcons
+        },
+        currentTime () {
+            return this.$store.state.currentTime
         }
     },
     watch: {
@@ -104,7 +183,12 @@ export default {
                 this.isHeadFixed = true
             }
         })
-        this.getWeather()
+        setTimeout(() => {
+            this.loading = false
+        }, 300)
+        this.$nextTick(() => {
+            new window.Swiper('.weatherSwiper', this.swiperOption)
+        })
     },
     methods: {
         scroll (fn) {
@@ -143,30 +227,6 @@ export default {
                 }
                 window.scrollTo(0, scrollTop - step)
             }, 10)
-        },
-        getWeather () {
-            // ?app=weather.future&weaid=1&&appkey=10003&sign=b59bc3ef6191eb9f747dd4e83c99f2a4&format=json
-            let _this = this
-            config.getUserIP((ip) => {
-                _this.$api.setting.weather({
-                    app: 'weather.future',
-                    weaid: ip || 1,
-                    appkey: 10003,
-                    sign: 'b59bc3ef6191eb9f747dd4e83c99f2a4',
-                    format: 'json'
-                }).then(res => {
-                    if (res && res.success === '1') {
-                        _this.weather = res.result[0]
-                        _this.weathers = res.result
-                        _this.weatherIcons.map(el => {
-                            if (_this.weather.weather.includes(el.name)) {
-                                _this.weather.icon = el.value
-                            }
-                        })
-                        console.log(_this.weather, 'weather')
-                    }
-                })
-            })
         }
     }
 }

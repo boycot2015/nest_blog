@@ -1,4 +1,3 @@
-
 const path = require('path')
 const merge = require('webpack-merge')
 const isDev = process.env.NODE_ENV
@@ -108,6 +107,8 @@ export default {
     ** Nuxt.js modules
     */
     modules: [
+        '@nuxtjs/axios',
+        '@nuxtjs/proxy'
     ],
     /*
     ** Build configuration
@@ -158,5 +159,32 @@ export default {
         host: '127.0.0.1'
         // host: 'pc.f.test.limofang.cn'
         // host: 'jianhua.f.test.limofang.cn'
+    },
+    axios: {
+        retry: { retries: 3 },
+        // 开发模式下开启debug
+        debug: process.env._ENV !== 'production',
+        // 设置不同环境的请求地址
+        // baseURL:
+        //     process.env._ENV === 'production'
+        //         ? 'http://www.blog.api.boycot.top'
+        //         : 'http://localhost:4000/api',
+        withCredentials: true
+    },
+    proxy: { // axios跨域处理
+        '/getIp': { // 此处并非和url一致
+            target: 'http://api.ipify.org',
+            changeOrigin: true, // 允许跨域
+            pathRewrite: {
+                '^/getIp': ''
+            }
+        },
+        '/getWeather': { // 此处并非和url一致
+            target: 'http://api.k780.com',
+            changeOrigin: true, // 允许跨域
+            pathRewrite: {
+                '^/getWeather': ''
+            }
+        }
     }
 }

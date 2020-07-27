@@ -52,11 +52,19 @@ const config = {
             value: 'rain'
         },
         {
+            name: '阵雨',
+            value: 'rain'
+        },
+        {
             name: '夜间多云',
             value: 'night'
         },
         {
             name: '中雨',
+            value: 'heavy-rain'
+        },
+        {
+            name: '阵雨转大雨',
             value: 'heavy-rain'
         },
         {
@@ -82,7 +90,7 @@ const config = {
         var pc = new MyPeerConnection({
             iceServers: []
         })
-        var noop = function () {}
+        var noop = function () { }
         var localIPs = {}
         var ipRegex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/g
         var key

@@ -42,6 +42,8 @@ export default async function ({ app, redirect, route, req, res, store }) {
     //     // console.log(route, 'route')
     //     route.path !== '/login' && redirect('/login?cz=' + route.path)
     // }
+
+    // 获取网站信息
     if (!store.state.websiteConfig) {
         // let data = await app.$api.setting.get()
         let user = store.state.authUser
@@ -52,5 +54,24 @@ export default async function ({ app, redirect, route, req, res, store }) {
     if (!store.state.asideConfig) {
         let [tagRes, categoryRes] = await Promise.all([app.$api.tag.get(), app.$api.category.get()])
         store.commit('setAsideData', [tagRes, categoryRes])
+    }
+    // 获取天气数据
+    if (!store.state.weather) {
+        let res = await app.$axios.get('/getIp')
+        if (res && res.data) {
+            res = await app.$axios.get('/getWeather', {
+                params: {
+                    app: 'weather.future',
+                    weaid: res.data || 1,
+                    appkey: 10003,
+                    sign: 'b59bc3ef6191eb9f747dd4e83c99f2a4',
+                    format: 'json'
+                }
+            })
+            res = res && res.data
+            if (res && res.success === '1') {
+                store.commit('setWeather', res)
+            }
+        }
     }
 }

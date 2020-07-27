@@ -6,6 +6,10 @@
 import digit from './digit'
 export default {
     props: {
+        time: {
+            type: Date,
+            default: new Date()
+        },
         radius: {
             type: [Number, String],
             default: 1

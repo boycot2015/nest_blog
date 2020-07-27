@@ -6,5 +6,6 @@ export default {
     add: prefix + '/add', // 新增用户
     edit: prefix + '/edit', // 编辑用户
     status: prefix + '/status', // 更改用户状态
-    weather: 'http://api.k780.com' // 获取天气接口api
+    weather: '/getWeather', // 获取天气接口api
+    getIp: '/getIp' // 获取ip接口api
 }
