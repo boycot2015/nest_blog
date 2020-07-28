@@ -1,5 +1,6 @@
 // 设置axios的全局变量
 import axios from '~/api/axios'
+import config from '@/config'
 // let whiteRoute = ['/product/search', '/cart', '/product/productDetails', '/', '/login', '/product/classification', '/homeProduct', '/homeProduct/customPages', '/register', '/test']
 export default async function ({ app, redirect, route, req, res, store }) {
     // let token = app.$cookies.get('token')
@@ -45,7 +46,6 @@ export default async function ({ app, redirect, route, req, res, store }) {
 
     // 获取网站信息
     if (!store.state.websiteConfig) {
-        // let data = await app.$api.setting.get()
         let user = store.state.authUser
         user = user !== null ? user : {}
         let [settingRes, homeRes] = await Promise.all([app.$api.setting.get({ websiteId: user.websiteId }), app.$api.home.datas()])
@@ -57,21 +57,18 @@ export default async function ({ app, redirect, route, req, res, store }) {
     }
     // 获取天气数据
     if (!store.state.weather) {
-        let res = await app.$axios.get('/getIp')
-        if (res && res.data) {
-            res = await app.$axios.get('/getWeather', {
+        let [weatherRes, weathersRes] = await Promise.all([
+            app.$axios.get('/yiketianqi', {
                 params: {
-                    app: 'weather.future',
-                    weaid: res.data || 1,
-                    appkey: 10003,
-                    sign: 'b59bc3ef6191eb9f747dd4e83c99f2a4',
-                    format: 'json'
+                    version: 'v61',
+                    ...config.weatherConfig
                 }
-            })
-            res = res && res.data
-            if (res && res.success === '1') {
-                store.commit('setWeather', res)
-            }
-        }
+            }), app.$axios.get('/yiketianqi', {
+                params: {
+                    version: 'v9',
+                    ...config.weatherConfig
+                }
+            })])
+        store.commit('setWeather', [weatherRes.data, weathersRes.data])
     }
 }

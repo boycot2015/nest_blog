@@ -163,7 +163,7 @@ export default {
     axios: {
         retry: { retries: 3 },
         // 开发模式下开启debug
-        // debug: process.env._ENV !== 'production',
+        debug: process.env._ENV !== 'production',
         // 设置不同环境的请求地址
         // baseURL:
         //     process.env._ENV === 'production'
@@ -179,11 +179,18 @@ export default {
                 '^/getIp': ''
             }
         },
-        '/getWeather': { // 此处并非和url一致
+        '/getWeather': {
             target: 'http://api.k780.com',
             changeOrigin: true, // 允许跨域
             pathRewrite: {
                 '^/getWeather': ''
+            }
+        },
+        '/yiketianqi': {
+            target: 'https://yiketianqi.com/api',
+            changeOrigin: true, // 允许跨域
+            pathRewrite: {
+                '^/yiketianqi': ''
             }
         }
     }

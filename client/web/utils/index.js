@@ -1,3 +1,5 @@
+import day from 'dayjs'
+
 /**
  * 处理评论递归数量
  */
@@ -20,4 +22,20 @@ export const getImgUrl = (str) => {
         data = capture
     })
     return data
+}
+/**
+ * 格式化时间戳（秒|毫秒）
+ * @param {timestamp} value 时间戳
+ * @param {timestamp} fstr 格式， 默认YYYY-MM-DD HH:mm:ss
+ */
+export const timeFormat = (value, fstr = 'YYYY-MM-DD HH:mm:ss') => {
+    value = value.toString()
+    if (value) {
+        if (value.length === 13) {
+            return day(Number(value)).format(fstr)
+        }
+        return day.unix(Number(value)).format(fstr)
+    } else {
+        return '-'
+    }
 }

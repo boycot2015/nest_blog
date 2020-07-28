@@ -14,21 +14,26 @@
       :class="{ 'fixed': isAsideFixed, 'active': isHeadFixed }"
       >
             <div class="clock" v-loading:abs="loading">
-                <h3 class="title">北京时间</h3>
+                    <h3 class="title">
+                        <calendar></calendar>
+                    </h3>
                     <time-canvas
                     :width="300"
                     :time="currentTime"
-                    :height="100"
+                    :height="70"
                     color="#00a2ff"
                     :x="30"
-                    :y="38"
+                    :y="18"
                     ></time-canvas>
             </div>
             <div class="weather">
-                <h3 class="title">天气 <i v-if="weather.weather">·</i> {{ weather.citynm }}</h3>
-                <div class="body" v-if="weather.weather">
+                <h3 class="title" :title="weather.city + '/' + weather.wea + '/' + weather.win">
+                    {{ weather.city }}<i v-if="weather.wea">·</i>{{ weather.wea }}/{{ weather.tem }}℃/{{ weather.win }}{{ weather.win_speed }}
+                </h3>
+                <div class="body" v-if="weather.wea">
+                    <span class="air name">{{ weather.air_level }}</span>
                     <i class="icon" :class="`icon-weather-${weather.icon}`"></i>
-                    <span class="name">{{ weather.weather }} | {{ weather.temperature }}</span>
+                    <span class="name">{{ weather.tem1 }}℃/{{ weather.tem2 }}℃</span>
                 </div>
                 <div
                 ref="weatherSwiper"
@@ -42,23 +47,12 @@
                         :key="item.id"
                         >
                             <i class="icon" :class="`icon-weather-${item.icon}`"></i>
-                            <p class="week">{{ item.week }}</p>
-                            <!-- {{ new Date(item.days).getDate() }}| -->
-                            <p class="name">{{ item.temperature }}</p>
+                            <p class="weather-text">{{ item.wea }}</p>
+                            <p class="name">{{ item.tem1 }}℃/{{ item.tem2 }}℃</p>
+                            <p class="week">{{ item.day }}</p>
                         </div>
                     </div>
-                    <!-- <div class="swiper-pagination"></div> -->
                 </div>
-                <!-- <ul class="list clearfix">
-                    <li
-                    class="list-item fl clearfix tc"
-                    v-for="item in weathers"
-                    :key="item.id"
-                    >
-                        <i class="icon" :class="`icon-weather-${item.icon}`"></i>
-                        <p class="name">{{ new Date(item.days).getDate() }}|{{ item.temperature }}</p>
-                    </li>
-                </ul> -->
             </div>
           <Aside
           title="标签"
@@ -83,12 +77,14 @@ import Footer from './footer'
 import Aside from './aside'
 import config from '@/config'
 import { TimeCanvas } from '@/components/TimeCanvas'
+import Calendar from '@/components/Calendar/calendar'
 export default {
     components: {
         Header,
         Footer,
         Aside,
-        TimeCanvas
+        TimeCanvas,
+        Calendar
     },
     transition: {
         name: 'default',
@@ -124,6 +120,7 @@ export default {
                 // 分页器设置
                 pagination: '.swiper-pagination',
                 slidesPerView: 3,
+                slidesPerGroup: 3,
                 centeredSlides: false,
                 // spaceBetween: -60,
                 observer: true, // 修改swiper自己或子元素时，自动初始化swiper

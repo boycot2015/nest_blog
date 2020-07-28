@@ -73,17 +73,18 @@ export const mutations = {
         // console.log(state.asideConfig)
     },
     setWeather (state, res) {
-        state.weather = res.result[0]
-        state.weathers = res.result
+        console.log(res[1], 'weathers')
+        state.weather = res[0]
+        state.weathers = res[1].data
         state.weatherIcons = config.weatherIcons
         state.weatherIcons.map(el => {
-            if (state.weather.weather.includes(el.name)) {
+            if (state.weather.wea.includes(el.name)) {
                 state.weather.icon = el.value
             }
         })
         state.weathers.map(el => {
             state.weatherIcons.map(val => {
-                if (el.weather.includes(val.name)) {
+                if (el.wea.includes(val.name)) {
                     el.icon = val.value
                 }
             })

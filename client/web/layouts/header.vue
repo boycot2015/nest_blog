@@ -11,7 +11,8 @@
         </div>
         <div class="notice flexbox-h align-c" v-if="websiteConfig && websiteConfig.notice">
             <i class="icon-notice"></i>
-            <nuxt-link class="notice-content tl flex1" :to="websiteConfig.notice.link"><div class="name" ref="textMove">{{ websiteConfig.notice.title }}</div></nuxt-link>
+            <a :href="websiteConfig.notice.link" target="_blank" class="notice-content tl flex1" v-if="websiteConfig.notice.link.includes('http')" :to="websiteConfig.notice.link"><div class="name" ref="textMove">{{ websiteConfig.notice.title }}</div></a>
+            <nuxt-link class="notice-content tl flex1" v-else :to="websiteConfig.notice.link"><div class="name" ref="textMove">{{ websiteConfig.notice.title }}</div></nuxt-link>
         </div>
         <div class="search-box fl">
             <input

@@ -107,22 +107,44 @@
             .weather,
             .clock {
                 border: 1px solid @c-e8;
-                border-radius: 3px;
+                // border-radius: 3px;
                 margin-bottom: 20px;
                 background-color: @white;
                 box-shadow: 0 0 10px @c-e8;
                 overflow: hidden;
+                color: @c-333;
                 .title {
                     font-size: 24px;
-                    line-height: 50px;
-                    font-weight: 400;
+                    line-height: 30px;
+                    padding: 10px 20px;
+                    font-weight: 300;
+                    width: 100%;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    overflow: hidden;
                     border-bottom: 1px solid @c-e8;
                 }
             }
             .weather {
                 .name {
                     font-size: 20px;
+                    line-height: 20px;
                     vertical-align: middle;
+                }
+                .address {
+                    margin-top: 20px;
+                    line-height: 20px;
+                }
+                .body {
+                    .name {
+                        margin:0 10px;
+                    }
+                }
+                .air {
+                    background: @primary;
+                    color:@white;
+                    border-radius: 3px;
+                    padding: 5px;
                 }
                 .icon {
                     display: inline-block;
@@ -402,6 +424,7 @@
         font-size: 18px;
         bottom: 120px;
         padding: 5px 10px;
+        z-index: 100;
         border-radius: 4px;
         cursor: pointer;
         i {

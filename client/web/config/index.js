@@ -38,6 +38,10 @@ const config = {
         }
         ]
     },
+    weatherConfig: {
+        appid: '47499825',
+        appsecret: 'liyLN9Cq'
+    },
     weatherIcons: [
         {
             name: '晴',
