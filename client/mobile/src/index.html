@@ -46,4 +46,47 @@
         <div id="app"></div>
         <!-- built files will be auto injected 111111111111 -->
     </body>
+    <script>
+        /*rem单位设置 100/750*/
+        !function (window) {
+            var docWidth = 750;
+            var doc = window.document,
+                docEl = doc.documentElement,
+                resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize';
+            var recalc = (function refreshRem () {
+                var clientWidth = docEl.getBoundingClientRect().width;
+                /* 8.55：小于320px不再缩小，11.2：大于420px不再放大 */
+                docEl.style.fontSize = Math.max(Math.min(20 * (clientWidth / docWidth), 11.2), 8.55) * 5 + 'px';
+                // docEl.style.fontSize = 100 * (clientWidth / 750) + 'px'
+
+                /**
+                 * 兼容华为三星移动端rem
+                 * 这里再取出当前html的font-size，和你想附的值进行比较，
+                 * 这里为什么不直接用size< 原因是正常机型的size也不一定等于你想附的值，尝试了很多机型，除了问题机型外，一般差距很小，另一半完全相等;
+                 *  为什么不直接*1.25 也不解释了 最终比例不一定是1.25
+                 * 如果当前html的font-size 的1.2倍仍然小于 之前想设置的值，就说明是问题机型，给之前想附的值乘1.25倍，这样他会被系统再次除1.25得到的才是我们想附的值
+                 */
+                if (window.getComputedStyle(document.getElementsByTagName("html")[0]).fontSize) {
+                    var size = window.getComputedStyle(document.getElementsByTagName("html")[0]).fontSize.split('p')[0];
+                    if (size * 1.2 < 100 * (clientWidth / 750)) {　
+                        docEl.style.fontSize = 125 * (clientWidth / 750) + 'px';
+                    }
+                }
+                return refreshRem;
+            })();
+            /* 添加倍屏标识，安卓为1 */
+            docEl.setAttribute('data-dpr', window.navigator.appVersion.match(/iphone/gi) ? window.devicePixelRatio : 1);
+            if (/iP(hone|od|ad)/.test(window.navigator.userAgent)) {
+                /* 添加IOS标识 */
+                doc.documentElement.classList.add('ios');
+                /* IOS8以上给html添加hairline样式，以便特殊处理 */
+                if (parseInt(window.navigator.appVersion.match(/OS (\d+)_(\d+)_?(\d+)?/)[1], 10) >= 8)
+                    doc.documentElement.classList.add('hairline');
+            }
+
+            if (!doc.addEventListener) return;
+            window.addEventListener(resizeEvt, recalc, false);
+            doc.addEventListener('DOMContentLoaded', recalc, false);
+        }(window);
+    </script>
 </html>

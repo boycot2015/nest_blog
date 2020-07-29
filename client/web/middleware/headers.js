@@ -3,6 +3,9 @@ import axios from '~/api/axios'
 import config from '@/config'
 // let whiteRoute = ['/product/search', '/cart', '/product/productDetails', '/', '/login', '/product/classification', '/homeProduct', '/homeProduct/customPages', '/register', '/test']
 export default async function ({ app, redirect, route, req, res, store }) {
+    if (req && axios.defaults) { // 设置域名访问
+        axios.defaults.headers.origin = req.host || 'www.boycot.top'
+    }
     // let token = app.$cookies.get('token')
     // if (!app.$cookies.get('userinfo')) {
     //     app.$cookies.remove('userinfo')
@@ -12,9 +15,6 @@ export default async function ({ app, redirect, route, req, res, store }) {
     //     axios.defaults.headers.Refresh = token.split('.')[2]
     // }
     // let visitors = true
-    // if (req && axios.defaults) { // 设置域名访问
-    //     axios.defaults.headers.origin = req.host || 'pc.f.test.limofang.cn'
-    // }
     // 处理需要登录的页面
     // if (store.state.visitors === '') { // 获取网站信息
     //     let data = await app.$api.user.getDetailInfoBooleans()
