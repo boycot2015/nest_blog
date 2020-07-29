@@ -1,6 +1,19 @@
 const path = require('path')
 const merge = require('webpack-merge')
 const isDev = process.env.NODE_ENV
+function getIPAddress () {
+    const interfaces = require('os').networkInterfaces()
+    for (let devName in interfaces) {
+        const iface = interfaces[devName]
+        for (let i = 0; i < iface.length; i++) {
+            const alias = iface[i]
+            if (alias.family === 'IPv4' && alias.address !== '127.0.0.1' && !alias.internal) {
+                return alias.address
+            }
+        }
+    }
+}
+const ipAddress = getIPAddress()
 export default {
     /*
     ** Nuxt rendering mode
@@ -155,8 +168,8 @@ export default {
         // })
     },
     server: {
-        port: 8080,
-        host: '127.0.0.1'
+        port: 8080
+        // host: '127.0.0.1'
         // host: 'pc.f.test.limofang.cn'
         // host: 'jianhua.f.test.limofang.cn'
     },
@@ -194,5 +207,9 @@ export default {
                 '^/yiketianqi': ''
             }
         }
+    },
+    env: {
+        NODE_ENV: process.env.NODE_ENV,
+        IP: ipAddress
     }
 }
