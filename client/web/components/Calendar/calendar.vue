@@ -7,7 +7,7 @@
 <script>
 import { timeFormat } from '@/utils'
 export default {
-    name: 'gaiaheader',
+    name: 'Calendar',
     created () {
         this.newtime()
         this.weeks()
@@ -24,7 +24,7 @@ export default {
         newtime () {
             // let date = new Date(DateTool.formatTimeToStr(new Date(), "yyyy-MM-dd"));
             // date = new Date(date.getTime(date) - 8 * 60 * 60000);
-            let date = timeFormat(new Date().getTime(), 'MM月DD日')
+            let date = timeFormat(new Date().getTime(), 'YYYY年MM月DD日')
             this.datetime = date
         },
         weeks () {

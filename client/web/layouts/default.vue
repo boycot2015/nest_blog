@@ -27,8 +27,8 @@
                     ></time-canvas>
             </div>
             <div class="weather">
-                <h3 class="title" :title="weather.city + '/' + weather.wea + '/' + weather.win">
-                    {{ weather.city }}<i v-if="weather.wea">·</i>{{ weather.wea }}/{{ weather.tem }}℃/{{ weather.win }}{{ weather.win_speed }}
+                <h3 class="title" :title="weather.city + '/' + weather.wea + '/' + weather.win + weather.win_speed">
+                    {{ weather.city }}<i class="sperate" v-if="weather.wea">·</i>{{ weather.wea }}/{{ weather.tem }}℃/{{ weather.win }}{{ weather.win_speed }}
                 </h3>
                 <div class="body" v-if="weather.wea">
                     <span class="air name">{{ weather.air_level }}</span>
