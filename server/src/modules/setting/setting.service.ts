@@ -11,7 +11,7 @@ export class SettingService {
     private readonly settingRepository: Repository<Setting>,
     private readonly usersService: UsersService) { }
     async get(data) {
-        console.log(data.websiteId, 'websiteId')
+        // console.log(data.websiteId, 'websiteId')
         if (data.websiteId) {
             return await this.settingRepository.findOne(data.websiteId)
         } else {
@@ -77,6 +77,7 @@ export class SettingService {
     getIp (params) {
         let userAgent = params.headers['user-agent'];
         userAgent = parseUserAgent(userAgent)
+        console.log({userAgent, ...getClientIP(params) }, 'clientIP')
         return Promise.resolve({
             ip: getClientIP(params),
             userAgent

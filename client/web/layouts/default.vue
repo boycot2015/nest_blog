@@ -131,7 +131,8 @@ export default {
             scrollObj: {},
             isNight: false,
             loading: true,
-            sideWhiteRoute: config.sideWhiteRoute
+            sideWhiteRoute: config.sideWhiteRoute,
+            userAgent: '' // 浏览器信息
         }
     },
     computed: {
@@ -186,6 +187,7 @@ export default {
         this.$nextTick(() => {
             new window.Swiper('.weatherSwiper', this.swiperOption)
         })
+        this.toggleMobile() // 根据浏览器器窗口切换服务
     },
     methods: {
         scroll (fn) {
@@ -224,6 +226,15 @@ export default {
                 }
                 window.scrollTo(0, scrollTop - step)
             }, 10)
+        },
+        toggleMobile () {
+            this.userAgent = navigator.userAgent
+            window.addEventListener('resize', () => {
+                if (this.userAgent !== navigator.userAgent) {
+                    window.location.reload(true)
+                    this.userAgent = navigator.userAgent
+                }
+            })
         }
     }
 }
