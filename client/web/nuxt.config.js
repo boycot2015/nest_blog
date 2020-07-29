@@ -172,14 +172,14 @@ export default {
         withCredentials: true
     },
     proxy: { // axios跨域处理
-        '/getIp': { // 此处并非和url一致
-            // target: 'http://api.ipify.org',
-            target: 'http://pv.sohu.com/cityjson',
-            changeOrigin: true, // 允许跨域
-            pathRewrite: {
-                '^/getIp': ''
-            }
-        },
+        // '/getIp': { // 此处并非和url一致
+        //     // target: 'http://api.ipify.org',
+        //     target: 'http://pv.sohu.com/cityjson',
+        //     changeOrigin: true, // 允许跨域
+        //     pathRewrite: {
+        //         '^/getIp': ''
+        //     }
+        // },
         '/getWeather': {
             target: 'http://api.k780.com',
             changeOrigin: true, // 允许跨域

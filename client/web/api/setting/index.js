@@ -21,9 +21,9 @@ export default {
     },
     getIpByIpify () {
         return axios.get(url.getIp, {
-            params: {
-                format: 'json'
-            }
+            // params: {
+            //     format: 'json'
+            // }
         })
     },
     yiketianqi (params) {

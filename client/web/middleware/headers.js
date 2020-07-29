@@ -57,20 +57,20 @@ export default async function ({ app, redirect, route, req, res, store }) {
     }
     // 获取天气数据
     if (!store.state.weather) {
-        let ipRes = await app.$axios.get('/getIp', {
+        let ipRes = await app.$api.setting.getIpByIpify('/getIp', {
             params: {
                 ie: 'utf-8'
                 // format: 'json'
             },
             responseType: 'json'
         })
-        ipRes = ipRes && JSON.parse(ipRes.data.split('=')[1].split(';')[0])
+        // ipRes = ipRes && JSON.parse(ipRes.data.split('=')[1].split(';')[0])
         console.log(ipRes, 'ipRes')
         let [weatherRes, weathersRes] = await Promise.all([
             app.$axios.get('/yiketianqi', {
                 params: {
                     version: 'v61',
-                    ip: ipRes.cip || '',
+                    ip: ipRes.ip || '',
                     cityid: ipRes.cid || '',
                     ...config.weatherConfig
                 }

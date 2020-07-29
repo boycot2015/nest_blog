@@ -52,12 +52,16 @@ const config = {
             value: 'cloudy'
         },
         {
+            name: '雨',
+            value: 'rain'
+        },
+        {
             name: '小雨',
             value: 'rain'
         },
         {
             name: '阵雨',
-            value: 'rain'
+            value: 'cloudy-rain'
         },
         {
             name: '夜间多云',
@@ -65,7 +69,7 @@ const config = {
         },
         {
             name: '中雨',
-            value: 'heavy-rain'
+            value: 'middle-rain'
         },
         {
             name: '阵雨转大雨',
@@ -86,6 +90,14 @@ const config = {
         {
             name: '阴',
             value: 'overcast'
+        },
+        {
+            name: '多云转阴',
+            value: 'cloudy'
+        },
+        {
+            name: '小雨转阴',
+            value: 'rain'
         }
     ],
     getUserIP (onNewIP) { //  获取本机电脑ip

@@ -76,6 +76,12 @@
             "style" : {
 				"navigationBarTitleText": "个人信息"
 			}
+        },{
+            "name": "demo",
+            "path" : "pages/demo",
+            "style" : {
+				"navigationBarTitleText": "demo"
+			}
         }
     ],
 	"globalStyle": {

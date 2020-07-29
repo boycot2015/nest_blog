@@ -3,7 +3,7 @@ import { Injectable, HttpException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Setting } from "../../entities/setting.entity";
-import { aesDecrypt, responseStatus } from "../../utils";
+import { parseUserAgent, responseStatus, getClientIP } from "../../utils";
 import { UsersService } from '../users/users.service';
 @Injectable()
 export class SettingService {
@@ -73,5 +73,13 @@ export class SettingService {
             return responseStatus.success.message
         }
         throw new HttpException(`参数为空！`, 400);
+    }
+    getIp (params) {
+        let userAgent = params.headers['user-agent'];
+        userAgent = parseUserAgent(userAgent)
+        return Promise.resolve({
+            ip: getClientIP(params),
+            userAgent
+        })
     }
 }

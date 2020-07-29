@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, Request, UseGuards, RequestMapping } from '@nestjs/common';
 import { SettingService } from './setting.service';
 import { ApiTags, ApiQuery, ApiProperty, ApiOperation } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
@@ -89,5 +89,13 @@ export class SettingController {
     @ApiOperation({ summary: '删除设置信息' })
     delete(@Query() id: number) {
         return this.settingService.delete(id)
+    }
+    // @Post('/getIp')
+    // @RequestMapping({path: '/getIp', method: 5})
+    @Get('/getIp')
+    // @UseGuards(AuthGuard())
+    @ApiOperation({ summary: '获取用户ip信息' })
+    getIp(@Request() req, @Query() data) {
+        return this.settingService.getIp({ ...data, ...req })
     }
 }
