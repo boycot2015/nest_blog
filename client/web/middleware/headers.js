@@ -43,45 +43,52 @@ export default async function ({ app, redirect, route, req, res, store }) {
     //     // console.log(route, 'route')
     //     route.path !== '/login' && redirect('/login?cz=' + route.path)
     // }
+    if (process.server) {
+        // 获取网站信息
+        if (!store.state.websiteConfig) {
+            let user = store.state.authUser
+            user = user !== null ? user : {}
+            let [settingRes, homeRes] = await Promise.all([app.$api.setting.get({ websiteId: user.websiteId }), app.$api.home.datas()])
+            store.commit('setCommonData', [settingRes, homeRes])
+        }
+        if (!store.state.asideConfig) {
+            let [tagRes, categoryRes] = await Promise.all([app.$api.tag.get(), app.$api.category.get()])
+            store.commit('setAsideData', [tagRes, categoryRes])
+        }
+        // 获取天气数据
+        if (!store.state.weather) {
+            // let ipRes = await app.$api.setting.getIpByIpify('/getIp', {
+            //     params: {
+            //         ie: 'utf-8'
+            //         // format: 'json'
+            //     },
+            //     responseType: 'json'
+            // })
+            // ipRes = ipRes && JSON.parse(ipRes.data.split('=')[1].split(';')[0])
 
-    // 获取网站信息
-    if (!store.state.websiteConfig) {
-        let user = store.state.authUser
-        user = user !== null ? user : {}
-        let [settingRes, homeRes] = await Promise.all([app.$api.setting.get({ websiteId: user.websiteId }), app.$api.home.datas()])
-        store.commit('setCommonData', [settingRes, homeRes])
-    }
-    if (!store.state.asideConfig) {
-        let [tagRes, categoryRes] = await Promise.all([app.$api.tag.get(), app.$api.category.get()])
-        store.commit('setAsideData', [tagRes, categoryRes])
-    }
-    // 获取天气数据
-    if (!store.state.weather) {
-        let ipRes = await app.$api.setting.getIpByIpify('/getIp', {
-            params: {
-                ie: 'utf-8'
-                // format: 'json'
-            },
-            responseType: 'json'
-        })
-        ipRes = ipRes && JSON.parse(ipRes.data.split('=')[1].split(';')[0])
-        console.log(ipRes, process.browser, 'ipRes')
-        let [weatherRes, weathersRes] = await Promise.all([
-            app.$axios.get('/yiketianqi', {
-                params: {
-                    version: 'v61',
-                    ip: ipRes.ip || '',
-                    cityid: ipRes.cid || '',
-                    ...config.weatherConfig
-                }
-            }), app.$axios.get('/yiketianqi', {
-                params: {
-                    version: 'v9',
-                    ip: ipRes.cip || '',
-                    cityid: ipRes.cid || '',
-                    ...config.weatherConfig
-                }
-            })])
-        store.commit('setWeather', [weatherRes.data, weathersRes.data])
+            // x-real-ip 通过nginx配置添加
+            const ip =
+                req.headers['bigo-x-client-source-ip'] ||
+                req.headers['x-real-ip'] ||
+                req.connection.remoteAddress
+
+            console.log(process.env.IP, ip, 'process.env.IP, ipRes')
+            // 对ip做业务处理
+            let [weatherRes, weathersRes] = await Promise.all([
+                app.$axios.get('/yiketianqi', {
+                    params: {
+                        version: 'v61',
+                        ip: ip || process.env.IP || '',
+                        ...config.weatherConfig
+                    }
+                }), app.$axios.get('/yiketianqi', {
+                    params: {
+                        version: 'v9',
+                        ip: ip || process.env.IP || '',
+                        ...config.weatherConfig
+                    }
+                })])
+            store.commit('setWeather', [weatherRes.data, weathersRes.data])
+        }
     }
 }
