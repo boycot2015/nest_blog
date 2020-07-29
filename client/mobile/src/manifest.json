@@ -58,14 +58,17 @@
     /* 快应用特有相关 */
     "mp-weixin" : {
         /* 微信小程序特有相关 */
-        "appid" : "",
+        "appid" : "wx3160abd5f598c733",
         "setting" : {
-            "urlCheck" : false
+            "urlCheck" : false,
+            "postcss" : false,
+            "minified" : false
         },
         "usingComponents" : true,
         "uniStatistics" : {
             "enable" : true
-        }
+        },
+        "permission" : {}
     },
     "mp-alipay" : {
         "usingComponents" : true,

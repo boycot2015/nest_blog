@@ -6,7 +6,7 @@ Vue.use(Vuex)
 const state = {
 	login: false,
 	token: '',
-	userInfo: localStorage.getItem('userinfo') && JSON.parse(localStorage.getItem('userinfo')) || {}
+	userInfo: uni.getStorage({ key: 'userinfo' }) && uni.getStorage({ key: 'userinfo' }) || {}
 }
 const mutations = {
 	login(state, provider) {
@@ -16,10 +16,14 @@ const mutations = {
 				state.token = provider
 				Cookie.set('token', provider)
 				provider = JSON.parse(Base64.decode(provider.split('.')[1]))
-				localStorage.setItem('userinfo', JSON.stringify(provider))
+				uni.setStorage({
+					key: 'userinfo',
+					data: JSON.stringify(provider)
+				})
 				state.userInfo = provider
 				console.log(provider)
 				resolve(provider)
+				
 			} else {
 				reject()
 			}
@@ -30,7 +34,7 @@ const mutations = {
 		state.token = ''
 		state.userInfo = {}
 		Cookie.remove('token')
-		localStorage.removeItem('userinfo')
+		uni.removeStorage({ key: 'userinfo' })
 	}
 }
 export default new Vuex.Store({

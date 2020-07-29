@@ -6,7 +6,7 @@
 			"style": {
 				"navigationBarTitleText": "博客首页",
 				"enablePullDownRefresh": true,
-				"titleNView": false,
+				// "titleNView": false,
 				"app-plus": {
 					"pullToRefresh": {
 						"support": true,
@@ -30,7 +30,6 @@
             "path" : "pages/userCenter/userCenter",
             "style" : {
 				"navigationBarTitleText": "个人中心",
-				"titleNView": false,
 				"enablePullDownRefresh": true
 			}
 		}
@@ -38,7 +37,6 @@
             "path" : "pages/articles/index",
             "style" : {
 				"navigationBarTitleText": "博客列表",
-				"titleNView": false,
 				"enablePullDownRefresh": true
 			}
 		}
@@ -59,7 +57,6 @@
             "name": "webview",
             "path" : "pages/webview",
             "style" : {
-				"titleNView": false,
 				"navigationBarTitleText": "web-view"
 			}
         }
@@ -67,7 +64,6 @@
             "name": "login",
             "path" : "pages/login/login",
             "style" : {
-				"titleNView": false
 			}
         }
         ,{

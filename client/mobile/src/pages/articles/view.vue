@@ -5,9 +5,13 @@
 		</view>
 		<view class="main">
 			<view class="public-time pdlr30">
-				<text>发布时间：{{new Date(viewData.createTime).getTime()|timeFilter}}</text>
+				<!-- {{new Date(viewData.createTime).getTime() | timeFilter}} -->
+				<text>发布时间：{{viewData.createTime}}</text>
 			</view>
-			<view class="desc" v-if="viewData.content" v-html="$options.filters.formatRichText(viewData.content)"></view>
+			<view class="desc" v-if="viewData.content">
+				<rich-text class="desc" v-if="viewData.content" :nodes="viewData.content"></rich-text>
+			</view>
+			
 			<view class="comment">
 				<view class="comment-title u-text-left">评论</view>
 				<view class="pdlr30">
@@ -271,6 +275,8 @@
 				let res = await this.$api.article.getById({ id: query.id })
 				if (res && res.success) {
 					this.viewData = res.data
+					this.viewData.content = this.formatRichText(res.data.content)
+					this.viewData.createTime = this.timeFilter(new Date(res.data.createTime).getTime())
 					this.commentForm.articleId = res.data.id
 					let page = Math.ceil(emoji.length/21)
 					for (let i = 0; i < page - 25; i++) {
@@ -281,7 +287,7 @@
 							):''
 						}
 					}
-                    document.title = this.viewData.title || '详情'
+                    // document.title = this.viewData.title || '详情'
 					uni.hideLoading()
 					this.showLoading = false
 					setTimeout(function() {
@@ -380,6 +386,61 @@
 				} else {
 					this.isScroll = false
 				}
+			},
+			formatRichText (html) { //控制小程序中图片大小
+				let newContent= html.replace(/<img[^>]*>/gi,function(match,capture){
+					match = match.replace(/style="[^"]+"/gi, '').replace(/style='[^']+'/gi, '');
+					match = match.replace(/width="[^"]+"/gi, '').replace(/width='[^']+'/gi, '');
+					match = match.replace(/height="[^"]+"/gi, '').replace(/height='[^']+'/gi, '');
+					return match;
+				});
+				newContent = newContent.replace(/style="[^"]+"/gi,function(match,capture){
+					match = match.replace(/width:[^;]+;/gi, 'max-width:100%;').replace(/width:[^;]+;/gi, 'max-width:100%;');
+					return match;
+				});
+				// newContent = newContent.replace(/<br[^>]*\/>/gi, '');
+				newContent = newContent.replace(/<p><\/p>/gi,'');
+				newContent = newContent.replace(/\<p style=/gi,'<p style="text-align:justify;text-indent:2em;margin: 8px 0;"');
+				newContent = newContent.replace(/\<span style=/gi,'<p style="text-align:justify;margin: 8px 0; padding: 0 15px; font-size: 16px; background: #e8e8e8;border-radius: 4px;"');
+				// code换行
+				newContent = newContent.replace(/\<pre/gi, '<pre style="white-space: pre-wrap;word-wrap: break-word;background: #e8e8e8;padding: 10px;margin-top: 10px;border-radius: 5px;"');
+				newContent = newContent.replace(/\<img/gi, '<img referrer="never" style="width:100%;height:auto;display:inline-block;margin:5rpx auto;vertical-align: middle;"');
+				return newContent;
+			},
+			timeFilter (value, fstr = 'YYYY-MM-DD HH:mm:ss') {
+			    value = value.toString()
+			    if (value) {
+			        let strArr = ['秒前', '分钟前', '小时前', '天前', '周前', '月前', '年前']
+			        let now = new Date().getTime() - value
+			        let mins = 60 * 1000
+			        let hours = 60 * 60 * 1000
+			        let days = 60 * 60 * 24 * 1000
+			        let weeks = 60 * 60 * 24 * 7 * 1000
+			        let months = 60 * 60 * 24 * 30 * 1000
+			        let years = 60 * 60 * 24 * 365 * 1000
+			        if (now <= mins) {
+			            return Math.ceil(now / 1000) + strArr[0]
+			        } else if (now > mins && now <= hours) {
+			            return Math.floor(now / mins) + strArr[1]
+			        } else if (now > hours && now <= days) {
+			            return Math.floor(now / hours) + strArr[2]
+			        } else if (now > days && now <= weeks) {
+			            return Math.floor(now / days) + strArr[3]
+			        } else if (now > weeks && now <= months) {
+			            return Math.floor(now / weeks) + strArr[4]
+			        } else if (now > months && now <= years) {
+			            return Math.floor(now / months) + strArr[5]
+			        } else if (now > years) {
+			            return Math.floor(now / years) + strArr[6]
+			        } else {
+			            if (value.length === 13) {
+			                return day(Number(value)).format(fstr)
+			            }
+			            return day.unix(Number(value)).format(fstr)
+			        }
+			    } else {
+			        return '-'
+			    }
 			}
 		}
 	}

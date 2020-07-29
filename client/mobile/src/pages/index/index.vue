@@ -24,7 +24,7 @@
 				@click="onNoticeClick(homeData.notice)"
 				class="notice-content u-flex-3"
 			>
-				<text ref="textMove" class="text" v-html="homeData.notice.title"></text>
+				<rich-text ref="textMove" class="text textMove" :style="{ left: positionStyle.left }" :nodes="homeData.notice.title"></rich-text>
 			</view>
 			<uni-icons type="closeempty" @tap="showNotice = false" color="#666" size="20"></uni-icons>
 		</view>
@@ -121,7 +121,10 @@
 				interval: 2000,
 				duration: 500,
 				showNotice: true,
-				loading: true
+				loading: true,
+				positionStyle:{
+					left: 0
+				}
             }
         },
         async onLoad() {
@@ -193,7 +196,9 @@
 				// this.$router.push('/pages/webview?url='+ item.link)
 			},
 			textMove () {
-				let oCon = this.$refs.textMove.$el
+				// let oCon = this.$refs.textMove.$el
+				var query = wx.createSelectorQuery();
+				let oCon = query.select('.textMove')
 				if(oCon !== null) {
 				    let _move = null
 					let seep = -2
@@ -201,22 +206,25 @@
 						this.autoRoll(oCon, seep)
 					}, 80)
 				    // clearInterval(_move)
-				    if (oCon.innerText.length <= 22) {
+				    if (oCon.innerText && oCon.innerText.length <= 22) {
 				        clearInterval(_move)
 				    } else {
-				        oCon.innerText += oCon.innerText
+				        // oCon.innerText += oCon.innerText
 						this.autoRoll(oCon, seep)
 				    }
 				}
 			},
 			autoRoll(oCon, seep) {
 			    if (oCon.offsetLeft < -oCon.offsetWidth / 2) {
-			        oCon.style.left = 0
+			        // oCon.style.left = 0
+					this.positionStyle.left = 0
 			    }
 			    if (oCon.offsetLeft > 0) {
-			        oCon.style.left = -oCon.offsetWidth / 2 + 'px'
+			        // oCon.style.left = -oCon.offsetWidth / 2 + 'px'
+					this.positionStyle.left = -oCon.offsetWidth / 2 + 'px'
 			    }
-			    oCon.style.left = oCon.offsetLeft + seep + 'px'
+			    // oCon.style.left = oCon.offsetLeft + seep + 'px'
+				this.positionStyle.left = oCon.offsetLeft + seep + 'px'
 			},
 			onNoticeClick (item) {
 				if (item.link) {
