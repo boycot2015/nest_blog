@@ -163,7 +163,7 @@ export default {
     axios: {
         retry: { retries: 3 },
         // 开发模式下开启debug
-        debug: process.env._ENV !== 'production',
+        // debug: process.env._ENV !== 'production',
         // 设置不同环境的请求地址
         // baseURL:
         //     process.env._ENV === 'production'
@@ -173,7 +173,8 @@ export default {
     },
     proxy: { // axios跨域处理
         '/getIp': { // 此处并非和url一致
-            target: 'http://api.ipify.org',
+            // target: 'http://api.ipify.org',
+            target: 'http://pv.sohu.com/cityjson',
             changeOrigin: true, // 允许跨域
             pathRewrite: {
                 '^/getIp': ''

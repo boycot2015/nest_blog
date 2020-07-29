@@ -59,19 +59,26 @@ export default async function ({ app, redirect, route, req, res, store }) {
     if (!store.state.weather) {
         let ipRes = await app.$axios.get('/getIp', {
             params: {
-                format: 'json'
-            }
+                ie: 'utf-8'
+                // format: 'json'
+            },
+            responseType: 'json'
         })
+        ipRes = ipRes && JSON.parse(ipRes.data.split('=')[1].split(';')[0])
+        console.log(ipRes, 'ipRes')
         let [weatherRes, weathersRes] = await Promise.all([
             app.$axios.get('/yiketianqi', {
                 params: {
                     version: 'v61',
-                    ip: ipRes.ip || '',
+                    ip: ipRes.cip || '',
+                    cityid: ipRes.cid || '',
                     ...config.weatherConfig
                 }
             }), app.$axios.get('/yiketianqi', {
                 params: {
                     version: 'v9',
+                    ip: ipRes.cip || '',
+                    cityid: ipRes.cid || '',
                     ...config.weatherConfig
                 }
             })])
