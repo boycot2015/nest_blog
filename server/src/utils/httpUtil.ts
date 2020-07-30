@@ -1,6 +1,6 @@
 const http = require('http'),
     https = require('https'),
-    Q = require('Q');
+    Q = require('q');
 
 export const restUtil = {
     /**
