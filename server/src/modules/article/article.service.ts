@@ -7,6 +7,9 @@ import * as dayjs from 'dayjs';
 import { TagService } from '../tag/tag.service';
 import { AuthService } from '../auth/auth.service';
 import { CategoryService } from '../category/category.service';
+const util = require('util');
+import { restUtil } from '../../utils/httpUtil';
+import { WebConfig } from '../../../config';
 
 @Injectable()
 export class ArticleService {
@@ -65,7 +68,99 @@ export class ArticleService {
         // 获取结果及(非分页的)查询结果总数
         // 或使用 .getMany() 不会返回总数
 
-        return await queryBy.getManyAndCount()
+        /**
+         * 合并第三方新闻接口与博客接口一同返回
+         * 对接第三方sdk api
+         */
+        let url = util.format(WebConfig.newsOption().hotWordUrl, WebConfig.newsOption().key);
+        let newsList = []
+        if (!data.title) {
+            /**
+             * {
+                "uniquekey": "d3c639c65a449059b809f20fee0c7621",
+                "title": "历史上和济宁关系最密切的三个县，向来三县并称如一家",
+                "date": "2020-07-30 17:11",
+                "category": "头条",
+                "author_name": "七零后看世界",
+                "url": "https://mini.eastday.com/mobile/200730171102031.html",
+                "thumbnail_pic_s": "https://08imgmini.eastday.com/mobile/20200730/20200730171102_e406736af8dba359a6f596586bfe0e60_1_mwpm_03200403.jpg",
+                "thumbnail_pic_s02": null,
+                "thumbnail_pic_s03": null
+            }
+             */
+            url = util.format(WebConfig.newsOption().listUrl, WebConfig.newsOption().listKey);
+            let listRes = { result: null }
+            listRes = await restUtil.get({
+                hostname : WebConfig.newsOption().hostname,
+                path : url
+            });
+            // console.log(listRes, 'keyWordRes')
+            if (listRes.result !== null) {
+                newsList = listRes.result.data
+                newsList.map(el => {
+                     el.source = el.author_name
+                     el.content = el.title + '·' + el.author_name + '·' + el.category
+                     el.createTime = el.date
+                     el.comment = []
+                     el.id = el.uniquekey
+                     el.img = el.thumbnail_pic_s
+                     el.category = {
+                        createTime: el.date,
+                        id: el.uniquekey,
+                        label: null,
+                        parentId: null,
+                        status: 1001,
+                        updateTime: el.date,
+                        value: el.category
+                    }
+                })
+            }
+        }
+        url = util.format(WebConfig.newsOption().queryUrl, WebConfig.newsOption().key, data.title);
+        url = encodeURI(url);
+        let newsRes = { result: null }
+        newsRes = await restUtil.get({
+            hostname :WebConfig.newsOption().hostname,
+            path : url
+        });
+        if (newsRes && newsRes.result !== null) {
+           newsList = newsRes.result
+           newsList.map(el => {
+                el.time = el.pdate
+                el.source = el.src
+                el.createTime = el.pdate_src
+                el.comment = []
+                el.category = {
+                    createTime: el.pdate_src,
+                    id: 0,
+                    label: null,
+                    parentId: null,
+                    status: 1001,
+                    updateTime: el.pdate_src,
+                    value: el.category
+                }
+           })
+        }
+        let res = await queryBy.getManyAndCount()
+        if (current > 1) {
+            return Promise.resolve(res)
+        }
+        res[0] = [...newsList, ...res[0]]
+        // console.log(res[0], 'newsRes')
+        // return await queryBy.getManyAndCount()
+        return Promise.resolve(res)
+    }
+    /**
+     * 获取新闻关键词
+     */
+    async getKeyWord () {
+        let url = util.format(WebConfig.newsOption().hotWordUrl, WebConfig.newsOption().key);
+        let keyWordRes = await restUtil.get({
+            hostname : WebConfig.newsOption().hostname,
+            path : url
+        });
+        // console.log(keyWordRes, url, 'keyWordRes')
+        return Promise.resolve([...keyWordRes.result])
     }
     /**
      * 获取所以文章
@@ -80,8 +175,41 @@ export class ArticleService {
             queryBy = queryBy
             .orderBy('article.createTime', order || 'DESC')
         }
+        let newsList = []
+        let url = util.format(WebConfig.newsOption().listUrl, WebConfig.newsOption().listKey);
+        let listRes = { result: null }
+        listRes = await restUtil.get({
+            hostname : WebConfig.newsOption().hostname,
+            path : url
+        });
+        if (listRes.result !== null) {
+            newsList = listRes.result.data
+            newsList.map(el => {
+                    el.source = el.author_name
+                    el.content = el.title + '·' + el.author_name + '·' + el.category
+                    el.createTime = el.date
+                    el.comment = []
+                    el.id = el.uniquekey
+                    el.img = el.thumbnail_pic_s
+                    el.category = {
+                    createTime: el.date,
+                    id: el.uniquekey,
+                    label: null,
+                    parentId: null,
+                    status: 1001,
+                    updateTime: el.date,
+                    value: el.category
+                }
+            })
+        }
         // 获取结果及(非分页的)查询结果总数
         // 或使用 .getMany() 不会返回总数
+        newsList = newsList.slice(0,2)
+        // let res = await queryBy.getManyAndCount()
+        // res[0] = res[0].slice(0, 2)
+        // res[0] = [...newsList, ...res[0]]
+        // console.log(newsList, 'keyWordRes')
+        // return Promise.resolve(res)
         return await queryBy.getManyAndCount()
     }
     /**

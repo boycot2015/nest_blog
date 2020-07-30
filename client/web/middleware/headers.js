@@ -90,5 +90,13 @@ export default async function ({ app, redirect, route, req, res, store }) {
                 })])
             store.commit('setWeather', [weatherRes.data, weathersRes.data])
         }
+
+        // 获取热点搜索词汇列表
+        if (!store.state.keyWordList) {
+            let keyWordRes = await app.$api.article.getkeyWord()
+            if (keyWordRes && keyWordRes.success) {
+                store.commit('setKeyWordList', keyWordRes.data)
+            }
+        }
     }
 }

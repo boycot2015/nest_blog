@@ -5,5 +5,6 @@ export default {
     add: prefix + '/add', // 新增文章
     edit: prefix + '/edit', // 编辑文章
     delete: prefix + '/delete', // 删除文章
+    getkeyWord: prefix + '/getkeyWord', // 获取热点词汇
     status: prefix + '/status' // 更改文章状态
 }

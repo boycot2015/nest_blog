@@ -14,4 +14,14 @@ export class WebConfig {
             html: ''
         }
     }
+    static newsOption() {
+        return {
+            listUrl: '/TouTiao/Query?key=%s&type=top',
+            queryUrl: '/ActNews/Query?key=%s&keyword=%s&encode=utf8',
+            hotWordUrl: '/ActNews/LookUp?key=%s',
+            key: '007077bae3d2499ab5ad7b66ffaf818b',
+            listKey: '27f22af449a1487bba835e062d08c967',
+            hostname : 'api.avatardata.cn'
+        }
+    }
 }

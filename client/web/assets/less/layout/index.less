@@ -310,7 +310,7 @@
                 height: 32px;
                 line-height: 32px;
                 border-radius: 32px;
-                overflow: hidden;
+                // overflow: hidden;
                 input {
                     text-overflow: ellipsis;
                     white-space: nowrap;
@@ -322,17 +322,83 @@
                     width: 32px;
                     opacity: 0;
                     transition: all .5s;
-                    &:hover,
-                    &:focus {
-                        opacity: 1;
-                        width: 180px;
-                    }
                 }
                 .icon {
                     position: absolute;
                     left: 8px;
                     top: 0;
                     line-height: 32px;
+                }
+                .key-list {
+                    position: absolute;
+                    opacity: 0;
+                    top: 40px;
+                    left: 0;
+                    width: 300px;
+                    text-align: left;
+                    height: 0;
+                    overflow: hidden;
+                    overflow-y: auto;
+                    padding: 10px 15px;
+                    border-radius: 5px;
+                    z-index: 10;
+                    box-shadow: 0 0 10px @c-ccc;
+                    background-color: @white;
+                    transition: all 0.3s 0.5s;
+                    &-item {
+                        font-size: 14px;
+                        color: @c-666;
+                        line-height: 40px;
+                        position: relative;
+                        overflow: hidden;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
+                        border-bottom: 1px solid @c-e8;
+                        &:first-child,
+                        &:nth-child(2) {
+                            padding-left: 20px;
+                            color: @c-333;
+                            font-weight: bold;
+                            &::before {
+                                top: 50%;
+                                margin-top: -20px;
+                                content: '热';
+                                left: 0;
+                                font-size: 12px;
+                                display: block;
+                                position: absolute;
+                                color: @red;
+                            }
+                        }
+                        &:last-child {
+                            border-bottom: 0;
+                        }
+                        &:nth-child(3) {
+                            padding-left: 20px;
+                            font-weight: bold;
+                            color: @c-333;
+                            &::before {
+                                top: 50%;
+                                margin-top: -20px;
+                                content: '新';
+                                left: 0;
+                                font-size: 12px;
+                                display: block;
+                                position: absolute;
+                                color: @red;
+                            }
+                        }
+                    }
+                }
+                &:hover {
+                    input {
+                        opacity: 1;
+                        width: 180px;
+                    }
+                    .key-list {
+                        opacity: 1;
+                        height: 300px;
+                    }
                 }
             }
         }

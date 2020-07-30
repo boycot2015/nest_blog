@@ -6,6 +6,16 @@ import { HttpExceptionFilter } from './filters/http-exception.filter';
 import { TransformInterceptor } from './interceptor/transform.interceptor';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
+const schedule = require('node-schedule');
+
+const  scheduleCronstyle = ()=>{
+  //每分钟的第30秒定时执行一次:
+    schedule.scheduleJob('30 * * * * *',()=>{
+        console.log('scheduleCronstyle:' + new Date());
+    }); 
+}
+
+scheduleCronstyle();
 // const instance = express();
 // instance.use(bodyParser.json());
 async function bootstrap() {

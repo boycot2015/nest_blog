@@ -13,7 +13,8 @@ export const state = () => ({
     visitors: '',
     importNoticeToken: false, // 重大通知标识
     importNotice: [], // 重大通知数组
-    aboutData: config.about || {} // 关于我页面数据
+    aboutData: config.about || {}, // 关于我页面数据
+    keyWordList: '' // 搜索热词
 })
 
 export const mutations = {
@@ -73,7 +74,7 @@ export const mutations = {
         // console.log(state.asideConfig)
     },
     setWeather (state, res) {
-        console.log(res[1], 'weathers')
+        // console.log(res[1], 'weathers')
         state.weather = res[0]
         state.weathers = res[1].data
         state.weatherIcons = config.weatherIcons
@@ -89,6 +90,9 @@ export const mutations = {
                 }
             })
         })
+    },
+    setKeyWordList (state, res) {
+        state.keyWordList = res
     }
 }
 

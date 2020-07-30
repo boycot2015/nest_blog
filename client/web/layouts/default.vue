@@ -175,7 +175,7 @@ export default {
     },
     mounted () {
         this.scroll((res) => {
-            if (res || this.scrollObj.scrollTop === 0) {
+            if (res || this.scrollObj.scrollTop === 0 || this.scrollObj.scrollTop < 120) {
                 this.isHeadFixed = false
             } else {
                 this.isHeadFixed = true

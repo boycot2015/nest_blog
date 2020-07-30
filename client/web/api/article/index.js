@@ -34,5 +34,8 @@ export default {
             data = {}
         } = configObj
         return axios({ url: url.status, method, data })
+    },
+    getkeyWord () {
+        return axios.get(url.getkeyWord)
     }
 }

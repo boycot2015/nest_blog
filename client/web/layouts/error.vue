@@ -1,5 +1,5 @@
 <template>
-  <div class="error">
+  <div class="error bgf">
     <div class="content">
       <img :src="errorImg" alt />
       <p>{{ errMsg }}</p>

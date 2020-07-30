@@ -127,7 +127,7 @@ const realFormatSecond = (second) => {
  */
 export const getCommentNum = (val) => {
     let num = 0
-    val.map(el => {
+    val && val.length && val.map(el => {
         num += 1
         if (el.children && el.children.length) {
             num += getCommentNum(el.children)
@@ -147,24 +147,27 @@ export const getCommentNum = (val) => {
  * @returns {void|string|*}
  */
 export const formatRichText = (html) => { // 控制小程序中图片大小
-    let newContent = html.replace(/<img[^>]*>/gi, function (match, capture) {
-        match = match.replace(/style="[^"]+"/gi, '').replace(/style='[^']+'/gi, '')
-        match = match.replace(/width="[^"]+"/gi, '').replace(/width='[^']+'/gi, '')
-        match = match.replace(/height="[^"]+"/gi, '').replace(/height='[^']+'/gi, '')
-        return match
-    })
-    newContent = newContent.replace(/style="[^"]+"/gi, function (match, capture) {
-        match = match.replace(/width:[^;]+;/gi, 'max-width:100%;').replace(/width:[^;]+;/gi, 'max-width:100%;')
-        return match
-    })
-    // newContent = newContent.replace(/<br[^>]*\/>/gi, '');
-    newContent = newContent.replace(/<p><\/p>/gi, '')
-    newContent = newContent.replace(/\<p style=/gi, '<p style="text-align:justify;text-indent:2em;margin: 8px 0;"')
-    // newContent = newContent.replace(/\<span style=/gi, '<p style="text-align:justify;margin: 8px 0; padding: 0 15px; font-size: 16px; background: #e8e8e8;border-radius: 4px;"')
-    // code换行
-    newContent = newContent.replace(/\<pre/gi, '<pre style="white-space: pre-wrap;word-wrap: break-word;background: #e8e8e8;padding: 10px;margin-top: 10px;border-radius: 5px;"')
-    newContent = newContent.replace(/\<img/gi, '<img referrer="never" style="width:100%;max-width: 800px;height: auto;display: block;margin: 5px auto;vertical-align: middle;"')
-    return newContent
+    if (html) {
+        let newContent = html.replace(/<img[^>]*>/gi, function (match, capture) {
+            match = match.replace(/style="[^"]+"/gi, '').replace(/style='[^']+'/gi, '')
+            match = match.replace(/width="[^"]+"/gi, '').replace(/width='[^']+'/gi, '')
+            match = match.replace(/height="[^"]+"/gi, '').replace(/height='[^']+'/gi, '')
+            return match
+        })
+        newContent = newContent.replace(/style="[^"]+"/gi, function (match, capture) {
+            match = match.replace(/width:[^;]+;/gi, 'max-width:100%;').replace(/width:[^;]+;/gi, 'max-width:100%;')
+            return match
+        })
+        // newContent = newContent.replace(/<br[^>]*\/>/gi, '');
+        newContent = newContent.replace(/<p><\/p>/gi, '')
+        newContent = newContent.replace(/\<p style=/gi, '<p style="text-align:justify;text-indent:2em;margin: 8px 0;"')
+        // newContent = newContent.replace(/\<span style=/gi, '<p style="text-align:justify;margin: 8px 0; padding: 0 15px; font-size: 16px; background: #e8e8e8;border-radius: 4px;"')
+        // code换行
+        newContent = newContent.replace(/\<pre/gi, '<pre style="white-space: pre-wrap;word-wrap: break-word;background: #e8e8e8;padding: 10px;margin-top: 10px;border-radius: 5px;"')
+        newContent = newContent.replace(/\<img/gi, '<img referrer="never" style="width:100%;max-width: 800px;height: auto;display: block;margin: 5px auto;vertical-align: middle;"')
+        return newContent
+    }
+    return ''
 }
 
 export default {

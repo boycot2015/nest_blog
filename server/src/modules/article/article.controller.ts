@@ -142,6 +142,13 @@ export class ArticleController {
         return this.articleService.getById(+id)
     }
 
+    @Get('/getKeyWord')
+    @ApiOperation({ summary: '获取热门新闻词汇', description: "获取热门新闻词汇" })
+    // @ApiQuery({ name: 'id', example: 1, description: '新闻词汇', required: true })
+    getKeyWord() {
+        return this.articleService.getKeyWord()
+    }
+
     @Post('/add')
     @UseGuards(AuthGuard())
     @ApiOperation({ summary: '新增文章', description: "新增文章" })

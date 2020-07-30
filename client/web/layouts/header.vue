@@ -24,6 +24,10 @@
             placeholder="请输入关键词..."
             >
             <label for="keyWord" class="icon-search icon"></label>
+            <!-- <div class="key-cover"></div> -->
+            <ul class="key-list">
+                <li class="key-list-item" @click="$router.push('/article?title=' + item)" :title="item" v-for="item in keyWordList" :key="item">{{ item }}</li>
+            </ul>
         </div>
         <div class="setting tr flexbox-h align-c just-s">
             <span>夜间模式</span>
@@ -70,7 +74,8 @@ export default {
                 query: {
                 }
             }],
-            keyWord: ''
+            keyWord: '',
+            keyWordList: this.$store.state.keyWordList
         }
     },
     mounted () {
@@ -80,6 +85,9 @@ export default {
         websiteConfig () {
             return this.$store.state.websiteConfig
         }
+        // keyWordList () {
+        //     return this.$store.state.keyWordList || []
+        // }
     },
     methods: {
         init () {
@@ -121,7 +129,9 @@ export default {
             oCon.style.left = oCon.offsetLeft + step + 'px'
         },
         onSearch (e) {
-            // console.log(e.keyCode, 'e.keyCode')
+            let keyWordList = this.keyWordList.filter(el => el.includes(this.keyWord))
+            this.keyWordList = keyWordList.length > 0 && this.keyWord ? keyWordList : this.$store.state.keyWordList
+            // console.log(this.keyWord, this.$store.state.keyWordList, 'e.keyCode')
             if (e.keyCode === 13 && this.keyWord) {
                 this.$router.push('/article?title=' + this.keyWord)
             }
