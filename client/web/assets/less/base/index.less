@@ -146,11 +146,6 @@ button {
 .line-clamp2{-webkit-line-clamp: 2;}
 .line-clamp3{-webkit-line-clamp: 3;}
 .line-clamp4{-webkit-line-clamp: 4;}
-::-webkit-scrollbar {/*滚动条整体样式*/
-  width: 6px;     /*高宽分别对应横竖滚动条的尺寸*/
-  height: 1px;
-
-}
 // pre, code, kbd, samp {
 //     display: block;
 //     p {
@@ -160,19 +155,22 @@ button {
 //         margin: 0 !important;
 //     }
 // }
+::-webkit-scrollbar {/*滚动条整体样式*/
+    width: 8px;     /*高宽分别对应横竖滚动条的尺寸*/
+    height: 1px;
+}
 ::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
-
-  border-radius: 10px;
-  -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
-  box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
-  background: @c-e8;
-
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+    background: @c-999;
 }
 
 ::-webkit-scrollbar-track {/*滚动条里面轨道*/
-//   -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
-  border-radius: 10px;
-  background: @white;
+    //   -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    border-radius: 10px;
+    // background: @c-ccc;
+    background: @white;
 }
 // 加载中样式
 .loading-box {

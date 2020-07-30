@@ -2,70 +2,70 @@
   <div class="root tc" ref="rootDom" :class="{'night': isNight}">
     <Header :class="{ 'fixed': isHeadFixed, 'unfixed': scrollObj.value > 0 }" @on-night=" (val) => isNight = val"></Header>
     <div class="root-main clearfix" >
+        <div
+        class="side-menu fl"
+        v-show="!sideWhiteRoute.includes($route.path)"
+        :class="{ 'fixed': isAsideFixed, 'active': isHeadFixed }"
+        >
+                <div class="clock" v-loading:abs="loading">
+                        <h3 class="title">
+                            <calendar></calendar>
+                        </h3>
+                        <time-canvas
+                        :width="300"
+                        :time="currentTime"
+                        :height="70"
+                        color="#00a2ff"
+                        :x="30"
+                        :y="18"
+                        ></time-canvas>
+                </div>
+                <div class="weather">
+                    <h3 class="title" :title="weather.city + '/' + weather.wea + '/' + weather.win + weather.win_speed">
+                        {{ weather.city }}<i class="sperate" v-if="weather.wea">·</i>{{ weather.wea }}/{{ weather.tem }}℃/{{ weather.win }}{{ weather.win_speed }}
+                    </h3>
+                    <div class="body" v-if="weather.wea">
+                        <span class="air name">{{ weather.air_level }}</span>
+                        <i class="icon" :class="`icon-weather-${weather.icon}`"></i>
+                        <span class="name">{{ weather.tem1 }}℃/{{ weather.tem2 }}℃</span>
+                    </div>
+                    <div
+                    ref="weatherSwiper"
+                    class="list weatherSwiper"
+                    v-if="weathers.length"
+                    >
+                        <div class="swiper-wrapper">
+                            <div
+                            class="swiper-slide list-item tc"
+                            v-for="item in weathers"
+                            :key="item.id"
+                            >
+                                <i class="icon" :class="`icon-weather-${item.icon}`"></i>
+                                <p class="weather-text">{{ item.wea }}</p>
+                                <p class="name">{{ item.tem1 }}℃/{{ item.tem2 }}℃</p>
+                                <p class="week">{{ item.day }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <Aside
+            title="标签"
+            :data="tagList"
+            icon="tag"
+            :total="tagTotal"
+            :props="{
+                    key: 'articleNum',
+                    value: 'value'
+                }"
+            ></Aside>
+            <Aside title="分类" icon="cate" :total="categoryTotal" :data="categoryList"></Aside>
+        </div>
         <!-- :style="{paddingTop: isHeadFixed || (scrollObj.value > 0) ? '100px' : '20px'}" -->
-        <div class="root-main-container fl" :style="{width: sideWhiteRoute.includes($route.path) ? '1200px':''}">
+        <div class="root-main-container fr" :style="{width: sideWhiteRoute.includes($route.path) ? '1200px':''}">
             <transition name="default" mode="out-in">
                 <Nuxt />
             </transition>
         </div>
-      <div
-      class="right fr"
-      v-show="!sideWhiteRoute.includes($route.path)"
-      :class="{ 'fixed': isAsideFixed, 'active': isHeadFixed }"
-      >
-            <div class="clock" v-loading:abs="loading">
-                    <h3 class="title">
-                        <calendar></calendar>
-                    </h3>
-                    <time-canvas
-                    :width="300"
-                    :time="currentTime"
-                    :height="70"
-                    color="#00a2ff"
-                    :x="30"
-                    :y="18"
-                    ></time-canvas>
-            </div>
-            <div class="weather">
-                <h3 class="title" :title="weather.city + '/' + weather.wea + '/' + weather.win + weather.win_speed">
-                    {{ weather.city }}<i class="sperate" v-if="weather.wea">·</i>{{ weather.wea }}/{{ weather.tem }}℃/{{ weather.win }}{{ weather.win_speed }}
-                </h3>
-                <div class="body" v-if="weather.wea">
-                    <span class="air name">{{ weather.air_level }}</span>
-                    <i class="icon" :class="`icon-weather-${weather.icon}`"></i>
-                    <span class="name">{{ weather.tem1 }}℃/{{ weather.tem2 }}℃</span>
-                </div>
-                <div
-                ref="weatherSwiper"
-                class="list weatherSwiper"
-                v-if="weathers.length"
-                >
-                    <div class="swiper-wrapper">
-                        <div
-                        class="swiper-slide list-item tc"
-                        v-for="item in weathers"
-                        :key="item.id"
-                        >
-                            <i class="icon" :class="`icon-weather-${item.icon}`"></i>
-                            <p class="weather-text">{{ item.wea }}</p>
-                            <p class="name">{{ item.tem1 }}℃/{{ item.tem2 }}℃</p>
-                            <p class="week">{{ item.day }}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-          <Aside
-          title="标签"
-          :data="tagList"
-          icon="tag"
-          :total="tagTotal"
-          :props="{
-                key: 'articleNum',
-                value: 'value'
-            }"
-        ></Aside>
-          <Aside title="分类" icon="cate" :total="categoryTotal" :data="categoryList"></Aside>
-      </div>
     </div>
     <Footer></Footer>
     <div class="top-btn" v-if="isAsideFixed" @click="onScrollToTop">回到顶部<i class="icon-top"></i></div>
