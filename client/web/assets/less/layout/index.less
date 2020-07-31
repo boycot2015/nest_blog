@@ -18,6 +18,7 @@
         .clock,
         .weather,
         .key-list,
+        .error,
         .site-footer {
             background-color: @c-000 !important;
             color: @white !important;
@@ -85,10 +86,12 @@
     }
     &-main {
         margin:0 auto ;
-        padding-top: 100px;
-        padding-bottom: 120px;
+        padding: 100px 0 120px;
         width: 1200px;
         position: relative;
+        &.active {
+            padding-top: 95px;
+        }
         &-container {
         width: 874px;
         height: 100%;
@@ -100,7 +103,7 @@
         }
         .side-menu {
             width: 300px;
-            transition: top 0.5s;
+            transition: all 0.5s;
             &.fixed {
                 position: fixed;
                 // left: calc(50% - 600px);
@@ -204,6 +207,9 @@
             }
             &.unfixed {
                 animation: up 0.5s;
+                position: fixed;
+                top: 0;
+                left: 0;
                 transform: translateY(-80px);
             }
             @keyframes up {
