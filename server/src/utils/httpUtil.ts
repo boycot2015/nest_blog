@@ -2,7 +2,7 @@ const http = require('http'),
     https = require('https'),
     Q = require('q');
 
-export const restUtil = {
+export const httpUtil = {
     /**
      * HOW TO Make an HTTP Call - GET
      *

@@ -7,10 +7,7 @@ import * as dayjs from 'dayjs';
 import { TagService } from '../tag/tag.service';
 import { AuthService } from '../auth/auth.service';
 import { CategoryService } from '../category/category.service';
-const util = require('util');
-import { restUtil } from '../../utils/httpUtil';
-import { WebConfig } from '../../../config';
-
+import { tianApi } from '../../api';
 @Injectable()
 export class ArticleService {
     constructor(@InjectRepository(Article)
@@ -67,79 +64,44 @@ export class ArticleService {
             .take(pageSize)
         // 获取结果及(非分页的)查询结果总数
         // 或使用 .getMany() 不会返回总数
-
+        if (data.category || data.tag) {
+            return await queryBy.getManyAndCount()
+        }
         /**
          * 合并第三方新闻接口与博客接口一同返回
          * 对接第三方sdk api
          */
-        let url = util.format(WebConfig.newsOption().hotWordUrl, WebConfig.newsOption().key);
         let newsList = []
-        if (!data.title) {
-            /**
-             * {
-                "uniquekey": "d3c639c65a449059b809f20fee0c7621",
-                "title": "历史上和济宁关系最密切的三个县，向来三县并称如一家",
-                "date": "2020-07-30 17:11",
-                "category": "头条",
-                "author_name": "七零后看世界",
-                "url": "https://mini.eastday.com/mobile/200730171102031.html",
-                "thumbnail_pic_s": "https://08imgmini.eastday.com/mobile/20200730/20200730171102_e406736af8dba359a6f596586bfe0e60_1_mwpm_03200403.jpg",
-                "thumbnail_pic_s02": null,
-                "thumbnail_pic_s03": null
+        /**
+         *  {
+            "ctime": "2020-07-31 17:45:07",
+            "title": "特朗普改口不推迟大选：他干的这些事，历史上其他总统也干了",
+            "description": "2020年美国迎来四年一次的总统选举，在新冠疫情与“黑人之死”事件的影响下，白宫会否迎来新主人？",
+            "picUrl": "http://p26-tt.byteimg.com/img/web-union/678f56ef-3d4e-47cb-9eb7-724769ce9ebd~tplv-tt-cs0:1125:555.jpg",
+            "url": "http://toutiao.com/group/6854697468815281672/",
+            "source": "热榜内容"
             }
-             */
-            url = util.format(WebConfig.newsOption().listUrl, WebConfig.newsOption().listKey);
-            let listRes = { result: null }
-            listRes = await restUtil.get({
-                hostname : WebConfig.newsOption().hostname,
-                path : url
-            });
-            // console.log(listRes, 'keyWordRes')
-            if (listRes.result !== null) {
-                newsList = listRes.result.data
-                newsList.map(el => {
-                     el.source = el.author_name
-                     el.content = el.title + '·' + el.author_name + '·' + el.category
-                     el.createTime = el.date
-                     el.comment = []
-                     el.id = el.uniquekey
-                     el.img = el.thumbnail_pic_s
-                     el.category = {
-                        createTime: el.date,
-                        id: el.uniquekey,
-                        label: null,
-                        parentId: null,
-                        status: 1001,
-                        updateTime: el.date,
-                        value: el.category
-                    }
-                })
-            }
-        }
-        url = util.format(WebConfig.newsOption().queryUrl, WebConfig.newsOption().key, data.title);
-        url = encodeURI(url);
-        let newsRes = { result: null }
-        newsRes = await restUtil.get({
-            hostname :WebConfig.newsOption().hostname,
-            path : url
-        });
-        if (newsRes && newsRes.result !== null) {
-           newsList = newsRes.result
-           newsList.map(el => {
-                el.time = el.pdate
-                el.source = el.src
-                el.createTime = el.pdate_src
-                el.comment = []
-                el.category = {
-                    createTime: el.pdate_src,
-                    id: 0,
+         */
+        let listRes = { result: null, newslist: [], code: 200 }
+        listRes = await tianApi.getNewsList({ word: data.title })
+        if (listRes.code === 200) {
+            newsList = listRes.newslist
+            newsList.map(el => {
+                 el.content = el.description
+                 el.createTime = el.ctime
+                 el.comment = []
+                 el.img = el.picUrl
+                 el.status = 1001
+                 el.category = {
+                    createTime: el.ctime,
+                    id: el.uniquekey,
                     label: null,
                     parentId: null,
                     status: 1001,
-                    updateTime: el.pdate_src,
+                    updateTime: el.ctime,
                     value: el.category
                 }
-           })
+            })
         }
         let res = await queryBy.getManyAndCount()
         if (current > 1) {
@@ -154,13 +116,13 @@ export class ArticleService {
      * 获取新闻关键词
      */
     async getKeyWord () {
-        let url = util.format(WebConfig.newsOption().hotWordUrl, WebConfig.newsOption().key);
-        let keyWordRes = await restUtil.get({
-            hostname : WebConfig.newsOption().hostname,
-            path : url
-        });
-        // console.log(keyWordRes, url, 'keyWordRes')
-        return Promise.resolve([...keyWordRes.result])
+        let keyWordRes = await tianApi.hotKeyWord()
+        if (keyWordRes && keyWordRes.code === 200) {
+            keyWordRes.newslist = keyWordRes.newslist.map(el => el.keyword)
+            return Promise.resolve([...keyWordRes.newslist])
+        } else {
+            throw new HttpException(keyWordRes.msg, responseStatus.failed.code);
+        }
     }
     /**
      * 获取所以文章
@@ -176,41 +138,35 @@ export class ArticleService {
             .orderBy('article.createTime', order || 'DESC')
         }
         let newsList = []
-        let url = util.format(WebConfig.newsOption().listUrl, WebConfig.newsOption().listKey);
-        let listRes = { result: null }
-        listRes = await restUtil.get({
-            hostname : WebConfig.newsOption().hostname,
-            path : url
-        });
-        if (listRes.result !== null) {
-            newsList = listRes.result.data
+        let listRes = await tianApi.getNewsList({})
+        if (listRes.code === 200) {
+            newsList = listRes.newslist
             newsList.map(el => {
-                    el.source = el.author_name
-                    el.content = el.title + '·' + el.author_name + '·' + el.category
-                    el.createTime = el.date
+                    el.content = el.description
+                    el.createTime = el.ctime
                     el.comment = []
-                    el.id = el.uniquekey
-                    el.img = el.thumbnail_pic_s
+                    el.img = el.picUrl
+                    el.status = 1001
                     el.category = {
-                    createTime: el.date,
-                    id: el.uniquekey,
-                    label: null,
-                    parentId: null,
-                    status: 1001,
-                    updateTime: el.date,
-                    value: el.category
-                }
+                        createTime: el.ctime,
+                        id: el.uniquekey,
+                        label: null,
+                        parentId: null,
+                        status: 1001,
+                        updateTime: el.ctime,
+                        value: el.category
+                    }
             })
         }
         // 获取结果及(非分页的)查询结果总数
         // 或使用 .getMany() 不会返回总数
         newsList = newsList.slice(0,2)
-        // let res = await queryBy.getManyAndCount()
-        // res[0] = res[0].slice(0, 2)
-        // res[0] = [...newsList, ...res[0]]
-        // console.log(newsList, 'keyWordRes')
-        // return Promise.resolve(res)
-        return await queryBy.getManyAndCount()
+        let res = await queryBy.getManyAndCount()
+        res[0] = res[0].slice(0, 2)
+        res[0] = newsList.concat(res[0])
+        // console.log(res, 'keyWordRes')
+        return Promise.resolve(res)
+        // return await queryBy.getManyAndCount()
     }
     /**
      * 创建文章 create(data: Partial<Article>): Promise<Article>

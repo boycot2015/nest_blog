@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { ArticleService } from "./modules/article/article.service";
 import { SettingService } from "./modules/setting/setting.service";
-import { timeFormat, getOneMonthDateList } from "./utils";
-
+import { timeFormat, getOneMonthDateList, getClientIP } from "./utils";
+import { tianApi } from './api';
 @Injectable()
 export class AppService {
     constructor(private articleService: ArticleService,
@@ -13,7 +13,7 @@ export class AppService {
     async getDatas(params): Promise<object> {
         const res = await this.articleService.getAll(params)
         const config = await this.settingService.get(params)
-        // console.log(config, 'config')
+        console.log(res, 'config')
         let activity = JSON.parse(config.activity)
         let deadline = new Date(activity.time).getTime()
         let deadTitle = activity.name
@@ -117,5 +117,12 @@ export class AppService {
         })
         // console.log(data.publicData.data, 'getOneMonthDateList()');
         return Promise.resolve(data)
+    }
+    async getWeather (params, req) {
+        let weaRes = await tianApi.weather({ ...params, ip: getClientIP(req) })
+        console.log(weaRes, 'weaRes')
+        if (weaRes && weaRes.code === 200) {
+            return Promise.resolve(weaRes.newslist)
+        }
     }
 }

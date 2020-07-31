@@ -19,7 +19,10 @@
                     v-html="item.content"
                     >
                     </div>
-                    <div class="time">{{ item.comment | getCommentNum }}条评论 - {{ new Date(item.createTime).getTime() | timeFilter }}</div>
+                    <div class="time">
+                        {{ item.comment | getCommentNum }}条评论 - {{ new Date(item.createTime).getTime() | timeFilter }}
+                        <span class="source" v-if="item.source"> · 来源：{{ item.source }}</span>
+                    </div>
                 </div>
                 <!-- <nuxt-link :to="'/article/view?id='+item.id" class="flexbox-h just-b" >
                 </nuxt-link> -->

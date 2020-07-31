@@ -51,7 +51,7 @@
             :key="item.id"
             class="article-list-item"
             >
-                <nuxt-link :to="'/article/view?id='+item.id" class="flexbox-h just-b">
+                <div @click="onReview(item)" class="flexbox-h just-b">
                     <div class="flex2 wrap"><div class="img" :style="{backgroundImage:`url('${getImgUrl(item.content)}')`}"></div></div>
                     <div class="text flex3 tl">
                         <div class="title line-clamp2">{{ item.title }}</div>
@@ -62,9 +62,12 @@
                         v-html="item.content"
                         >
                         </div>
-                        <div class="time">{{ item.comment | getCommentNum }}条评论 - {{ new Date(item.createTime).getTime() | timeFilter }}</div>
+                        <div class="time">
+                            {{ item.comment | getCommentNum }}条评论 - {{ new Date(item.createTime).getTime() | timeFilter }}
+                            <span class="source" v-if="item.source"> · 来源：{{ item.source }}</span>
+                        </div>
                     </div>
-                </nuxt-link>
+                </div>
             </div>
         </div>
     </div>
@@ -152,6 +155,20 @@ export default {
         this.$nextTick(() => {
             new window.Swiper('.mySwiper', this.swiperOption)
         })
+    },
+    methods: {
+        onReview (item) {
+            if (item.url) {
+                window.open(item.url)
+            } else {
+                this.$router.push({
+                    path: '/article/view',
+                    query: {
+                        id: item.id
+                    }
+                })
+            }
+        }
     }
 }
 </script>

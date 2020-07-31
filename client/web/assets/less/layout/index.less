@@ -3,20 +3,21 @@
     position: relative;
     // background-color: @c-f8;
     &.night {
-        // background-color: @c-000 !important;
+        background-color: @c-000 !important;
         color: @white !important;
         .site-header,
-        // .root-main,
-        // .root-main-container,
+        .root-main,
+        .root-main-container,
         .site-aside,
-        // .home-container,
+        .home-container,
         .bgc,
         .article-list-item,
-        // .classes-content,
-        // .article-main,
+        .classes-content,
+        .article-main,
         .about,
         .clock,
         .weather,
+        .key-list,
         .site-footer {
             background-color: @c-000 !important;
             color: @white !important;
@@ -48,6 +49,14 @@
             .setting {
                 .spanner {
                     box-shadow: inset 0 0 5px rgba(255,255,255,0.1);
+                }
+            }
+            .search-box {
+                .key-list {
+                    border: 1px solid @white;
+                    &-item {
+                        color: @white !important;
+                    }
                 }
             }
         }
