@@ -1,7 +1,7 @@
 <template>
   <div class="loading-more" :class="{'bgc img': showImg}">
         <img v-if="showImg" src="@/assets/img/img-null.png" alt="">
-        <p class="loading-more-text" :class="{'no-more': !hasMore}">{{ text }}</p>
+        <p class="loading-more-text" :class="{'no-more': !hasMore}"><span>{{ text }}</span></p>
   </div>
 </template>
 <style lang="less" scoped>

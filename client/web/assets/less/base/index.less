@@ -191,6 +191,10 @@ button {
     // width: 102px;
     font-size: 16px;
     color: @c-666;
+    span {
+        padding: 0 10px;
+        background-color: @c-f8;
+    }
     &::before {
         font-family: iconfont;
         content: '\e62f';
@@ -226,8 +230,26 @@ button {
             }
         }
     }
-    &.no-more&::before {
-        display: none;
+    &.no-more {
+        position: relative;
+        z-index: 1;
+        background-color: @c-f8;
+        span {
+            &::before {
+                position: absolute;
+                display: block;
+                content: '';
+                width: 30%;
+                top: 50%;
+                left: 50%;
+                margin-left: -15%;
+                height: 1px;
+                z-index: -1;
+                line-height: 40px;
+                background-color: @c-ccc;
+                color: @c-666;
+            }
+        }
     }
 }
 .loading-more {

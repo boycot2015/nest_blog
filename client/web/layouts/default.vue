@@ -1,7 +1,7 @@
 <template>
   <div class="root tc" ref="rootDom" :class="{'night': isNight}">
     <Header :class="{ 'fixed': isHeadFixed, 'unfixed': scrollObj.value > 0 }" @on-night=" (val) => isNight = val"></Header>
-    <div class="root-main clearfix" :class="{ 'fixed': isAsideFixed, 'active': isHeadFixed }">
+    <div class="root-main clearfix" :class="{ 'active': isHeadFixed }">
         <div
         class="side-menu fl"
         v-show="!sideWhiteRoute.includes($route.path)"
