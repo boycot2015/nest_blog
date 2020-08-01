@@ -26,7 +26,7 @@
             <label for="keyWord" class="icon-search icon"></label>
             <!-- <div class="key-cover"></div> -->
             <ul class="key-list">
-                <li class="key-list-item" @click="$router.push('/article?title=' + item)" :title="item" v-for="item in keyWordList" :key="item">{{ item }}</li>
+                <li class="key-list-item" @click="$router.push('/article?title=' + item);keyWord = item" :title="item" v-for="item in keyWordList" :key="item">{{ item }}</li>
             </ul>
         </div>
         <div class="setting tr flexbox-h align-c just-s">
