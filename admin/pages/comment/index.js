@@ -273,7 +273,8 @@ class Article extends React.Component {
                 pageSize: 10,
                 total: this.state.pageData.total,
                 pageSizeOptions: [10, 20, 30, 50]
-            }
+            },
+            rowSelection: undefined
         })
         // 发送服务器请求
         const { current, pageSize } = isPage ? values : this.state.pageData

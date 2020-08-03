@@ -1,10 +1,9 @@
 import React, { useState, Fragment } from 'react';
+import _ from 'lodash';
 import {
     Form, Row, Col, Input,
-    Select, Table, Tag,
-    notification, Badge,
-    message, Modal,
-    Alert,
+    Select, Table, Tag, Badge,
+    message, Modal, Switch,
     Button, Cascader
 } from 'antd';
 import {
@@ -23,10 +22,11 @@ const columns = (props) => {
             title: '标题',
             dataIndex: 'title',
             key: 'title',
-            width: 100,
+            width: 200,
+            ellipsis: 2,
             align: 'center',
             rowKey: record => record.dataIndex,
-            render: text => <a>{text}</a>,
+            render: text => <a title={text}>{text}</a>,
         },
         {
             title: '分类',
@@ -41,12 +41,12 @@ const columns = (props) => {
             title: '内容概述',
             dataIndex: 'content',
             key: 'content',
-            width: 200,
-            ellipsis: 2,
+            width: 300,
+            ellipsis: 3,
             // colSpan: 6,
             rowKey: record => record.dataIndex,
             render: (text, record) => <div
-                onClick={() => props.handleReview(record.id)}
+                onClick={() => props.handleReview(record)}
                 style={{ maxHeight: 85, overflow: 'hidden' }}
                 dangerouslySetInnerHTML={{ __html: text }}>
             </div>,
@@ -60,7 +60,7 @@ const columns = (props) => {
             dataIndex: 'tags',
             render: tags => (
                 <span>
-                    {tags.map((tag, index) => {
+                    {tags && tags.map((tag, index) => {
                         let color = index > 1 ? 'geekblue' : 'green';
                         if (tag.value === '前端') {
                             color = 'volcano';
@@ -114,10 +114,11 @@ const columns = (props) => {
             fixed: 'right',
             render: (text, record) => (
                 <span>
-                    <a style={{ marginRight: 16 }} onClick={() => props.handleReview(record.id)}>查看</a>
+                    <a style={{ marginRight: 16 }} onClick={() => props.handleReview(record)}>查看</a>
                     <a style={{ marginRight: 16 }} onClick={() => Router.push('/article/edit?id=' + record.id)}>编辑</a>
                     {record.status === 1002 && <a style={{ marginRight: 16 }} onClick={() => props.handleChangeStatus(record)}>发布</a>}
-                    {(record.status === 1002 || record.status === 1003) && <a onClick={() => props.handleDelete(record.id)}> 删除</a>}
+                    {<a onClick={() => props.handleDelete(record)}> 删除</a>}
+                    {/* (record.status === 1002 || record.status === 1003) &&  */}
                 </span>
             ),
         },
@@ -243,6 +244,36 @@ const AdvancedSearchForm = (props) => {
                         重置
                 </Button>
                 </Col>
+                <Col span={8} style={{ textAlign: 'right' }}>
+                    {/* <Button
+                        type="primary" style={{ marginRight: 10 }}
+                        onClick={props.handleRowSelectionChange}>
+                        多选
+                    </Button> */}
+                    <Form.Item label="多选" style={{ width: !props.rowSelection ? 100 : 300, marginLeft: 10 }}>
+                        <Switch
+                            style={{ marginRight: 10 }}
+                            checked={!!props.rowSelection}
+                            onChange={props.handleRowSelectionChange} />
+                        {props.rowSelection ?
+                            <Button style={{ marginRight: 10 }}
+                                disabled={!(props.rowSelection &&
+                                    props.rowSelection.selectedRowKeys &&
+                                    props.rowSelection.selectedRowKeys.length)}
+                                type="primary" onClick={props.handleBatchDelete}>
+                                {/* {console.log(props.rowSelection)} */}
+                                批量删除
+                            </Button> : null}
+                        {props.rowSelection ?
+                            <Button style={{ marginRight: 10 }}
+                                disabled={!(props.rowSelection &&
+                                    props.rowSelection.selectedRowKeys &&
+                                    props.rowSelection.selectedRowKeys.length)}
+                                type="primary" onClick={props.handleBatchStatus}>
+                                批量审核
+                            </Button> : null}
+                    </Form.Item>
+                </Col>
             </Row>
         </Form>
     );
@@ -256,7 +287,7 @@ class Article extends React.Component {
         //通过process的browser属性判断处于何种环境：Node环境下为false,浏览器为true
         // 发送服务器请求
         const [res, cateRes, tagRes] = await Promise.all([
-            await $api.article.get({ current: 1, pageSize: 5 }),
+            await $api.article.get({ current: 1, pageSize: 10 }),
             await $api.category.get(),
             await $api.tag.get()])
         if (res && res.success && cateRes && cateRes.success && tagRes && tagRes.success) {
@@ -265,7 +296,7 @@ class Article extends React.Component {
                 data: res.data[0],
                 pageData: {
                     current: 1,
-                    pageSize: 5,
+                    pageSize: 10,
                     total: res.data[1],
                     pageSizeOptions: [5, 10, 20, 50]
                 },
@@ -278,7 +309,7 @@ class Article extends React.Component {
                 data: [],
                 pageData: {
                     current: 1,
-                    pageSize: 5,
+                    pageSize: 10,
                     total: 999,
                     pageSizeOptions: [5, 10, 20, 50]
                 },
@@ -298,7 +329,8 @@ class Article extends React.Component {
             name: '',
             email: '',
             content: ''
-        }
+        },
+        rowSelection: undefined
     }
     async handlerFormSubmit (values, isPage) {
         isPage && this.setState({ loading: true, pageData: values, reset: false })
@@ -307,11 +339,12 @@ class Article extends React.Component {
             queryData: values,
             pageData: {
                 current: 1,
-                pageSize: 5,
+                pageSize: 10,
                 total: this.state.pageData.total,
                 pageSizeOptions: [5, 10, 20, 50]
             },
-            reset: false
+            reset: false,
+            rowSelection: undefined
         })
         // 发送服务器请求
         const { current, pageSize } = isPage ? values : this.state.pageData
@@ -330,7 +363,7 @@ class Article extends React.Component {
     async getPageData (params = {}) {
         const { current, pageSize } = params
         const [res, cateRes, tagRes] = await Promise.all([
-            await $api.article.get({ params }),
+            await $api.article.get({ ...params }),
             await $api.category.get(),
             await $api.tag.get()])
         if (res && res.success && cateRes && cateRes.success && tagRes && tagRes.success) {
@@ -360,20 +393,25 @@ class Article extends React.Component {
             })
         }
     }
-    handleDelete = (id) => {
+    handleDelete = (item, isBatch) => {
         const { pageData, queryData } = this.state
         const { pageSize, current } = pageData
-        console.log(this.state, 'asdasdsa')
+        // console.log(this.state, 'asdasdsa')
+        let params = {}
+        let api = isBatch ? 'batchDelete' : 'delete'
+        isBatch ? (params.ids = item.join(',')) : (params.id = item.id)
         Modal.confirm({
             title: '温馨提示',
             icon: <ExclamationCircleOutlined />,
             content: '确认删除？',
             okText: '确认',
+            maskClosable: true,
+            centered: true,
             onOk: () => {
-                $api.article.delete({ params: { id } }).then(res => {
+                $api.article[api]({ ...params }).then(res => {
                     if (res && res.success) {
                         message.success(res.data)
-                        this.setState({ reset: true })
+                        this.setState({ reset: true, rowSelection: undefined })
                         this.getPageData({ pageSize, current, ...queryData })
                     } else {
                         res && message.error(res.message)
@@ -383,7 +421,7 @@ class Article extends React.Component {
             cancelText: '取消'
         })
     }
-    handleReview (id) {
+    handleReview (item) {
         // $api.article.getById({ params: { id } }).then(res => {
         //     if (res && res.success) {
         //         this.setState({ reviewData: res.data, modalVisible: true })
@@ -391,19 +429,60 @@ class Article extends React.Component {
         //         message.error(res.message)
         //     }
         // })
-        Router.push('/article/view?id=' + id)
-    }
-    async handleChangeStatus (item) {
-        let { id, status } = item
-        status = status === 1001 ? 1002 : 1001
-        const res = await $api.article.status({ data: { id, status } })
-        if (res && res.success) {
-            message.success(res.message)
-            this.setState({ reset: true })
-            this.handlerFormSubmit({})
-            return
+        if (item.url) {
+            window.open(item.url)
+        } else {
+            Router.push('/article/view?id=' + item.id)
         }
-        res && message.error(res.message)
+    }
+
+    // 批量删除
+    handleBatchDelete () {
+        this.handleDelete(this.state.rowSelection.selectedRowKeys, true)
+    }
+    // 批量修改状态
+    handleBatchStatus () {
+        this.handleChangeStatus(this.state.rowSelection.selectedRowKeys, true)
+    }
+
+    async handleChangeStatus (item, isBatch) {
+        status = item.status === 1001 ? 1002 : 1001
+        let api = isBatch ? 'batchStatus' : 'status'
+        let params = { status }
+        isBatch ? (params.ids = item.join(',')) : (params.id = item.id)
+        Modal.confirm({
+            title: '温馨提示',
+            icon: <ExclamationCircleOutlined />,
+            maskClosable: true,
+            centered: true,
+            content: '确认审核,审核通过后可展示在列表',
+            okText: '审核通过',
+            cancelText: '审核不通过',
+            onOk: async () => {
+                const res = await $api.article[api]({ ...params })
+                if (res && res.success) {
+                    message.success(res.message)
+                    this.setState({ reset: true, rowSelection: undefined })
+                    this.handlerFormSubmit({})
+                    return
+                }
+                res && message.error(res.message)
+            },
+            onCancel: async (e) => {
+                if (e.triggerCancel) return // 点击遮罩层关闭弹框不执行操作
+                params.status = 1003
+                // console.log( params, 'icon: <ExclamationCircleOutlined />,');
+                const res = await $api.article[api]({ ...params })
+                if (res && res.success) {
+                    message.success(res.message)
+                    this.setState({ reset: true, rowSelection: undefined })
+                    this.handlerFormSubmit({})
+                    return Promise.resolve()
+                }
+                res && message.error(res.message)
+                return Promise.resolve()
+            }
+        })
     }
     setArticle (callback) {
         return callback(this.state.reviewData)
@@ -436,6 +515,60 @@ class Article extends React.Component {
     setModalVisible (modalVisible) {
         this.setState({ modalVisible });
     }
+    /**
+   * @name: 手动选中复选框
+   * @msg: 
+   * @param {type} 
+   * @return: 
+   */
+    onSelect = (record, selected) => {
+        let mySelectedRows = this.state.rowSelection.selectedRows;
+        if (selected) {
+            mySelectedRows.push(record);
+        } else {
+            _.remove(mySelectedRows, (o) => { return o.id === record.id });
+        }
+        const selectedRowKeys = _.map(mySelectedRows, 'id');
+        console.log(selectedRowKeys, 'selectedRowKeys')
+        this.setState({
+            rowSelection: {
+                ...this.state.rowSelection,
+                selectedRowKeys,
+                selectedRows: mySelectedRows
+            }
+        })
+    }
+    onSelectAll = (selected, selectedRows, changeRows) => {
+        let mySelectedRows = this.state.rowSelection.selectedRows;
+        const changeRowKeys = _.map(changeRows, 'id');
+        if (selected) {
+            // 先连接再进行一次去重
+            mySelectedRows = _.uniqBy(_.concat(mySelectedRows, changeRows), 'id')
+        } else {
+            // 先判断包含再移除
+            _.remove(mySelectedRows, (o) => { return _.includes(changeRowKeys, o.id) })
+            // mySelectedRows = []
+        }
+        const selectedRowKeys = _.map(mySelectedRows, 'id')
+        this.setState({
+            rowSelection: {
+                ...this.state.rowSelection,
+                selectedRowKeys,
+                selectedRows: mySelectedRows
+            }
+        })
+    }
+    handleRowSelectionChange = enable => {
+        this.setState({
+            rowSelection: enable ? {
+                selectedRowKeys: [],
+                selectedRows: [],
+                // onChange: this.onSelectionChange.bind(this),
+                onSelect: this.onSelect.bind(this),
+                onSelectAll: this.onSelectAll.bind(this)
+            } : undefined
+        })
+    }
     render () {
         const { ...state } = this.state
         return (
@@ -444,16 +577,20 @@ class Article extends React.Component {
                     <title>文章列表</title>
                 </Head>
                 <h3 className='text-gray-600 text-lg leading-4 mb-5 divide-x border-solid border-l-4 pl-2 border-orange-f9'>文章列表</h3>
-                <AdvancedSearchForm setParentState={this.handlerFormSubmit.bind(this)} state={this.state} />
+                <AdvancedSearchForm state={this.state} {...state}
+                    setParentState={this.handlerFormSubmit.bind(this)}
+                    handleBatchDelete={this.handleBatchDelete.bind(this)}
+                    handleBatchStatus={this.handleBatchStatus.bind(this)}
+                    handleRowSelectionChange={this.handleRowSelectionChange.bind(this)} />
                 <Table
                     {...this.state}
                     width={1200}
-                    rowKey={(record, index) => index}
+                    rowKey={(record, index) => record.id}
                     dataSource={state.hasData ? this.state.data : null}
                     columns={columns(this)}
                     handleDelete={(val) => this.handleDelete(val)}
                     handleReview={(val) => this.handleReview(val)}
-                    scroll={{ y: 510 }}
+                    scroll={{ y: 450 }}
                     onChange={(pageData) => this.handlerFormSubmit(pageData, true)}
                     pagination={{
                         ...this.state.pageData,

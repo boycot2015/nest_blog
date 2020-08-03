@@ -28,7 +28,7 @@ class ArticleEdit extends React.Component {
         //通过process的browser属性判断处于何种环境：Node环境下为false,浏览器为true
         // 发送服务器请求
         const [res, detail, cateRes] = await Promise.all([await $api.tag.get(),
-        await $api.article.getById({ params: { id: query.id } }),
+        await $api.article.getById({ id: query.id }),
         await $api.category.get()])
         if (res && res.success && detail && detail.success) {
             const { id, title, content, tags, categoryId } = detail.data
@@ -95,7 +95,7 @@ class ArticleEdit extends React.Component {
             message.error('文章内容不能为空！')
             return true
         }
-        $api.article.edit({ data }).then(res => {
+        $api.article.edit({ ...data }).then(res => {
             if (res && res.success) {
                 Router.push('/article')
             } else {

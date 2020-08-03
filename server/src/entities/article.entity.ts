@@ -36,11 +36,11 @@ export class Article {
     @Column({ type: 'text', default: null, charset: 'utf8mb4', select: true })
     content: string
 
-    // @Column({ type: 'text', default: null, charset: 'utf8mb4', select: true })
-    // categoryId: string
+    @Column({ type: 'text', default: '', charset: 'utf8mb4', select: true })
+    url: string
 
-    // @Column({ type: 'text', default: null, charset: 'utf8mb4', select: true })
-    // tagIds: string
+    @Column({ type: 'text', default: '', charset: 'utf8mb4', select: true })
+    img: string
 
     @Column({ type: 'text', default: null, charset: 'utf8mb4', select: true })
     categoryName: string

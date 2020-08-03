@@ -27,7 +27,7 @@ class ArticleView extends React.Component {
         //通过process的browser属性判断处于何种环境：Node环境下为false,浏览器为true
         // 发送服务器请求
         // console.log(ctx.query, 'query')
-        let res = await $api.article.getById({ params: { id: ctx.query.id } })
+        let res = await $api.article.getById({ id: ctx.query.id })
         if (res && res.success) {
             // console.log(res.data, 'comment')
             return {
@@ -90,35 +90,39 @@ class ArticleView extends React.Component {
                             }}
                             readOnly
                         ></BraftEditor>
-                        <div className="others" style={{ width: 1000, margin: '0 auto', border: '1px dashed #e8e8e8', padding: '5px 20px' }}>
-                            {this.state.reviewData.tags && this.state.reviewData.tags.length ? <div style={{ width: 1000, margin: '0 auto 30px' }} className="tags">
-                                <h3 className="text-2 mb-5 mt-5">关联标签: </h3>
-                                <span>
-                                    {this.state.reviewData.tags && this.state.reviewData.tags.map((tag, index) => {
-                                        let color = index > 1 ? 'geekblue' : 'green';
-                                        if (tag.value === '前端') {
-                                            color = 'volcano';
-                                        }
-                                        return (
-                                            <Tag color={color} key={tag.id} className="mb-1">
-                                                {tag.value[0].toUpperCase() + tag.value.slice(1)}
-                                            </Tag>
-                                        );
-                                    })}
-                                </span>
-                            </div> : null}
-                            {this.state.reviewData.categoryName && this.state.reviewData.categoryName.length ? <div style={{ width: 1000, margin: '0 auto 30px' }} className="category">
-                                <h3 className="text-2 mb-5 mt-5">所属分类: </h3>
-                                <span style={{
-                                    backgroundColor: colors[Math.floor(Math.random() * colors.length)],
-                                    padding: '5px 10px',
-                                    color: 'white',
-                                    borderRadius: 5
-                                }}>
-                                    {this.state.reviewData.categoryName}
-                                </span>
-                            </div> : null}
-                        </div>
+                        {
+                            this.state.reviewData.tags && this.state.reviewData.tags.length &&
+                                this.state.reviewData.categoryName && this.state.reviewData.categoryName.length ?
+                                <div className="others" style={{ width: 1000, margin: '0 auto', border: '1px dashed #e8e8e8', padding: '5px 20px' }}>
+                                    {this.state.reviewData.tags && this.state.reviewData.tags.length ? <div style={{ width: 1000, margin: '0 auto 30px' }} className="tags">
+                                        <h3 className="text-2 mb-5 mt-5">关联标签: </h3>
+                                        <span>
+                                            {this.state.reviewData.tags && this.state.reviewData.tags.map((tag, index) => {
+                                                let color = index > 1 ? 'geekblue' : 'green';
+                                                if (tag.value === '前端') {
+                                                    color = 'volcano';
+                                                }
+                                                return (
+                                                    <Tag color={color} key={tag.id} className="mb-1">
+                                                        {tag.value[0].toUpperCase() + tag.value.slice(1)}
+                                                    </Tag>
+                                                );
+                                            })}
+                                        </span>
+                                    </div> : null}
+                                    {this.state.reviewData.categoryName && this.state.reviewData.categoryName.length ? <div style={{ width: 1000, margin: '0 auto 30px' }} className="category">
+                                        <h3 className="text-2 mb-5 mt-5">所属分类: </h3>
+                                        <span style={{
+                                            backgroundColor: colors[Math.floor(Math.random() * colors.length)],
+                                            padding: '5px 10px',
+                                            color: 'white',
+                                            borderRadius: 5
+                                        }}>
+                                            {this.state.reviewData.categoryName}
+                                        </span>
+                                    </div> : null}
+                                </div> : null
+                        }
                     </div>
                     <div className="comment">
                         <h3 className='text-gray-600 text-lg leading-4 mb-10 divide-x border-solid border-l-4 pl-2 border-orange-f9'>最新评论</h3>
