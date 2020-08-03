@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网抑云音乐</title>
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/dist/css/index.min.css">
+    <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/art-template/4.13.2/lib/template-web.min.js"></script>
+    <script src="/dist/js/template.js"></script>
+    <script src="/dist/js/index.js"></script>
+</head>
+<style>
+    .aside .list-item.active::before {
+        position: absolute;
+        content: '';
+        display: block;
+        left: 0;
+        height: 32px;
+        width: 2px;
+        z-index: 10;
+        background-color: #C62F2F;
+        /* border-left: 3px solid #C62F2F; */
+    }
+</style>
+<body>
+    <div class="container flexbox-h align-c">
+        <div class="box">
+            <div class="header flexbox-h">
+                <div class="logo flexbox-h">
+                    <div class="logo-icon"></div>
+                    <h3 class="logo-title">网抑云音乐</h3>
+                </div>
+                <div class="back-forward tc flexbox-h">
+                    <div class="back-btn">&lt;</div>
+                    <div class="forward-btn">&gt;</div>
+                </div>
+                <div class="search-box flexbox-h">
+                    <input type="text" placeholder="搜索音乐，视频，歌词，电台">
+                    <div class="input-icon fa fa-search"></div>
+                </div>
+                <div class="user-info flex-3 tc just-c flexbox-h">
+                    <div class="avatar ">
+                        <img src="/dist/images/avatar.jpg" alt="">
+                    </div>
+                    <div class="text name flex-1">大唐江流儿
+                        <i class="fa fa-caret-down"></i>
+                        <span class="vip-text">开通VIP</span>
+                    </div>
+                    <div class="text icon theme fa fa-snapchat-ghost"></div>
+                    <div class="text icon message fa fa-envelope-o"></div>
+                    <div class="text icon setting fa fa-cog"></div>
+                </div>
+                <div class="operation flex-1 align-c flexbox-h tc just-c">
+                    <i class="full-sreen-btn flex-1 fa fa-window-restore"></i>
+                    <i class="full-sreen-btn flex-1 fa fa-minus"></i>
+                    <i class="min-btn flex-1 fa fa-arrows-alt"></i>
+                    <i class="close-btn flex-1 fa fa-close "></i>
+                </div>
+            </div>
+            <div class="center flexbox-h">
+                <div class="aside">
+                    <div class="aside-list js-aside-template">
+    
+                    </div>
+                    <div class="music-info flexbox-h">
+                        <div class="img tl">
+                            <img src="/dist/images/avatar.jpg"alt="">
+                        </div>
+                        <div class="text flex-3">
+                            <div class="top flexbox-h just-b">
+                                <p class="name">至尊宝</p>
+                                <span class="star-icon fa fa-envelope-o"></span>
+                            </div>
+                            <div class="bottom flexbox-h just-b">
+                                <p class="singer">徐良/杨威</p>
+                                <span class="share-icon fa fa-envelope-o"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="main"></div>
+            </div>
+            <div class="footer"></div>
+        </div>
+    </div>
+</body>
+<script type="text/html" id="asideTemp">
+    {{each list}}
+        <div class="aside-item  {{$value.unfold ? 'unfold' : ''}}">
+            <div class="title flexbox-h just-b js-toggle-class">
+                <p class="name">{{$value.name}}</p>
+                <span class="icon right-icon-{{$value.icon}}">{{!$value.unfold ? '>' : ''}}</span>
+            </div>
+            <ul class="list">
+                {{each $value.list}}
+                    <li class="list-item js-list-item">
+                        <span class="icon left-icon-{{$value.icon}}"></span>
+                        <span class="name">{{$value.name}}</span>
+                    </li>
+                {{/each}}
+            </ul>
+        </div>
+    {{/each}}
+</script>
+</html>

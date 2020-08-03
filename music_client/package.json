@@ -1,0 +1,22 @@
+{
+  "name": "music_client",
+  "version": "1.0.0",
+  "description": "",
+  "main": "gulpfile.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "gulp-minify-css": "^1.2.4",
+    "gulp-sourcemaps": "^2.6.5"
+  },
+  "dependencies": {
+    "browser-sync": "^2.26.12"
+  }
+}
