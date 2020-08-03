@@ -52,11 +52,18 @@
             class="article-list-item"
             >
                 <div @click="onReview(item)" class="flexbox-h just-b">
-                    <div class="flex2 wrap"><div class="img" :style="{backgroundImage:`url('${getImgUrl(item.content)}')`}"></div></div>
-                    <div class="text flex3 tl">
+                    <div class="flex2 wrap" v-if="item.img || getImgUrl(item.content)"><div class="img" :style="{backgroundImage:`url('${item.img || getImgUrl(item.content)}')`}"></div></div>
+                    <div
+                        class="text flex3 tl"
+                        :style="{
+                            minHeight: item.img || getImgUrl(item.content) ? '': '180px'
+                        }"
+                    >
                         <div class="title line-clamp2">{{ item.title }}</div>
                         <div
-                        :style="{maxHeight: item.content.length > 120 && item.title.length <= 28 ? '88px':'' }"
+                        :style="{
+                            maxHeight: item.content.length > 120 && item.title.length <= 28 ? '88px':''
+                            }"
                         :class="{'line-clamp4': item.content.length > 120 && item.title.length <= 28 }"
                         class="desc line-clamp3"
                         v-html="item.content"

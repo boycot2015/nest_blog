@@ -21,10 +21,13 @@
         }
         &:hover {
             box-shadow: 0px 0 10px @c-e8;
+            .text .title {
+                color: @primary;
+            }
         }
         .wrap {
             overflow: hidden;
-            margin-right: 20px;
+            // margin-right: 20px;
         }
         .img {
             height: 180px;
@@ -39,14 +42,12 @@
             width: calc(100% - 355px);
             text-align: justify;
             position: relative;
+            margin-left: 20px;
             .title {
                 font-size: 18px;
                 // height: 48px;
                 line-height: 24px;
                 color: @c-333;
-                &:hover {
-                    color: @primary;
-                }
             }
             .desc {
                 margin-top: 5px;

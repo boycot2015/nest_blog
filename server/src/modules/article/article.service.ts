@@ -17,6 +17,47 @@ export class ArticleService {
         private readonly tagService: TagService
     ) { }
     async get(data) {
+        /**
+         * 合并第三方新闻接口与博客接口一同返回
+         * 对接第三方sdk api
+         */
+        let newsList = []
+        /**
+         *  {
+            "ctime": "2020-07-31 17:45:07",
+            "title": "特朗普改口不推迟大选：他干的这些事，历史上其他总统也干了",
+            "description": "2020年美国迎来四年一次的总统选举，在新冠疫情与“黑人之死”事件的影响下，白宫会否迎来新主人？",
+            "picUrl": "http://p26-tt.byteimg.com/img/web-union/678f56ef-3d4e-47cb-9eb7-724769ce9ebd~tplv-tt-cs0:1125:555.jpg",
+            "url": "http://toutiao.com/group/6854697468815281672/",
+            "source": "热榜内容"
+            }
+         */
+        let listRes = { result: null, newslist: [], code: 200 }
+        listRes = await tianApi.getNewsList({ word: data.title })
+        if (listRes.code === 200) {
+            newsList = listRes.newslist
+            newsList.map(el => {
+                 el.content = el.description
+                 el.createTime = el.ctime
+                 el.updateTime = el.ctime
+                 el.comment = []
+                 el.tags = []
+                 el.img = el.picUrl
+                 el.status = 1001
+                 el.category = {
+                    createTime: el.ctime,
+                    id: el.uniquekey,
+                    label: null,
+                    parentId: null,
+                    status: 1001,
+                    updateTime: el.ctime,
+                    value: el.category
+                }
+            })
+        }
+        newsList.map(el => {
+            this.create(el)
+        })
         data.current = data.current || 1
         data.pageSize = data.pageSize || 10
         // console.log(data, 'asdada')
@@ -67,47 +108,11 @@ export class ArticleService {
         if (data.category || data.tag) {
             return await queryBy.getManyAndCount()
         }
-        /**
-         * 合并第三方新闻接口与博客接口一同返回
-         * 对接第三方sdk api
-         */
-        let newsList = []
-        /**
-         *  {
-            "ctime": "2020-07-31 17:45:07",
-            "title": "特朗普改口不推迟大选：他干的这些事，历史上其他总统也干了",
-            "description": "2020年美国迎来四年一次的总统选举，在新冠疫情与“黑人之死”事件的影响下，白宫会否迎来新主人？",
-            "picUrl": "http://p26-tt.byteimg.com/img/web-union/678f56ef-3d4e-47cb-9eb7-724769ce9ebd~tplv-tt-cs0:1125:555.jpg",
-            "url": "http://toutiao.com/group/6854697468815281672/",
-            "source": "热榜内容"
-            }
-         */
-        let listRes = { result: null, newslist: [], code: 200 }
-        listRes = await tianApi.getNewsList({ word: data.title })
-        if (listRes.code === 200) {
-            newsList = listRes.newslist
-            newsList.map(el => {
-                 el.content = el.description
-                 el.createTime = el.ctime
-                 el.comment = []
-                 el.img = el.picUrl
-                 el.status = 1001
-                 el.category = {
-                    createTime: el.ctime,
-                    id: el.uniquekey,
-                    label: null,
-                    parentId: null,
-                    status: 1001,
-                    updateTime: el.ctime,
-                    value: el.category
-                }
-            })
-        }
         let res = await queryBy.getManyAndCount()
-        if (current > 1) {
-            return Promise.resolve(res)
-        }
-        res[0] = [...newsList, ...res[0]]
+        // if (current > 1) {
+        //     return Promise.resolve(res)
+        // }
+        // res[0] = [...newsList, ...res[0]]
         // console.log(res[0], 'newsRes')
         // return await queryBy.getManyAndCount()
         return Promise.resolve(res)
@@ -144,6 +149,7 @@ export class ArticleService {
             newsList.map(el => {
                     el.content = el.description
                     el.createTime = el.ctime
+                    el.updateTime = el.ctime
                     el.comment = []
                     el.img = el.picUrl
                     el.status = 1001
@@ -164,6 +170,7 @@ export class ArticleService {
         let res = await queryBy.getManyAndCount()
         res[0] = res[0].slice(0, 2)
         res[0] = newsList.concat(res[0])
+        res[1] += newsList.length
         // console.log(res, 'keyWordRes')
         return Promise.resolve(res)
         // return await queryBy.getManyAndCount()
@@ -180,6 +187,10 @@ export class ArticleService {
         const exist = await this.articleRepository.findOne({ where: { title } });
 
         if (exist) {
+            // process.on('unhandledRejection', error => {
+            //     console.error('文章标题已存在', error);
+            //     process.exit(1) // To exit with a 'failure' code
+            // })
             throw new HttpException('文章标题已存在', responseStatus.failed.code);
         }
         let { tags = [], categoryId = null } = data
@@ -259,6 +270,22 @@ export class ArticleService {
         }
         else throw new HttpException(`暂无数据`, 404);
     }
+    // 批量删除文章
+    async batchDelete({ ids }) {
+        // return Promise.resolve('操作成功！');
+        if (!ids) {
+            throw new HttpException("参数为空", responseStatus.failed.code);
+        }
+        ids = ids.split(',')
+        const hasArticle = await this.articleRepository.findByIds(ids)
+        // console.log(hasArticle)
+        if (!hasArticle) {
+            throw new HttpException("评论不存在！", responseStatus.failed.code);
+        } else {
+            await this.articleRepository.remove(hasArticle)
+            return responseStatus.success.message
+        }
+    }
     /**
      * 根据id获取文章
      * @param id 文章id
@@ -309,6 +336,24 @@ export class ArticleService {
             throw new HttpException("文章不存在！", responseStatus.failed.code);
         }
         const updatedArticle = { ...existUser, status }
+        await this.articleRepository.save(updatedArticle)
+        return responseStatus.success.message
+    }
+    // 批量修改状态
+    async batchStatus({ ids, status }) {
+        if (!ids || !status) {
+            throw new HttpException("参数为空", responseStatus.failed.code);
+        }
+        ids = ids.split(',')
+        const existComment = await this.articleRepository.findByIds(ids)
+        // console.log(existComment)
+        if (!existComment) {
+            throw new HttpException("评论不存在！", responseStatus.failed.code);
+        }
+        const updatedArticle = []
+        existComment.map(el => {
+            updatedArticle.push({...el, status: status})
+        })
         await this.articleRepository.save(updatedArticle)
         return responseStatus.success.message
     }

@@ -83,7 +83,7 @@ class ArticleAdd extends React.Component {
             message.error('文章内容不能为空！')
             return true
         }
-        $api.article.add({ data }).then(res => {
+        $api.article.add({ ...data }).then(res => {
             if (res && res.success) {
                 Router.push('/article')
             } else {

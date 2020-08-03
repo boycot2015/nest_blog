@@ -1,9 +1,23 @@
 <template>
     <div class="time">
-        <p>{{ datetime + '/' + week }}</p>
-        <p>{{ nongli }}</p>
+        <p><span class="date">{{ datetime }}</span> / <span class="week">{{ week }}</span></p>
+        <p class="calendar">{{ nongli }}</p>
     </div>
 </template>
+<style lang="less">
+    .time {
+        .date {
+            color: @c-333;
+            font-size: 22px;
+        }
+        .week {
+            color: @primary;
+        }
+        .calendar {
+            color: @c-666;
+        }
+    }
+</style>
 <script>
 import { timeFormat } from '@/utils'
 export default {

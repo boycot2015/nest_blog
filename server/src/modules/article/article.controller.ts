@@ -123,7 +123,19 @@ export class ArticleState {
     })
     status: string;
 }
+export class ArticleBatchState {
+    @ApiProperty({
+        description: '文章ids',
+        required: true
+    })
+    ids: string;
 
+    @ApiProperty({
+        description: '状态',
+        required: false
+    })
+    status: string;
+}
 @Controller('article')
 @ApiTags('文章列表')
 export class ArticleController {
@@ -177,5 +189,18 @@ export class ArticleController {
     @UseGuards(AuthGuard())
     public status(@Body() userStatus: ArticleState) {
         return this.articleService.setStatus(userStatus)
+    }
+    @Post('/delete/batch')
+    @ApiOperation({ summary: '批量删除文章' })
+    // @ApiQuery({ name: 'ids', description: '文章ids', required: true })
+    @UseGuards(AuthGuard())
+    public batchDelete(@Body() data) {
+        return this.articleService.batchDelete(data)
+    }
+    @Post('/status/batch')
+    @ApiOperation({ summary: '批量更改评论状态' })
+    @UseGuards(AuthGuard())
+    public batchStatus(@Body() articleBatchState: ArticleBatchState) {
+        return this.articleService.batchStatus(articleBatchState)
     }
 }

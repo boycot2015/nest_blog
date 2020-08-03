@@ -1,46 +1,32 @@
-import { getDataFromServer } from '../index'
+import axios from '@/api/axios'
 import url from './url'
 export default {
-    getById (configObj) {
-        let {
-            method = 'get',
-            params = {}
-        } = configObj
-        return getDataFromServer(url.getById, { method, params })
+    getById (params) {
+        return axios.get(url.getById, { params })
     },
-    get (configObj) {
-        let {
-            method = 'get',
-            params = {}
-        } = (configObj && configObj) || {}
-        return getDataFromServer(url.get, { method, params })
+    get (params) {
+        return axios.get(url.get, { params })
     },
-    add (configObj) {
-        let {
-            method = 'post',
-            data = {}
-        } = configObj
-        return getDataFromServer(url.add, { method, data })
+    add (data) {
+        return axios.post(url.add, data)
     },
-    edit (configObj) {
-        let {
-            method = 'post',
-            data = {}
-        } = configObj
-        return getDataFromServer(url.edit, { method, data })
+    edit (data) {
+        return axios.post(url.edit, data)
     },
-    delete (configObj) {
-        let {
-            method = 'post',
-            params = {}
-        } = configObj
-        return getDataFromServer(url.delete, { method, params })
+    delete (params) {
+        return axios({
+            method: 'post',
+            url: url.delete,
+            params
+        })
     },
-    status (configObj) {
-        let {
-            method = 'post',
-            data = {}
-        } = configObj
-        return getDataFromServer(url.status, { method, data })
+    status (data) {
+        return axios.post(url.status, data)
+    },
+    batchDelete (data) {
+        return axios.post(url.batchDelete, data)
+    },
+    batchStatus (data) {
+        return axios.post(url.batchStatus, data)
     }
 }
