@@ -13,3 +13,13 @@ var TemplateEngine = function(html, options) {
     code += 'return r.join("");';
     return new Function(code.replace(/[\r\t\n]/g, '')).apply(options);
 }
+
+//传入参数为文件路径,return 出返回值的responseText文本
+function getTpl(fileUrl) {
+    var result = $.ajax({
+        type: "GET",
+        url: fileUrl,
+        async: false
+    });
+    return result.responseText;
+};

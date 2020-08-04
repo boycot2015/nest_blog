@@ -1,0 +1,129 @@
+[
+    {
+        "name": "推荐",
+        "icon": "record",
+        "unfold": true,
+        "list": [
+            {
+                "id": 1,
+                "name": "发现音乐",
+                "icon": "music"
+            },
+            {
+                "id": 2,
+                "name": "私人FM",
+                "icon": "FM"
+            },
+            {
+                "id": 3,
+                "name": "LOOK直播",
+                "icon": "replay"
+            },
+            {
+                "id": 4,
+                "name": "视频",
+                "icon": "video"
+            },
+            {
+                "id": 5,
+                "name": "朋友",
+                "icon": "friend"
+            }
+        ]
+    },
+    {
+        "name": "我的音乐",
+        "icon": "record",
+        "unfold": true,
+        "list": [
+            {
+                "id": 1,
+                "name": "本地音乐",
+                "icon": "my-music"
+            },
+            {
+                "id": 2,
+                "name": "下载管理",
+                "icon": "download"
+            },
+            {
+                "id": 3,
+                "name": "我的音乐云盘",
+                "icon": "cloud"
+            },
+            {
+                "id": 4,
+                "name": "我的电台",
+                "icon": "radio"
+            },
+            {
+                "id": 5,
+                "name": "我的收藏",
+                "icon": "star-user"
+            }
+        ]
+    },
+    {
+        "name": "创建的歌单",
+        "icon": "record",
+        "list": [
+            {
+                "id": 1,
+                "name": "我喜欢的音乐",
+                "icon": "love",
+                "rightIcon": "beckoning"
+            },
+            {
+                "id": 2,
+                "name": "下载管理",
+                "icon": "list"
+            },
+            {
+                "id": 3,
+                "name": "我的音乐云盘",
+                "icon": "list"
+            },
+            {
+                "id": 4,
+                "name": "我的电台",
+                "icon": "list"
+            },
+            {
+                "id": 5,
+                "name": "我的收藏",
+                "icon": "list"
+            }
+        ]
+    },
+    {
+        "name": "收藏的歌单",
+        "icon": "record",
+        "list": [
+            {
+                "id": 1,
+                "name": "本地音乐",
+                "icon": "list"
+            },
+            {
+                "id": 2,
+                "name": "下载管理",
+                "icon": "list"
+            },
+            {
+                "id": 3,
+                "name": "我的音乐云盘",
+                "icon": "list"
+            },
+            {
+                "id": 4,
+                "name": "我的电台",
+                "icon": "list"
+            },
+            {
+                "id": 5,
+                "name": "我的收藏",
+                "icon": "list"
+            }
+        ]
+    }
+]

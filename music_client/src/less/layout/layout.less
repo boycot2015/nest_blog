@@ -9,7 +9,7 @@
         width: 1020px;
         height: 700px;
         box-shadow: 0 0 20px @c-333;
-        border: 1px solid @primary;
+        // border: 1px solid @primary;
         background-color: #F5F5F7;
         .header {
             height: 50px;
@@ -18,15 +18,28 @@
             background-color: @primary;
             .logo {
                 line-height: 50px;
+                min-width: 120px;
                 .logo-title {
                     font-size: 16px;
                 }
                 .logo-icon {
-                    width: 25px;
-                    height: 25px;
-                    border-radius: 25px;
-                    margin-right: 10px;
-                    background-color: @c-ccc;
+                    width: 20px;
+                    height: 20px;
+                    line-height: 20px;
+                    border-radius: 22px;
+                    margin-right: 5px;
+                    background-color: @white;
+                    position: relative;
+                    &:after {
+                        // content: '';
+                        font-size: 12px;
+                        position: absolute;
+                        top: 1px;
+                        left: 4px;
+                        height: 100%;
+                        color: @primary;
+                        width: 100%;
+                    }
                 }
             }
             .back-forward {
@@ -65,7 +78,8 @@
                 }
             }
             .user-info {
-                margin-left: 80px;
+                margin-left: 120px;
+                min-width: 280px;
                 .avatar {
                     width: 25px;
                     height: 25px;
@@ -77,11 +91,17 @@
                 }
                 .text {
                     padding: 0 12px;
+                    &:last-child {
+                        padding-right: 0;
+                    }
                     &.icon {
                         font-size: 18px;
+                        &::after {
+                            color: @white;
+                        }
                     }
                     .vip-text {
-                        margin-left: 20px;
+                        margin-left: 5px;
                     }
                 }
             }
@@ -91,7 +111,10 @@
                 i {
                     font-size: 14px;
                     font-weight: 300;
-                    vertical-align: middle;
+                    &::after {
+                        vertical-align: middle;
+                        color: @white;
+                    }
                     &.close-btn {
                         font-size: 18px;
                     }
@@ -128,7 +151,7 @@
                     }
                     &.active {
                         .icon {
-                            transform: rotateZ(-90deg);
+                            transform: rotateZ(90deg);
                         }
                     }
                 }
@@ -141,10 +164,32 @@
                     }
                     &-item {
                         line-height: 32px;
-                        padding: 0 20px;
+                        padding: 0 10px 0 20px;
                         position: relative;
+                        cursor: pointer;
+                        &:hover {
+                            .name {
+                                color: @c-000;
+                            }
+                        }
                         &.active {
                             background-color: #E6E7EA;
+                            .name {
+                                color: @c-000;
+                            }
+                            &::before {
+                                position: absolute;
+                                content: '';
+                                display: block;
+                                left: 0;
+                                height: 32px;
+                                width: 3px;
+                                z-index: 10;
+                                background-color: @primary;
+                            }
+                        }
+                        .icon {
+                            margin-right: 5px;
                         }
                         .name {
                             font-size: 12px;
@@ -153,7 +198,7 @@
                     }
                 }
             }
-            .aside-list  {
+            .aside-list {
                 overflow: hidden;
                 overflow-y: auto;
                 height: calc(100% - 56px);
@@ -180,12 +225,106 @@
                     .singer {
                         color: @c-666;
                     }
+                    .star-icon,
+                    .share-icon {
+                        &::after {
+                            font-size: 14px;
+                        }
+                    }
                 }
             }
         }
         
         .footer {
+            height: 50px;
             border-top: 1px solid @c-ddd;
+            .play-btn {
+                width: 200px;
+                padding: 0 15px;
+                box-sizing: border-box;
+            }
+            .progress {
+                padding-left: 5px;
+                &-bar {
+                    width: 380px;
+                    height: 5px;
+                    margin: 0 14px;
+                    position: relative;
+                    background-color: @c-ccc;
+                    border-radius: 5px;
+                    .line {
+                        position: absolute;
+                        left: 0;
+                        top: 0;
+                        width: 20%;
+                        height: 100%;
+                        z-index: 9;
+                        border-radius: 5px;
+                        background-color: @primary;
+                    }
+                    .point {
+                        position: absolute;
+                        left: 18%;
+                        top: -5px;
+                        height: 12px;
+                        width: 12px;
+                        z-index: 10;
+                        border-radius: 10px;
+                        background-color: @white;
+                        border: 1px solid @c-ccc;
+                        &::after {
+                            content: '';
+                            background-color: @primary;
+                            border-radius: 3px;
+                            position: absolute;
+                            top: 50%;
+                            left: 50%;
+                            margin-left: -2px;
+                            margin-top: -1px;
+                            width: 3px;
+                            height: 3px;
+                        }
+                    }
+                }
+            }
+            .volume {
+                margin: 0 7px;
+                &-bar {
+                    width: 100px;
+                    height: 5px;
+                    margin: 0 8px;
+                    position: relative;
+                    background-color: @c-ccc;
+                    border-radius: 5px;
+                    .line {
+                        position: absolute;
+                        left: 0;
+                        top: 0;
+                        width: 20%;
+                        height: 100%;
+                        z-index: 9;
+                        border-radius: 5px;
+                        background-color: @primary;
+                    }
+                }
+                .heart-icon {
+                    margin-left: 8px;
+                }
+            }
+            .others {
+                width: 180px;
+                padding: 0 20px 0 10px;
+                i {
+                    font-size: 12px;
+                    color: @c-666;
+                    &.type,
+                    &.word {
+                        border: 1px solid @c-999;
+                        border-radius: 2px;
+                        padding: 2px;
+                    }
+                }
+            }
         }
     }
 }
