@@ -4,8 +4,13 @@
     background: url('/dist/images/bg.jpg') no-repeat;
     background-position: center;
     background-size: cover;
-    .box {
-        margin: 100px auto;
+    .music-box {
+        // position: absolute;
+        // top: 50%;
+        // margin-top: -350px;
+        // left: 50%;
+        // margin-left: -510px;
+        position: absolute;
         width: 1020px;
         height: 700px;
         box-shadow: 0 0 20px @c-333;
@@ -65,20 +70,25 @@
                 overflow: hidden;
                 width: 210px;
                 padding-right: 10px;
-                background-color: #A82828;
+                // background-color: #A82828;
+                background-color: rgba(0, 0, 0, 0.15);
                 input {
                     width: 210px;
                     height: 22px;
                     color: @white;
-                    background-color: #A82828;
-                    // background-color: rgba(0, 0, 0, 0.1);
+                    opacity: 0.6;
+                    background-color: transparent;
+                    &:focus {
+                        opacity: 1;
+                    }
                 }
                 .input-icon {
                     color: @c-ccc;
                 }
             }
             .user-info {
-                margin-left: 120px;
+                margin-left: 132px;
+                margin-right: 15px;
                 min-width: 280px;
                 .avatar {
                     width: 25px;
@@ -91,6 +101,15 @@
                 }
                 .text {
                     padding: 0 12px;
+                    color: @white;
+                    opacity: 0.6;
+                    cursor: pointer;
+                    &.name {
+                        padding: 0 12px 0 6px;
+                        .name {
+                            margin-right: 5px;
+                        }
+                    }
                     &:last-child {
                         padding-right: 0;
                     }
@@ -100,17 +119,25 @@
                             color: @white;
                         }
                     }
-                    .vip-text {
-                        margin-left: 5px;
+                    &:hover {
+                        opacity: 1;
+                    }
+                    &.vip-text {
+                        padding: 0;
                     }
                 }
             }
             .operation {
-                border-left: 1px solid @c-ccc;
+                border-left: 1px solid #A82828;
                 padding-left: 10px;
                 i {
                     font-size: 14px;
                     font-weight: 300;
+                    opacity: 0.6;
+                    cursor: pointer;
+                    &:hover {
+                        opacity: 1;
+                    }
                     &::after {
                         vertical-align: middle;
                         color: @white;
@@ -133,6 +160,7 @@
             &-item {
                 // padding: 10px 20px 0 10px;
                 margin-top: 10px;
+                cursor: pointer;
                 &.unfold {
                     .list {
                         height: auto;
@@ -168,13 +196,13 @@
                         position: relative;
                         cursor: pointer;
                         &:hover {
-                            .name {
+                            .name,.icon::after {
                                 color: @c-000;
                             }
                         }
                         &.active {
                             background-color: #E6E7EA;
-                            .name {
+                            .name,.icon::after {
                                 color: @c-000;
                             }
                             &::before {
@@ -211,6 +239,31 @@
                 border-top: 1px solid @c-ddd;
                 border-right: 1px solid @c-ddd;
                 background-color: #F5F5F7;
+                position: relative;
+                .mask {
+                    position: absolute;
+                    display: none;
+                    left: 0;
+                    top: 0;
+                    height: 100%;
+                    width: 100%;
+                    .icon::after {
+                        color: @c-ccc;
+                        // line-height: 56px;
+                        padding: 3px 4px;
+                        position: absolute;
+                        left: 8px;
+                        top: 7px;
+                        box-sizing: border-box;
+                        font-size: 32px;
+                        background-color: rgba(0, 0, 0, 0.3);
+                    }
+                }
+                &:hover {
+                    .mask {
+                        display: block;
+                    }
+                }
                 .img {
                     width: 40px;
                     height: 40px;
@@ -244,13 +297,14 @@
                 box-sizing: border-box;
             }
             .progress {
+                height: 20px;
                 padding-left: 5px;
                 &-bar {
                     width: 380px;
-                    height: 5px;
+                    height: 4px;
                     margin: 0 14px;
                     position: relative;
-                    background-color: @c-ccc;
+                    background-color: @c-ddd;
                     border-radius: 5px;
                     .line {
                         position: absolute;
@@ -260,7 +314,7 @@
                         height: 100%;
                         z-index: 9;
                         border-radius: 5px;
-                        background-color: @primary;
+                        background-color: @footer-theme;
                     }
                     .point {
                         position: absolute;
@@ -272,39 +326,39 @@
                         border-radius: 10px;
                         background-color: @white;
                         border: 1px solid @c-ccc;
+                        cursor: pointer;
+                        &:hover {
+                            box-shadow: 0 0 10px @c-666;
+                        }
                         &::after {
                             content: '';
-                            background-color: @primary;
+                            background-color: @footer-theme;
                             border-radius: 3px;
                             position: absolute;
                             top: 50%;
                             left: 50%;
                             margin-left: -2px;
-                            margin-top: -1px;
-                            width: 3px;
-                            height: 3px;
+                            margin-top: -2px;
+                            width: 4px;
+                            height: 4px;
                         }
                     }
                 }
             }
             .volume {
                 margin: 0 7px;
-                &-bar {
+                .progress-bar {
                     width: 100px;
-                    height: 5px;
+                    height: 4px;
                     margin: 0 8px;
                     position: relative;
-                    background-color: @c-ccc;
+                    background-color: @c-ddd;
                     border-radius: 5px;
-                    .line {
-                        position: absolute;
-                        left: 0;
-                        top: 0;
-                        width: 20%;
-                        height: 100%;
-                        z-index: 9;
-                        border-radius: 5px;
-                        background-color: @primary;
+                    .point {
+                        display: none;
+                        &:hover {
+                            display: block;
+                        }
                     }
                 }
                 .heart-icon {

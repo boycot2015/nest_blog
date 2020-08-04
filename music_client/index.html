@@ -15,7 +15,7 @@
 </style>
 <body>
     <div class="container flexbox-h align-c">
-        <div class="box">
+        <div class="music-box flexbox-v">
             <div class="header flexbox-h">
                 <div class="logo flexbox-h">
                     <div class="logo-icon icon-music-logo-icon"></div>
@@ -36,8 +36,8 @@
                     <div class="text name">
                         <span class="name">大唐江流儿</span>
                         <i class="fa fa-caret-down"></i>
-                        <span class="vip-text">开通VIP</span>
                     </div>
+                    <span class="text vip-text">开通VIP</span>
                     <div class="text icon theme icon-music-clothes"></div>
                     <div class="text icon message icon-music-msg"></div>
                     <div class="text icon setting icon-music-setting"></div>
@@ -55,6 +55,9 @@
                         <div id="template"></div>
                     </div>
                     <div class="music-info flexbox-h">
+                        <div class="mask">
+                            <i class="icon icon-music-max"></i>
+                        </div>
                         <div class="img tl">
                             <img src="/dist/images/avatar.jpg"alt="">
                         </div>
@@ -82,14 +85,15 @@
                     <span class="start-time tl">00:50</span>
                     <div class="progress-bar tc flex-4">
                         <span class="point"></span>
-                        <span class="line"></span>
+                        <span class="line js-line"></span>
                     </div>
                     <span class="end-time tr">03:08</span>
                 </div>
                 <div class="volume flex-2 flexbox-h just-b tc">
                     <i class="icon-music-volume flex-1"></i>
-                    <div class="volume-bar flex-4">
-                        <span class="line"></span>
+                    <div class="progress-bar flex-4">
+                        <span class="point"></span>
+                        <span class="line js-line"></span>
                     </div>
                     <i class="heart-icon icon-music-beckoning flex-1"></i>
                 </div>

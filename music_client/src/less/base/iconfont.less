@@ -1,13 +1,12 @@
 @font-face {
-    font-family: 'font-music'; /* project id 1984636 */
-    src: url('//at.alicdn.com/t/font_1984636_72ztivrtwtv.eot');
-    src: url('//at.alicdn.com/t/font_1984636_72ztivrtwtv.eot?#iefix') format('embedded-opentype'),
-    url('//at.alicdn.com/t/font_1984636_72ztivrtwtv.woff2') format('woff2'),
-    url('//at.alicdn.com/t/font_1984636_72ztivrtwtv.woff') format('woff'),
-    url('//at.alicdn.com/t/font_1984636_72ztivrtwtv.ttf') format('truetype'),
-    url('//at.alicdn.com/t/font_1984636_72ztivrtwtv.svg#font-music') format('svg');
+    font-family: 'font-music';  /* project id 1984636 */
+    src: url('//at.alicdn.com/t/font_1984636_lirbvc4dx6b.eot');
+    src: url('//at.alicdn.com/t/font_1984636_lirbvc4dx6b.eot?#iefix') format('embedded-opentype'),
+    url('//at.alicdn.com/t/font_1984636_lirbvc4dx6b.woff2') format('woff2'),
+    url('//at.alicdn.com/t/font_1984636_lirbvc4dx6b.woff') format('woff'),
+    url('//at.alicdn.com/t/font_1984636_lirbvc4dx6b.ttf') format('truetype'),
+    url('//at.alicdn.com/t/font_1984636_lirbvc4dx6b.svg#font-music') format('svg');
   }
-
 .icon-music {
     font-family: 'font-music';
     font-size: 18px;
@@ -263,7 +262,7 @@
         font-family: 'font-music';
         font-size: 14px;
         color: @white;
-        background-color: @primary;
+        background-color: @footer-theme;
         border-radius: 32px;
         padding: 8px;
         vertical-align: bottom;
@@ -273,7 +272,7 @@
         font-family: 'font-music';
         font-size: 14px;
         color: @white;
-        background-color: @primary;
+        background-color: @footer-theme;
         border-radius: 32px;
         padding: 8px;
         vertical-align: bottom;
@@ -311,7 +310,7 @@
         font-family: 'font-music';
         font-size: 16px;
         color: @white;
-        background-color: @primary;
+        background-color: @footer-theme;
         border-radius: 32px;
         padding: 8px;
         vertical-align: bottom;
@@ -331,5 +330,11 @@
         vertical-align: bottom;
         content: '\e70f';
     }
-
+    &-max::after {
+        font-family: 'font-music';
+        font-size: 18px;
+        color: @c-666;
+        vertical-align: bottom;
+        content: '\e725';
+    }
 }

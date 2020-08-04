@@ -43,6 +43,7 @@ var watch = require('gulp-watch');
 var bs = require('browser-sync').create();
 var less = require('gulp-less');
 function logError (logError) {
+    console.log(logError)
     this.emit('end')
 }
 // 为避免写死路径,这里我们定义路径,然后方面后面随时更改.

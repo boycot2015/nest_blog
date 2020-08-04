@@ -12,7 +12,7 @@ var sass = require('gulp-sass');
 // 为避免写死路径,这里我们定义路径,然后方面后面随时更改.
 var path = {
     'html':'./templates/**/',//中间的**代表任意目录
-    'css':'./src/css/',
+    'css':'./src/css/**/',
     'js':'./src/js/',
     'images':'./src/images/',
     'css_dist':'./dist/css/',
