@@ -68,6 +68,7 @@ function drag(obj,target,site,fn){
             if(fn){                         //执行回调函数，如果有其他附加情况需要处理
                 fn({left:iLeft,top:iTop})
             }
+            $(obj).find('.point').show()
             target.style.left = iLeft + 'px';
             target.style.top = iTop + 'px';
         }

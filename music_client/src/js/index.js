@@ -36,7 +36,7 @@ $(function () {
 
     // 渲染底部===================================
 
-    // 1. 进度条js
+    // 1. 时间进度条js
     $('.progress .progress-bar').click(function(e) {
         var left = e.offsetX
         if (commonObj.progressPsition) {
@@ -57,15 +57,21 @@ $(function () {
         commonObj.progressPsition = position
         $('.progress .progress-bar .line').width(position.left)
     })
-    // 2.音量js
-    $('.volume .volume-bar').click(function(e) {
+    // 2.音量进度条js
+    $('.volume .progress-bar').click(function(e) {
         var left = e.offsetX
         if (commonObj.progressPsition) {
             left = commonObj.progressPsition.left
         }
-        $('.volume .volume-bar .point').css('left', left)
-        $('.volume .volume-bar .js-line').css('width', left)
+        $('.volume .progress-bar .point').css('left', left)
+        left  = e.offsetX > 8 ? left + 8 : left
+        $('.volume .progress-bar .js-line').width(left)
         commonObj.progressPsition = ''
+    })
+    $('.volume .progress-bar').mouseenter(function () {
+        $(this).find('.point').show()
+    }).mouseleave(function () {
+        $(this).find('.point').hide()
     })
     drag(
         $('.volume .progress-bar .point')[0],
@@ -76,6 +82,21 @@ $(function () {
         b: -4
     }, function (position) {
         commonObj.progressPsition = position
-        $('.volume .progress-bar .line').width(position.left)
+        var left = position.left
+        left  = left > 8 ? left + 8 : left
+        $('.volume .progress-bar .line').width(left)
+    })
+    $('.js-music-volume').click(function () {
+        var width = parseInt($('.volume .progress-bar .line').css('width'))
+        if (!width) {
+            $('.volume .progress-bar .point').css('left', commonObj.progressPsition.left)
+            $('.volume .progress-bar .line').width(commonObj.progressPsition.left)
+        } else {
+            commonObj.progressPsition = {
+                left: width
+            }
+            $('.volume .progress-bar .point').css('left', 0)
+            $('.volume .progress-bar .line').width(0)
+        }
     })
 })
