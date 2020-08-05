@@ -15,7 +15,7 @@
 </style>
 <body>
     <div class="container flexbox-h align-c">
-        <div class="music-box flexbox-v">
+        <div class="music-box js-music-box flexbox-v">
             <div class="header flexbox-h">
                 <div class="logo flexbox-h">
                     <div class="logo-icon icon-music-logo-icon"></div>
@@ -43,10 +43,10 @@
                     <div class="text icon setting icon-music-setting"></div>
                 </div>
                 <div class="operation flex-1 align-c flexbox-h tc just-c">
-                    <i class="full-sreen-btn flex-1 icon-music-min"></i>
-                    <i class="full-sreen-btn flex-1 fa icon-music-minus"></i>
-                    <i class="min-btn flex-1 icon-music-rectangle"></i>
-                    <i class="close-btn flex-1 icon-music-close "></i>
+                    <i class="full-sreen-btn flex-1 icon-music-min js-music-min"></i>
+                    <i class="full-sreen-btn flex-1 fa icon-music-minus js-music-minus"></i>
+                    <i class="min-btn flex-1 icon-music-rectangle js-music-rectangle"></i>
+                    <i class="close-btn flex-1 icon-music-close js-music-close"></i>
                 </div>
             </div>
             <div class="center flexbox-h">
@@ -78,7 +78,7 @@
             <div class="footer flexbox-h just-a">
                 <div class="play-btn flexbox-h just-a">
                     <i class="icon-music-play-left"></i>
-                    <i class="icon-music-pause"></i>
+                    <i class="js-play icon-music-pause"></i>
                     <i class="icon-music-play-right"></i>
                 </div>
                 <div class="progress flex-2 flexbox-h just-b">
@@ -105,6 +105,72 @@
                 </div>
             </div>
         </div>
+        <div class="mini-music-box js-mini-music-box flexbox-v">
+            <div class="wrap flexbox-h just-b">
+                <div class="left flex-2 flexbox-h just-b">
+                    <div class="img tl">
+                        <img src="/dist/images/avatar.jpg"alt="">
+                    </div>
+                    <p class="name tc">一诺千金到尽头</p>
+                    <div class="play-btn js-play-btn flexbox-h just-a">
+                        <i class="icon-music-play-left"></i>
+                        <i class="icon-play js-play icon-music-pause"></i>
+                        <i class="icon-music-play-right"></i>
+                    </div>
+                    <div class="more js-more text">
+                        <div class="wrap flexbox-h tc just-c">
+                            <p class="name">菩提偈</p>
+                            <span class="line"> - </span>
+                            <span class="singer">刘惜君</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="right flex-1 flexbox-h just-b">
+                    <span class="love-icon icon-music-love"></span>
+                    <span class="volume-icon icon-music-volume"></span>
+                    <span class="list-icon icon-music-list js-list-icon"></span>
+                </div>
+                <!-- <div class="text flex-3 flexbox-h just-b">
+                </div> -->
+            </div>
+            <div class="more js-mini-music-list">
+                <ul class="music-list">
+                    <li class="music-list-item flexbox-h">
+                        <span class="name">一眼万年</span>
+                        <span class="source line-one">(电视剧《孤独天下》片尾曲)</span>
+                    </li>
+                    <li class="music-list-item flexbox-h">
+                        <span class="name">一眼万年</span>
+                        <span class="source line-one">(电视剧《孤独天下》片尾曲)</span>
+                    </li>
+                    <li class="music-list-item flexbox-h">
+                        <span class="name">一眼万年</span>
+                        <span class="source line-one">(电视剧《孤独天下》片尾曲)</span>
+                    </li>
+                    <li class="music-list-item flexbox-h">
+                        <span class="name">一眼万年</span>
+                        <span class="source line-one">(电视剧《孤独天下》片尾曲)</span>
+                    </li>
+                    <li class="music-list-item flexbox-h">
+                        <span class="name">一眼万年</span>
+                        <span class="source line-one">(电视剧《孤独天下》片尾曲)</span>
+                    </li>
+                    <li class="music-list-item flexbox-h">
+                        <span class="name">一眼万年</span>
+                        <span class="source line-one">(电视剧《孤独天下》片尾曲)</span>
+                    </li>
+                    <li class="music-list-item flexbox-h">
+                        <span class="name">一眼万年</span>
+                        <span class="source line-one">(电视剧《孤独天下》片尾曲)</span>
+                    </li>
+                    <li class="music-list-item flexbox-h">
+                        <span class="name">一眼万年</span>
+                        <span class="source line-one">(电视剧《孤独天下》片尾曲)</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <audio src="/src/source/前世今生-文武贝钢琴版.mp3" id="play-audio" controls="controls"></audio>
     </div>
 </body>
 </html>

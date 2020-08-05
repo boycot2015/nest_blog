@@ -1,11 +1,11 @@
-var TemplateEngine = function(html, options) {
+var TemplateEngine = function (html, options) {
     var re = /<%([^%>]+)?%>/g, reExp = /(^( )?(if|for|else|switch|case|break|{|}))(.*)?/g, code = 'var r=[];\n', cursor = 0;
-    var add = function(line, js) {
-        js? (code += line.match(reExp) ? line + '\n' : 'r.push(' + line + ');\n') :
+    var add = function (line, js) {
+        js ? (code += line.match(reExp) ? line + '\n' : 'r.push(' + line + ');\n') :
             (code += line != '' ? 'r.push("' + line.replace(/"/g, '\\"') + '");\n' : '');
         return add;
     }
-    while(match = re.exec(html)) {
+    while (match = re.exec(html)) {
         add(html.slice(cursor, match.index))(match[1], true);
         cursor = match.index + match[0].length;
     }
@@ -13,12 +13,8 @@ var TemplateEngine = function(html, options) {
     code += 'return r.join("");';
     return new Function(code.replace(/[\r\t\n]/g, '')).apply(options);
 }
-// 定义公共方法
-var commonObj = {
-    progressPsition: '' // 进度条位置
-}
 //传入参数为文件路径,return 出返回值的responseText文本
-function getTpl(fileUrl) {
+function getTpl (fileUrl) {
     var result = $.ajax({
         type: "GET",
         url: fileUrl,
@@ -27,62 +23,133 @@ function getTpl(fileUrl) {
     return result.responseText;
 };
 
+// function setStatus (currentTime, curStr, endStr, duration) {
+//     var left = 0;
+//     if (commonObj.progressPsition) {
+//         left = commonObj.progressPsition.left
+//     }
+//     left = currentTime * $('.progress .progress-bar').width() / duration;
+//     left = Math.round(left);
+//     $('.progress .progress-bar .point').css('left', left)
+//     $('.progress .progress-bar .js-line').css('width', left)
+//     $('.progress .start-time').html(curStr)
+//     $('.progress .end-time').html(endStr)
+// }
 
-function drag(obj,target,site,fn){
-    var dmW = document.documentElement.clientWidth || document.body.clientWidth  
+// 定义公共方法
+var commonObj = {
+    progressPsition: '', // 进度条位置
+    playData: {
+        url: '',
+        duration: 1000
+    },
+    getAudioInfo: function (_audio, call) {
+        var time = _audio.duration;
+        var min = parseInt(time / 60);
+        var second = parseInt(time % 60);
+        var currentTime = _audio.currentTime;
+        var duration = min * 60 + second;
+        min = min < 10 ? '0' + min : min;
+        second = second < 10 ? '0' + second : second;
+        var endStr = min + ':' + second;
+        min = Math.round(currentTime) > 59 ? (Math.round(currentTime / 60) < 10 ? ('0' + parseInt(currentTime / 60)) : Math.round(currentTime / 60)) : '00';
+        second = Math.round(currentTime % 60) < 10 ? ('0' + Math.round(currentTime % 60)) : Math.round(currentTime % 60);
+        second = second == 60 ? '00' : second;
+        var curStr = min + ':' + second;
+        this.playData = {
+            url: _audio.currentSrc,
+            curStr: curStr,
+            endStr: endStr,
+            duration: duration,
+            currentTime: parseInt(currentTime)
+        }
+        // console.log(parseInt(currentTime), curStr, endStr, duration);
+        if (call) call(parseInt(currentTime), curStr, endStr, duration);
+    },
+    initPlayer: function (audioPlayer, setStatus) {
+        //进度事件监听
+        audioPlayer.addEventListener('timeupdate', function () {
+            commonObj.getAudioInfo(audioPlayer, setStatus)
+        })
+        //加载事件监听
+        audioPlayer.addEventListener('loadedmetadata', function () {
+            commonObj.getAudioInfo(audioPlayer, setStatus)
+        })
+        //结束事件监听
+        audioPlayer.addEventListener('ended', function () {
+            clearInterval(timer)
+        })
+    }
+}
+
+
+function drag (options) {
+    var obj = options.obj,
+        target = options.target || options.obj,
+        site = options.site,
+        fn = options.fn,
+        cancelElem = options.cancelElem;
+    var dmW = document.documentElement.clientWidth || document.body.clientWidth
     var dmH = document.documentElement.clientHeight || document.body.clientHeight
-    var site = site || {};               
+    site = site || {};
     var adsorb = site.n || 0;              //磁性吸附的吸附范围
     var l = site.l || 0;
-    var r = (site.r || site.r==0)?site.r:dmW - target.offsetWidth;
+    var r = (site.r || site.r == 0) ? site.r : dmW - target.offsetWidth;
     var t = site.t || 0;
-    var b = (site.b || site.b==0)?site.b:dmH - target.offsetHeight; 
-    obj.onmousedown=function(ev){
-       var oEvent = ev || event;
-       var siteX = oEvent.clientX- target.offsetLeft;
-       var siteY = oEvent.clientY- target.offsetTop;
-       if(obj.setCapture){                  //兼容IE低版本的阻止默认行为，并实现事件捕获
-          obj.onmousemove=move;
-          obj.onmouseup=up;
-          obj.setCapture();
-       }else{
-          document.onmousemove=move;
-          document.onmouseup=up;
-       }
-        function move(ev){
+    var b = (site.b || site.b == 0) ? site.b : dmH - target.offsetHeight;
+    obj.onmousedown = function (ev) {
+        var oEvent = ev || event;
+        var siteX = oEvent.clientX - target.offsetLeft;
+        var siteY = oEvent.clientY - target.offsetTop;
+        // 获取需要排除的元素
+        var elemCancel = $(ev.target).closest(cancelElem);
+        // 如果拖拽的是排除元素，函数返回
+        if (elemCancel.length) {
+            return true;
+        }
+        if (obj.setCapture) { //兼容IE低版本的阻止默认行为，并实现事件捕获
+            obj.onmousemove = move;
+            obj.onmouseup = up;
+            obj.setCapture();
+        } else {
+            document.onmousemove = move;
+            document.onmouseup = up;
+        }
+        function move (ev) {
             var oEvent = ev || event;
             var iLeft = oEvent.clientX - siteX;
             var iTop = oEvent.clientY - siteY;
-            if(iLeft <=l+adsorb){              //限制拖动范围
-                iLeft=0;
+            if (iLeft <= l + adsorb) {              //限制拖动范围
+                iLeft = 0;
             }
-            if(iLeft >=r-adsorb){
-                iLeft= r;
+            if (iLeft >= r - adsorb) {
+                iLeft = r;
             }
-            if(iTop<=t+adsorb){
-                iTop =0;
+            if (iTop <= t + adsorb) {
+                iTop = 0;
             }
-            if(iTop >=b-adsorb){
+            if (iTop >= b - adsorb) {
                 iTop = b;
             }
-            if(fn){                         //执行回调函数，如果有其他附加情况需要处理
-                fn({left:iLeft,top:iTop})
+            if (fn) {                         //执行回调函数，如果有其他附加情况需要处理
+                fn({ left: iLeft, top: iTop })
             }
             $(obj).find('.point').show()
             target.style.left = iLeft + 'px';
             target.style.top = iTop + 'px';
         }
-        function up(){
+        function up () {
             var oEvent = ev || event;
             var iLeft = oEvent.clientX - siteX;
             var iTop = oEvent.clientY - siteY;
-            if(obj.setCapture){            //拖放结束后释放捕获
+            if (obj.setCapture) {            //拖放结束后释放捕获
                 obj.releaseCapture();
             }
-            this.onmousemove=null;
-            this.onmouseup=null;
-            this.onclick=null;
+            if (options.end) options.end({ left: iLeft, top: iTop })
+            this.onmousemove = null;
+            this.onmouseup = null;
+            this.onclick = null;
         }
         return false;
     }
- }
+}
