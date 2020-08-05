@@ -1,8 +1,8 @@
 $(function () {
     //获取模板规则<script>标签;
-    var layoutTemp = getTpl("./template/layout.html");
+    var layoutTemp = commonObj.getTpl("./template/layout.html");
     var audioPlayer = $('#play-audio')[0];
-    var timer = null
+
     audioPlayer.load()
     var layOutConfig = {
         setStatus: function (currentTime, curStr, endStr, duration) {
@@ -11,13 +11,34 @@ $(function () {
                 left = commonObj.progressPsition.left
             }
             left = currentTime * $('.progress .progress-bar').width() / duration;
-            left = Math.round(left);
+            
+            left = Math.abs(left);
+
+            if (commonObj.playData.ended) {
+                audioPlayer.pause()
+                $('.js-play').removeClass('play')
+            }
+            left = left > commonObj.maxPlayWidth ? commonObj.maxPlayWidth : left;
             $('.progress .progress-bar .point').css('left', left)
             $('.progress .progress-bar .js-line').css('width', left)
             $('.progress .start-time').html(curStr)
             $('.progress .end-time').html(endStr)
+        },
+        setVolume: function (left, width) {
+            if (!left && !width) {
+                audioPlayer.volume = 0.5;
+                $('.volume .progress-bar .point').css('left', 42);
+                $('.volume .progress-bar .line').width(50);
+                return true
+            }
+            var volume = Math.abs(left/width);
+            volume = volume > 1 ? 1 : volume;
+            audioPlayer.volume = volume;
+            commonObj.playData.volume = volume
         }
     }
+    commonObj.initPlayer(audioPlayer, layOutConfig.setStatus, layOutConfig.setVolume)
+
     // 设置窗口可拖动
     drag({
         obj: $('.js-music-box .header')[0],
@@ -83,12 +104,7 @@ $(function () {
     })
     drag({
         obj: $('.progress .progress-bar .point')[0],
-        site: {
-            l: -4,
-            t: -6,
-            r: 372,
-            b: -4
-        },
+        site: commonObj.audioTimePos,
         fn: function (position) {
             commonObj.progressPsition = position;
             $('.progress .start-time').html(commonObj.playData.curStr);
@@ -98,9 +114,9 @@ $(function () {
         },
         end: function (position) {
             $('.progress .start-time').html(commonObj.playData.curStr);
-            $('.progress .progress-bar .line').width(position.left);
-            audioPlayer.play()
-            audioPlayer.currentTime = position.left / $('.progress .progress-bar').width() * commonObj.playData.duration;
+            $('.progress .progress-bar .line').width(commonObj.progressPsition.left);
+            $('.js-play').hasClass('play') && audioPlayer.play()
+            audioPlayer.currentTime = commonObj.progressPsition.left / $('.progress .progress-bar').width() * commonObj.playData.duration;
         }
     })
     // 2.音量进度条js
@@ -110,9 +126,9 @@ $(function () {
             left = commonObj.progressPsition.left
         }
         $('.volume .progress-bar .point').css('left', left)
-        left = e.offsetX > 8 ? left + 8 : left
+        layOutConfig.setVolume(left, commonObj.maxVolumeWidth)
+        left = e.offsetX > 8 ? left + 8 : left;
         $('.volume .progress-bar .js-line').width(left)
-        console.log(this.commonObj.playData.duration);
         commonObj.progressPsition = ''
     })
     $('.volume .progress-bar').mouseenter(function () {
@@ -122,30 +138,30 @@ $(function () {
     })
     drag({
         obj: $('.volume .progress-bar .point')[0],
-        site: {
-            l: -4,
-            t: -6,
-            r: 82,
-            b: -4
-        },
+        site: commonObj.audioVolumePos,
         fn: function (position) {
             commonObj.progressPsition = position
             var left = position.left
+            layOutConfig.setVolume(left, commonObj.maxVolumeWidth)
             left = left > 8 ? left + 8 : left
             $('.volume .progress-bar .line').width(left)
         }
     })
     $('.js-music-volume').click(function () {
         var width = parseInt($('.volume .progress-bar .line').css('width'))
+        var left = commonObj.progressPsition.left
         if (!width) {
-            $('.volume .progress-bar .point').css('left', commonObj.progressPsition.left)
-            $('.volume .progress-bar .line').width(commonObj.progressPsition.left)
+            $('.volume .progress-bar .line').width(left)
+            layOutConfig.setVolume(left, commonObj.maxVolumeWidth)
+            left = left > 8 ? left - 8 : left
+            $('.volume .progress-bar .point').css('left', left)
         } else {
             commonObj.progressPsition = {
                 left: width
             }
-            $('.volume .progress-bar .point').css('left', 0)
-            $('.volume .progress-bar .line').width(0)
+            audioPlayer.volume = 0;
+            $('.volume .progress-bar .point').css('left', 0);
+            $('.volume .progress-bar .line').width(0);
         }
     })
 
@@ -157,7 +173,8 @@ $(function () {
         // target: $('.js-music-box .wrap')[0],
         cancelElem: $('.js-mini-music-box').find('.more')
     })
-    $('.js-mini-music-box').dblclick(function () {
+    $('.js-mini-music-box').dblclick(function (e) {
+        if ($(e.target).closest($('.more')).length) return;
         $(this).hide().siblings('.js-music-box').show();
     })
     $('.js-list-icon').click(function () {
@@ -171,20 +188,26 @@ $(function () {
     })
     // 播放暂停
     $('.js-play').click(function () {
-        clearInterval(timer)
-        if (!$('.js-play').hasClass('pause')) {
-            timer = setInterval(function () {
+        clearInterval(commonObj.timer)
+        if (!$('.js-play').hasClass('play')) {
+            commonObj.timer = setInterval(function () {
                 commonObj.getAudioInfo(audioPlayer, layOutConfig.setStatus)
             }, 1000);
             $('#play-audio')[0].play()
         } else {
-            clearInterval(timer)
+            clearInterval(commonObj.timer)
             $('#play-audio')[0].pause()
         }
-        $('.js-play').toggleClass('pause')
+        $('.js-play').toggleClass('play')
     })
-    commonObj.initPlayer(audioPlayer, layOutConfig.setStatus)
     $('.js-mini-music-list').on('click', '.music-list-item', function () {
-        $(this).addClass('active').siblings().removeClass('active')
+        $(this).addClass('active').siblings().not('.play').removeClass('active')
+    })
+    $('.js-mini-music-list').on('dblclick', '.music-list-item', function () {
+        $(this).addClass('active play').siblings().removeClass('active play');
+        $('.js-play').addClass('play');
+        audioPlayer.src = commonObj.playData.src;
+        audioPlayer.volume = commonObj.playData.volume
+        audioPlayer.play();
     })
 })

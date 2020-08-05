@@ -1,28 +1,3 @@
-var TemplateEngine = function (html, options) {
-    var re = /<%([^%>]+)?%>/g, reExp = /(^( )?(if|for|else|switch|case|break|{|}))(.*)?/g, code = 'var r=[];\n', cursor = 0;
-    var add = function (line, js) {
-        js ? (code += line.match(reExp) ? line + '\n' : 'r.push(' + line + ');\n') :
-            (code += line != '' ? 'r.push("' + line.replace(/"/g, '\\"') + '");\n' : '');
-        return add;
-    }
-    while (match = re.exec(html)) {
-        add(html.slice(cursor, match.index))(match[1], true);
-        cursor = match.index + match[0].length;
-    }
-    add(html.substr(cursor, html.length - cursor));
-    code += 'return r.join("");';
-    return new Function(code.replace(/[\r\t\n]/g, '')).apply(options);
-}
-//传入参数为文件路径,return 出返回值的responseText文本
-function getTpl (fileUrl) {
-    var result = $.ajax({
-        type: "GET",
-        url: fileUrl,
-        async: false
-    });
-    return result.responseText;
-};
-
 // function setStatus (currentTime, curStr, endStr, duration) {
 //     var left = 0;
 //     if (commonObj.progressPsition) {
@@ -38,10 +13,54 @@ function getTpl (fileUrl) {
 
 // 定义公共方法
 var commonObj = {
+    timer: null,
     progressPsition: '', // 进度条位置
+    maxPlayWidth: 372,
+    audioTimePos: {
+        l: -4,
+        t: -6,
+        r: 372,
+        b: -4
+    },
+    audioVolumePos: {
+        l: -4,
+        t: -6,
+        r: 82,
+        b: -4
+    },
+    maxVolumeWidth: 82,
     playData: {
-        url: '',
+        src: '/src/source/前世今生-文武贝钢琴版.mp3',
+        volume: 0.5,
+        loop: false,
+        ended: false,
+        muted: false,
+        currentTime: 0,
         duration: 1000
+    },
+    TemplateEngine: function (html, options) {
+        var re = /<%([^%>]+)?%>/g, reExp = /(^( )?(if|for|else|switch|case|break|{|}))(.*)?/g, code = 'var r=[];\n', cursor = 0;
+        var add = function (line, js) {
+            js ? (code += line.match(reExp) ? line + '\n' : 'r.push(' + line + ');\n') :
+                (code += line != '' ? 'r.push("' + line.replace(/"/g, '\\"') + '");\n' : '');
+            return add;
+        }
+        while (match = re.exec(html)) {
+            add(html.slice(cursor, match.index))(match[1], true);
+            cursor = match.index + match[0].length;
+        }
+        add(html.substr(cursor, html.length - cursor));
+        code += 'return r.join("");';
+        return new Function(code.replace(/[\r\t\n]/g, '')).apply(options);
+    },
+    //传入参数为文件路径,return 出返回值的responseText文本
+    getTpl: function(fileUrl) {
+        var result = $.ajax({
+            type: "GET",
+            url: fileUrl,
+            async: false
+        });
+        return result.responseText;
     },
     getAudioInfo: function (_audio, call) {
         var time = _audio.duration;
@@ -53,31 +72,34 @@ var commonObj = {
         second = second < 10 ? '0' + second : second;
         var endStr = min + ':' + second;
         min = Math.round(currentTime) > 59 ? (Math.round(currentTime / 60) < 10 ? ('0' + parseInt(currentTime / 60)) : Math.round(currentTime / 60)) : '00';
-        second = Math.round(currentTime % 60) < 10 ? ('0' + Math.round(currentTime % 60)) : Math.round(currentTime % 60);
+        second = parseInt(currentTime % 60) < 10 ? ('0' + parseInt(currentTime % 60)) : parseInt(currentTime % 60);
         second = second == 60 ? '00' : second;
         var curStr = min + ':' + second;
-        this.playData = {
-            url: _audio.currentSrc,
-            curStr: curStr,
-            endStr: endStr,
-            duration: duration,
-            currentTime: parseInt(currentTime)
-        }
-        // console.log(parseInt(currentTime), curStr, endStr, duration);
+        this.playData.src = _audio.src;
+        this.playData.volume = _audio.volume;
+        this.playData.loop = _audio.loop;
+        this.playData.ended = _audio.ended;
+        this.playData.muted = _audio.muted;
+        this.playData.curStr = curStr;
+        this.playData.endStr = endStr;
+        this.playData.duration = duration;
+        this.playData.currentTime = parseInt(currentTime);
         if (call) call(parseInt(currentTime), curStr, endStr, duration);
     },
-    initPlayer: function (audioPlayer, setStatus) {
+    initPlayer: function (audioPlayer, setStatus, setVolume) {
         //进度事件监听
         audioPlayer.addEventListener('timeupdate', function () {
-            commonObj.getAudioInfo(audioPlayer, setStatus)
+            commonObj.getAudioInfo(audioPlayer, setStatus);
         })
         //加载事件监听
         audioPlayer.addEventListener('loadedmetadata', function () {
-            commonObj.getAudioInfo(audioPlayer, setStatus)
+            setVolume()
+            commonObj.getAudioInfo(audioPlayer, setStatus);
         })
         //结束事件监听
         audioPlayer.addEventListener('ended', function () {
-            clearInterval(timer)
+            commonObj.getAudioInfo(audioPlayer, setStatus)
+            clearInterval(commonObj.timer)
         })
     }
 }

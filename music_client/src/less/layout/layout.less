@@ -294,8 +294,14 @@
                 width: 200px;
                 padding: 0 15px;
                 box-sizing: border-box;
-                i.pause::after {
+                i.play::after {
                     content: '\e6a5';
+                }
+                i::after {
+                    transition: all 0.4s;
+                }
+                i:hover::after {
+                    background-color: #A82828;
                 }
             }
             .progress {
@@ -396,7 +402,7 @@
         position: absolute;
         z-index: 100;
         box-shadow: 0 0 10px @c-666;
-        // display: none;
+        display: none;
         background-color: @white;
         .left {
             .img {
@@ -432,7 +438,7 @@
                     border: 1px solid @primary;
                     border-radius: 30px;
                 }
-                i.pause::after {
+                i.play::after {
                     content: '\e6a5';
                 }
             }
@@ -482,6 +488,7 @@
                 &-item {
                     padding: 0 20px;
                     line-height: 28px;
+                    position: relative;
                     &:nth-child(odd) {
                         background-color: @c-f8;
                     }
