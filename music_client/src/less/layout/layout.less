@@ -8,6 +8,80 @@
     #play-audio {
         display: none;
     }
+    .progress {
+        height: 20px;
+        padding-left: 5px;
+        &-bar {
+            width: 380px;
+            height: 4px;
+            margin: 0 14px;
+            position: relative;
+            background-color: @c-ddd;
+            border-radius: 5px;
+            .line {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 0%;
+                height: 100%;
+                z-index: 9;
+                border-radius: 5px;
+                background-color: @footer-theme;
+            }
+            .point {
+                position: absolute;
+                left: 18%;
+                top: -5px;
+                height: 12px;
+                width: 12px;
+                z-index: 10;
+                border-radius: 10px;
+                background-color: @white;
+                border: 1px solid @c-ccc;
+                cursor: pointer;
+                &:hover {
+                    box-shadow: 0 0 10px @c-666;
+                }
+                &::after {
+                    content: '';
+                    background-color: @footer-theme;
+                    border-radius: 3px;
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    margin-left: -2px;
+                    margin-top: -2px;
+                    width: 4px;
+                    height: 4px;
+                }
+            }
+        }
+    }
+    .volume {
+        margin: 0 5px 0 7px;
+        .progress-bar {
+            width: 100px;
+            height: 4px;
+            margin: 0 8px;
+            position: relative;
+            background-color: @c-ddd;
+            border-radius: 5px;
+            .line {
+                width: 20%;
+            }
+            .point {
+                display: none;
+            }
+            // &:hover {
+            //     .point {
+            //         display: block;
+            //     }
+            // }
+        }
+        .heart-icon {
+            margin-left: 8px;
+        }
+    }
     .music-box {
         position: absolute;
         width: 1020px;
@@ -246,6 +320,7 @@
                     top: 0;
                     height: 100%;
                     width: 100%;
+                    pointer-events: none;
                     .icon::after {
                         color: @c-ccc;
                         // line-height: 56px;
@@ -304,80 +379,6 @@
                     background-color: #A82828;
                 }
             }
-            .progress {
-                height: 20px;
-                padding-left: 5px;
-                &-bar {
-                    width: 380px;
-                    height: 4px;
-                    margin: 0 14px;
-                    position: relative;
-                    background-color: @c-ddd;
-                    border-radius: 5px;
-                    .line {
-                        position: absolute;
-                        left: 0;
-                        top: 0;
-                        width: 0%;
-                        height: 100%;
-                        z-index: 9;
-                        border-radius: 5px;
-                        background-color: @footer-theme;
-                    }
-                    .point {
-                        position: absolute;
-                        left: 18%;
-                        top: -5px;
-                        height: 12px;
-                        width: 12px;
-                        z-index: 10;
-                        border-radius: 10px;
-                        background-color: @white;
-                        border: 1px solid @c-ccc;
-                        cursor: pointer;
-                        &:hover {
-                            box-shadow: 0 0 10px @c-666;
-                        }
-                        &::after {
-                            content: '';
-                            background-color: @footer-theme;
-                            border-radius: 3px;
-                            position: absolute;
-                            top: 50%;
-                            left: 50%;
-                            margin-left: -2px;
-                            margin-top: -2px;
-                            width: 4px;
-                            height: 4px;
-                        }
-                    }
-                }
-            }
-            .volume {
-                margin: 0 7px;
-                .progress-bar {
-                    width: 100px;
-                    height: 4px;
-                    margin: 0 8px;
-                    position: relative;
-                    background-color: @c-ddd;
-                    border-radius: 5px;
-                    .line {
-                        width: 20%;
-                    }
-                    .point {
-                        display: none;
-                    }
-                    // &:hover {
-                    //     .point {
-                    //         display: block;
-                    //     }
-                    // }
-                }
-                .heart-icon {
-                    margin-left: 8px;
-                }
-            }
             .others {
                 width: 180px;
                 padding: 0 20px 0 10px;
@@ -404,6 +405,12 @@
         box-shadow: 0 0 10px @c-666;
         display: none;
         background-color: @white;
+        .wrap {
+            z-index: 10;
+            position: relative;
+            background: #fff;
+            box-shadow: 0 0 5px @c-999;
+        }
         .left {
             .img {
                 width: 42px;
@@ -451,10 +458,66 @@
         }
         .right {
             padding: 0 18px;
+            position: relative;
             .star-icon,
             .share-icon {
                 &::after {
                     font-size: 14px;
+                }
+            }
+            span:hover {
+                &::after {
+                    color: @c-666;
+                }
+            }
+            span::after {
+                color: @c-999;
+            }
+            .volume {
+                position: absolute;
+                display: none;
+                right: -2px;
+                top: -45px;
+                background-color: @white;
+                // overflow: hidden;
+                margin: 0;
+                padding: 12px 7px;
+                border-radius: 3px;
+                box-shadow: 0 2px 5px @c-999;
+                border: 1px solid @c-666;
+                &::after {
+                    content: '';
+                    height: 10px;
+                    width: 10px;
+                    transform: rotateZ(-45deg);
+                    background-color: @white;
+                    border-bottom: 1px solid @c-666;
+                    border-left: 1px solid @c-666;
+                    position: absolute;
+                    left: 50%;
+                    top: 27px;
+                    // margin-left: -8px;
+                    // border-width: 8px 8px;
+                    // border-style: solid;
+                    // border-color: @white transparent transparent transparent;
+                }
+                .progress-bar {
+                    margin: 0;
+                    height: 8px;
+                    background-color: @c-999;
+                    // overflow: hidden;
+                    border-radius: 8px;
+                    .line {
+                        height: 8px;
+                        background-color: @c-666;
+                        border-radius: 8px;
+                    }
+                    .point {
+                        top: -3px;
+                        &::after {
+                            background-color: @c-666;
+                        }
+                    }
                 }
             }
         }
@@ -504,6 +567,22 @@
                             color: @c-000;
                         }
                         &.play {
+                            &::before {
+                                position: absolute;
+                                left: -2px;
+                                top: 0;
+                                width: 0;
+                                height: 0;
+                                color: @primary;
+                                font-size: 18px;
+                                font-family: 'font-music';
+                                content: "\e6a5";
+                            }
+                            .source {
+                                color: @c-000;
+                            }
+                        }
+                        &.pause {
                             &::before {
                                 position: absolute;
                                 left: 3px;

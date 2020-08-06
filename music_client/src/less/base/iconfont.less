@@ -1,11 +1,11 @@
 @font-face {
     font-family: 'font-music';  /* project id 1984636 */
-    src: url('//at.alicdn.com/t/font_1984636_lirbvc4dx6b.eot');
-    src: url('//at.alicdn.com/t/font_1984636_lirbvc4dx6b.eot?#iefix') format('embedded-opentype'),
-    url('//at.alicdn.com/t/font_1984636_lirbvc4dx6b.woff2') format('woff2'),
-    url('//at.alicdn.com/t/font_1984636_lirbvc4dx6b.woff') format('woff'),
-    url('//at.alicdn.com/t/font_1984636_lirbvc4dx6b.ttf') format('truetype'),
-    url('//at.alicdn.com/t/font_1984636_lirbvc4dx6b.svg#font-music') format('svg');
+    src: url('//at.alicdn.com/t/font_1984636_82al5ve0ugi.eot');
+    src: url('//at.alicdn.com/t/font_1984636_82al5ve0ugi.eot?#iefix') format('embedded-opentype'),
+    url('//at.alicdn.com/t/font_1984636_82al5ve0ugi.woff2') format('woff2'),
+    url('//at.alicdn.com/t/font_1984636_82al5ve0ugi.woff') format('woff'),
+    url('//at.alicdn.com/t/font_1984636_82al5ve0ugi.ttf') format('truetype'),
+    url('//at.alicdn.com/t/font_1984636_82al5ve0ugi.svg#font-music') format('svg');
   }
 .icon-music {
     font-family: 'font-music';
@@ -130,6 +130,10 @@
         vertical-align: bottom;
         content: '\e604';
     }
+    &-volume.close::after {
+        font-size: 18px;
+        content: '\e645';
+    }
     &-logo::after {
         font-family: 'font-music';
         font-size: 18px;
@@ -140,9 +144,18 @@
     &-love::after {
         font-family: 'font-music';
         font-size: 18px;
+        cursor: pointer;
         color: @c-666;
         vertical-align: bottom;
         content: '\e8ab';
+    }
+    &-love-full::after {
+        font-family: 'font-music';
+        font-size: 18px;
+        color: @primary !important;
+        cursor: pointer;
+        vertical-align: bottom;
+        content: '\e644';
     }
     &-radio::after {
         font-family: 'font-music';
@@ -153,14 +166,14 @@
     }
     &-loop::after {
         font-family: 'font-music';
-        font-size: 18px;
+        font-size: 22px;
         color: @c-666;
         vertical-align: bottom;
         content: '\e60f';
     }
     &-loop-one::after {
         font-family: 'font-music';
-        font-size: 18px;
+        font-size: 22px;
         color: @c-666;
         vertical-align: bottom;
         content: '\e610';
@@ -202,7 +215,7 @@
     }
     &-loop-random::after {
         font-family: 'font-music';
-        font-size: 18px;
+        font-size: 22px;
         color: @c-666;
         vertical-align: bottom;
         content: '\e611';

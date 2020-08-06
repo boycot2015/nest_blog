@@ -6,7 +6,11 @@
     <title>网抑云音乐</title>
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/dist/css/index.min.css">
+    <!-- <link rel="stylesheet" src="/src/lib/dialog/art-dialog.css"></link> -->
     <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="/src/lib/dialog/art-dialog.js"></script>
+    <link href="https://cdn.bootcdn.net/ajax/libs/Selectivity.js/2.1.0/selectivity-full.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcdn.net/ajax/libs/Selectivity.js/2.1.0/selectivity-full.min.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/art-template/4.13.2/lib/template-web.min.js"></script>
     <script src="/dist/js/common.js"></script>
     <script src="/dist/js/index.js"></script>
@@ -64,7 +68,7 @@
                         <div class="text flex-3">
                             <div class="top flexbox-h just-b">
                                 <p class="name">至尊宝</p>
-                                <span class="star-icon icon-music-love"></span>
+                                <span class="js-love-icon star-icon icon-music-love"></span>
                             </div>
                             <div class="bottom flexbox-h just-b">
                                 <p class="singer">徐良/杨威</p>
@@ -82,12 +86,12 @@
                     <i class="icon-music-play-right"></i>
                 </div>
                 <div class="progress flex-2 flexbox-h just-b">
-                    <span class="start-time tl">00:50</span>
+                    <span class="start-time tl">00:00</span>
                     <div class="progress-bar tc flex-4">
                         <span class="point"></span>
                         <span class="line js-line"></span>
                     </div>
-                    <span class="end-time tr">03:08</span>
+                    <span class="end-time tr">00:00</span>
                 </div>
                 <div class="volume flex-2 flexbox-h just-b tc">
                     <i class="icon-music-volume js-music-volume flex-1"></i>
@@ -95,7 +99,8 @@
                         <span class="point"></span>
                         <span class="line js-line"></span>
                     </div>
-                    <i class="heart-icon icon-music-beckoning flex-1"></i>
+                    <!-- icon-music-beckoning-->
+                    <i class="order-icon icon-music-loop flex-1"></i>
                 </div>
                 <div class="others flex-3 flexbox-h just-b">
                     <i class="type">标准</i>
@@ -126,9 +131,17 @@
                     </div>
                 </div>
                 <div class="right flex-1 flexbox-h just-b">
-                    <span class="love-icon icon-music-love"></span>
-                    <span class="volume-icon icon-music-volume"></span>
+                    <span class="js-love-icon love-icon icon-music-love"></span>
+                    <span class="volume-icon icon-music-volume js-min-music-volume"></span>
                     <span class="list-icon icon-music-list js-list-icon"></span>
+                    <div class="volume flex-2 flexbox-h just-b tc">
+                        <!-- <i class="icon-music-volume js-music-volume flex-1"></i> -->
+                        <div class="progress-bar flex-4">
+                            <span class="point"></span>
+                            <span class="line js-line"></span>
+                        </div>
+                        <!-- <i class="heart-icon icon-music-beckoning flex-1"></i> -->
+                    </div>
                 </div>
                 <!-- <div class="text flex-3 flexbox-h just-b">
                 </div> -->
@@ -173,4 +186,24 @@
         <audio src="/src/source/前世今生-文武贝钢琴版.mp3" id="play-audio" controls="controls"></audio>
     </div>
 </body>
+<script>
+    var d = dialog({
+        title: '消息',
+        okValue: '猛击我',
+        ok: function () {
+            this.content('hello world!');
+            return false;
+        },
+        content: '<div id="example-1">猛击我</div>',
+        onshow: function () {
+            $('.ui-dialog #example-1').selectivity({
+                allowClear: true,
+                items: ['Amsterdam', 'Antwerp', 'Antwerp', 'Antwerp', 'Antwerp', 'Antwerp'/*, ...*/],
+                placeholder: 'No city selected'
+            });
+            this.content('dialog ready');
+        }
+    });
+    // d.show();
+</script>
 </html>
