@@ -67,11 +67,11 @@
                         </div>
                         <div class="text flex-3">
                             <div class="top flexbox-h just-b">
-                                <p class="name">至尊宝</p>
+                                <p class="name line-one">至尊宝</p>
                                 <span class="js-love-icon star-icon icon-music-love"></span>
                             </div>
                             <div class="bottom flexbox-h just-b">
-                                <p class="singer">徐良/杨威</p>
+                                <p class="singer line-one">徐良/杨威</p>
                                 <span class="share-icon icon-music-share"></span>
                             </div>
                         </div>
@@ -106,7 +106,40 @@
                     <i class="type">标准</i>
                     <i class="new">new</i>
                     <i class="word">词</i>
-                    <i class="icon icon-music-play-list"></i>
+                    <i class="icon js-play-list-btn icon-music-play-list"></i>
+                    <div class="play-list js-play-list">
+                        <div class="title flexbox-h just-c">
+                            <div class="btn tc flex-1 flexbox-h just-c">
+                                <span class="active js-list-btn list-btn">播放列表</span>
+                                <span class="js-history-btn history-btn">历史记录</span>
+                            </div>
+                            <i class="tr js-list-close icon-close icon-music-close"></i>
+                        </div>
+                        <div class="list-header flexbox-h just-b">
+                            <div class="total tl">
+                                <span class="num">总<i>199</i>首</span>
+                                <i class="icon-music-info"></i>
+                            </div>
+                            <div class="operation">
+                                <i class="icon-music-star"></i>
+                                收藏全部
+                                <span class="line">|</span>
+                                <i class="icon-music-delete"></i>
+                                清空
+                            </div>
+                        </div>
+                        <div class="wrap">
+                            <ul class="music-list js-footer-music-list">
+                                <!-- <li class="music-list-item flexbox-h jsut-b">
+                                    <span class="name flex-1">一眼万年</span>
+                                    <span class="source flex-4 line-one">(电视剧《孤独天下》片尾曲)</span>
+                                    <span class="singer flex-1">群星</span>
+                                    <span class="icon-music-link"></span>
+                                    <span class="time tr flex-1">00:00</span>
+                                </li> -->
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -124,9 +157,9 @@
                     </div>
                     <div class="more js-more text">
                         <div class="wrap flexbox-h tc just-c">
-                            <p class="name">菩提偈</p>
+                            <p class="name line-one">菩提偈</p>
                             <span class="line"> - </span>
-                            <span class="singer">刘惜君</span>
+                            <span class="singer line-one">刘惜君</span>
                         </div>
                     </div>
                 </div>
@@ -147,43 +180,20 @@
                 </div> -->
             </div>
             <div class="more js-mini-music-list">
-                <ul class="music-list">
-                    <li class="music-list-item flexbox-h">
+                <ul class="music-list js-music-list">
+                    <li class="music-list-item flexbox-h jsut-b">
                         <span class="name">一眼万年</span>
-                        <span class="source line-one">(电视剧《孤独天下》片尾曲)</span>
-                    </li>
-                    <li class="music-list-item flexbox-h">
-                        <span class="name">一眼万年</span>
-                        <span class="source line-one">(电视剧《孤独天下》片尾曲)</span>
-                    </li>
-                    <li class="music-list-item flexbox-h">
-                        <span class="name">一眼万年</span>
-                        <span class="source line-one">(电视剧《孤独天下》片尾曲)</span>
-                    </li>
-                    <li class="music-list-item flexbox-h">
-                        <span class="name">一眼万年</span>
-                        <span class="source line-one">(电视剧《孤独天下》片尾曲)</span>
-                    </li>
-                    <li class="music-list-item flexbox-h">
-                        <span class="name">一眼万年</span>
-                        <span class="source line-one">(电视剧《孤独天下》片尾曲)</span>
-                    </li>
-                    <li class="music-list-item flexbox-h">
-                        <span class="name">一眼万年</span>
-                        <span class="source line-one">(电视剧《孤独天下》片尾曲)</span>
-                    </li>
-                    <li class="music-list-item flexbox-h">
-                        <span class="name">一眼万年</span>
-                        <span class="source line-one">(电视剧《孤独天下》片尾曲)</span>
-                    </li>
-                    <li class="music-list-item flexbox-h">
-                        <span class="name">一眼万年</span>
-                        <span class="source line-one">(电视剧《孤独天下》片尾曲)</span>
+                        <span class="source flex-4 line-one">(电视剧《孤独天下》片尾曲)</span>
                     </li>
                 </ul>
             </div>
         </div>
-        <audio src="/src/source/前世今生-文武贝钢琴版.mp3" id="play-audio" controls="controls"></audio>
+        <audio id="play-audio" src="/src/source/前世今生-文武贝钢琴版.mp3"  controls="controls"></audio>
+        <!-- <video autoplay id="play-audio" src="/src/source/前世今生-文武贝钢琴版.mp3"></video> -->
+        <!-- <video src="/src/source/前世今生-文武贝钢琴版.mp3" type="audio/mp4" id="play-audio" controls="controls"></video> -->
+        <!-- <video controls="" autoplay="" muted id="play-audio" name="media">
+            <source src="" type="audio/mp4">
+        </video> -->
     </div>
 </body>
 <script>

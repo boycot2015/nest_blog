@@ -18,13 +18,17 @@ var commonObj = {
     maxVolumeWidth: 82,
     playData: {
         src: '/src/source/前世今生-文武贝钢琴版.mp3',
+        name: '至尊宝',
+        singer: '徐良/杨威',
+        coverImg: '/dist/images/avatar.jpg',
         volume: 0.5,
         loop: false,
         ended: false,
         muted: false,
         currentTime: 0,
-        duration: 1000
+        duration: 0,
     },
+    data: {},
     TemplateEngine: function (html, options) {
         var re = /<%([^%>]+)?%>/g, reExp = /(^( )?(if|for|else|switch|case|break|{|}))(.*)?/g, code = 'var r=[];\n', cursor = 0;
         var add = function (line, js) {
@@ -79,7 +83,7 @@ var commonObj = {
         })
         //加载事件监听
         audioPlayer.addEventListener('loadedmetadata', function () {
-            setVolume()
+            // setVolume()
             commonObj.getAudioInfo(audioPlayer, setStatus);
         })
         //结束事件监听
