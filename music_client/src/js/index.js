@@ -335,7 +335,7 @@ $(function () {
                 // setTimeout(function () {
                 //     audioPlayer.muted = false;
                 // }, 1000);
-                commonObj.playData.name = item.al.name;
+                commonObj.playData.name = item.name;
                 commonObj.playData.singer = '';
                 item.ar.forEach(function (singer, cindex) {
                     commonObj.playData.singer +=  singer.name + ((cindex < item.ar.length - 1) ? '/' : '');
