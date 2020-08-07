@@ -77,7 +77,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="main"></div>
+                <div class="main flex-1 flexbox-v">
+                    <iframe src="/src/pages/index.html" frameborder="0"></iframe>
+                </div>
             </div>
             <div class="footer flexbox-h just-a">
                 <div class="play-btn flexbox-h just-a">
@@ -121,11 +123,9 @@
                                 <i class="icon-music-info"></i>
                             </div>
                             <div class="operation">
-                                <i class="icon-music-star"></i>
-                                收藏全部
+                                <i class="icon-music-star">收藏全部</i>
                                 <span class="line">|</span>
-                                <i class="icon-music-delete"></i>
-                                清空
+                                <i class="icon-music-delete">清空</i>
                             </div>
                         </div>
                         <div class="wrap">
@@ -181,14 +181,14 @@
             </div>
             <div class="more js-mini-music-list">
                 <ul class="music-list js-music-list">
-                    <li class="music-list-item flexbox-h jsut-b">
+                    <!-- <li class="music-list-item flexbox-h jsut-b">
                         <span class="name">一眼万年</span>
                         <span class="source flex-4 line-one">(电视剧《孤独天下》片尾曲)</span>
-                    </li>
+                    </li> -->
                 </ul>
             </div>
         </div>
-        <audio id="play-audio" src="/src/source/前世今生-文武贝钢琴版.mp3"  controls="controls"></audio>
+        <audio id="play-audio" src="/src/source/前世今生-文武贝钢琴版.mp3" muted  controls="controls"></audio>
         <!-- <video autoplay id="play-audio" src="/src/source/前世今生-文武贝钢琴版.mp3"></video> -->
         <!-- <video src="/src/source/前世今生-文武贝钢琴版.mp3" type="audio/mp4" id="play-audio" controls="controls"></video> -->
         <!-- <video controls="" autoplay="" muted id="play-audio" name="media">

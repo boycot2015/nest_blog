@@ -20,27 +20,6 @@
         {{/each}}
     </script>
 </div>
-<!-- <div id="playTemp">
-    <script type="text/html" id="playTemp">
-        {{each list $value fIndex}}
-            <div class="aside-item {{$value.unfold ? 'unfold' : ''}}">
-                <div class="title flexbox-h just-b js-toggle-class">
-                    <p class="name">{{$value.name}}</p>
-                    <span class="icon icon-music-{{$value.icon}}">{{!$value.unfold ? '>' : ''}}</span>
-                </div>
-                <ul class="list">
-                    {{each $value.list item cIndex}}
-                        <li class="list-item js-list-item flexbox-h {{fIndex === 0 && cIndex === 0 ? 'active': ''}}">
-                            <span class="icon icon-music-{{item.icon}}"></span>
-                            <span class="name">{{item.name}}</span>
-                            <span class="icon flex-1 tr icon-music-{{item.rightIcon}}"></span>
-                        </li>
-                    {{/each}}
-                </ul>
-            </div>
-        {{/each}}
-    </script>
-</div> -->
 
 <div id="listTemp">
     <script type="text/html" id="listTemp">
@@ -63,3 +42,24 @@
         {{/each}}
     </script>
 </div>
+<!-- <div id="playTemp">
+    <script type="text/html" id="playTemp">
+        {{each list $value fIndex}}
+            <div class="aside-item {{$value.unfold ? 'unfold' : ''}}">
+                <div class="title flexbox-h just-b js-toggle-class">
+                    <p class="name">{{$value.name}}</p>
+                    <span class="icon icon-music-{{$value.icon}}">{{!$value.unfold ? '>' : ''}}</span>
+                </div>
+                <ul class="list">
+                    {{each $value.list item cIndex}}
+                        <li class="list-item js-list-item flexbox-h {{fIndex === 0 && cIndex === 0 ? 'active': ''}}">
+                            <span class="icon icon-music-{{item.icon}}"></span>
+                            <span class="name">{{item.name}}</span>
+                            <span class="icon flex-1 tr icon-music-{{item.rightIcon}}"></span>
+                        </li>
+                    {{/each}}
+                </ul>
+            </div>
+        {{/each}}
+    </script>
+</div> -->

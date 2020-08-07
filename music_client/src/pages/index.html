@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link crossorigin="anonymous" href="https://lib.baomitu.com/Swiper/5.4.5/css/swiper.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/dist/css/index.min.css">
+    <script src="https://lib.baomitu.com/Swiper/5.4.5/js/swiper.min.js"></script>
+    <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/art-template/4.13.2/lib/template-web.min.js"></script>
+    <script src="/dist/js/common.js"></script>
+    <script src="/dist/js/home.js"></script>
+    <title>首页</title>
+</head>
+<body>
+    <div class="music-home">
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <script type="text/html" id="bannerTemp">
+                    {{each list item index}}
+                        <div class="swiper-slide">
+                            <div class="img" title="{{list.title}}">
+                                <img src="{{list.imgUrl}}" alt="">
+                            </div>
+                            <div class="text">{{list.title}}</div>
+                        </div>
+                    {{/each}}
+                </script>
+                <!-- <div class="swiper-slide">Slide 2</div>
+                <div class="swiper-slide">Slide 3</div> -->
+            </div>
+            <!-- 如果需要分页器 -->
+            <div class="swiper-pagination">
+            </div>
+            
+            <!-- 如果需要导航按钮 -->
+            <!-- <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div> -->
+            
+            <!-- 如果需要滚动条 -->
+            <!-- <div class="swiper-scrollbar"></div> -->
+        </div>
+    </div>
+</body>
+</html>

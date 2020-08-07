@@ -108,7 +108,7 @@ $(function () {
                         min = min < 10 ? '0' + min : min;
                         second = second < 10 ? '0' + second : second;
                         item.time = min + ':' + second;
-                        item.src = 'http://m701.music.126.net/20200807000622/33a4623423943181751d02d2b19ba89a/jdyyaac/0f0b/045a/510b/8a8e1941733003480167fa6fa3270073.m4a'
+                        item.src = 'http://m10.music.126.net/20200807094723/c03a9d05ed395a612e4e1ae62930c0b7/yyaac/obj/wonDkMOGw6XDiTHCmMOi/3355922236/ab61/828a/4c8d/b614204ea9081dcf6db1722c5fa7f398.m4a'
                         $.ajax({
                             type: "post",
                             dataType: "jsonp",
@@ -173,7 +173,7 @@ $(function () {
             $('.js-mini-music-box').find('img').attr('src', playData.picUrl);
             $('.js-music-box .music-info').find('img').attr('src', playData.picUrl);
             $('.js-music-box .music-info .name').html(playData.name).parent().siblings().find('.singer').html(playData.singer);
-            $('.js-mini-music-box').find('.more .name').html(playData.name).siblings('.singer').html(playData.singer);
+            $('.js-mini-music-box').find('.left .more .name').html(playData.name).siblings('.singer').html(playData.singer);
         }
     }
     commonObj.initPlayer(audioPlayer, layOutConfig.setStatus, layOutConfig.setVolume)
@@ -322,29 +322,32 @@ $(function () {
         $('.js-play').toggleClass('play')
     })
     $('.js-mini-music-list, .js-footer-music-list').on('click', '.music-list-item', function () {
-        $(this).addClass('active').siblings().not('.play, .pause').removeClass('active')
+        $(this).addClass('active').siblings().removeClass('active')
     })
     $('.js-mini-music-list, .js-footer-music-list').on('dblclick', '.music-list-item', function () {
-        $(this).addClass('active play').siblings().removeClass('play active pause');
-        $('.js-play').addClass('play');
         var _this = $(this);
         commonObj.data.tracks.forEach(function (item, i) {
             if (item.id == _this.attr('data-id')) {
-                // audioPlayer.muted = true;
-                audioPlayer.src = item.src
-                // setTimeout(function () {
-                //     audioPlayer.muted = false;
-                // }, 1000);
+                audioPlayer.muted = false;
+                audioPlayer.src = item.src;
+                commonObj.playData.id = item.id;
                 commonObj.playData.name = item.name;
                 commonObj.playData.singer = '';
                 item.ar.forEach(function (singer, cindex) {
-                    commonObj.playData.singer +=  singer.name + ((cindex < item.ar.length - 1) ? '/' : '');
+                    commonObj.playData.singer += singer.name + ((cindex < item.ar.length - 1) ? '/' : '');
                 })
                 commonObj.playData.picUrl = item.al.picUrl;
             }
         })
         layOutConfig.setCurrentData(commonObj.playData)
         // audioPlayer.volume = commonObj.playData.volume
+        var listDom = $('.js-mini-music-list, .js-footer-music-list').find('.music-list-item');
+        listDom.each(function (i, e) {
+            if ($(this).attr('data-id') == commonObj.playData.id) {
+                $(this).removeClass('pause').addClass('play active').siblings().removeClass('play active pause');
+            }
+        })
+        $('.js-play').addClass('play');
         audioPlayer.play();
     })
     $('.js-min-music-volume').click(function () {

@@ -5,6 +5,15 @@
     background-position: center;
     background-size: cover;
     position: relative;
+    .main {
+        padding: 20px;
+        min-height: 560px;
+        iframe {
+            min-height: 560px;
+            width: 100%;
+            height: 100%;
+        }
+    }
     #play-audio {
         display: none;
     }
@@ -81,6 +90,11 @@
         .heart-icon {
             margin-left: 8px;
         }
+        .order-icon {
+            &:hover::after {
+                color: @c-000;
+            }
+        }
     }
     
     .music-list {
@@ -94,8 +108,8 @@
             }
             &:hover {
                 background-color: @c-e8;
-                .name {
-                    color: @c-000;
+                .name,.singer i, .time, .icon-music-link::after {
+                    color: @c-000 !important;
                 }
             }
             &.active {
@@ -103,38 +117,32 @@
                 .name {
                     color: @c-000;
                 }
-                &.play {
-                    &::before {
-                        position: absolute;
-                        left: -2px;
-                        top: 0;
-                        width: 0;
-                        height: 0;
-                        color: @primary;
-                        font-size: 18px;
-                        font-family: 'font-music';
-                        content: "\e6a5";
-                    }
-                    .source {
-                        color: @c-000;
-                    }
+            }
+            &.play {
+                &::before {
+                    position: absolute;
+                    left: -2px;
+                    top: 0;
+                    width: 0;
+                    height: 0;
+                    color: @primary;
+                    font-size: 18px;
+                    font-family: 'font-music';
+                    content: "\e6a5";
                 }
-                &.pause {
-                    &::before {
-                        position: absolute;
-                        left: 3px;
-                        top: 9px;
-                        width: 0;
-                        height: 0;
-                        content: "";
-                        border-width: 5px 8px;
-                        border-style: solid;
-                        border-style: solid;
-                        border-color: transparent transparent transparent @primary;
-                    }
-                    .source {
-                        color: @c-000;
-                    }
+            }
+            &.pause {
+                &::before {
+                    position: absolute;
+                    left: 3px;
+                    top: 9px;
+                    width: 0;
+                    height: 0;
+                    content: "";
+                    border-width: 5px 8px;
+                    border-style: solid;
+                    border-style: solid;
+                    border-color: transparent transparent transparent @primary;
                 }
             }
             .name {
@@ -455,11 +463,23 @@
                 i {
                     font-size: 12px;
                     color: @c-666;
+                    &:hover {
+                        color: @c-333;
+                        border-color: @c-333;
+                        &::after {
+                            color: @c-333;
+                            border-color: @c-333;
+                        }
+                    }
                     &.type,
                     &.word {
                         border: 1px solid @c-999;
                         border-radius: 2px;
                         padding: 2px;
+                        &:hover {
+                            color: @c-333;
+                            border-color: @c-333;
+                        }
                     }
                 }
                 .play-list {
@@ -471,6 +491,7 @@
                     background-color: @white;
                     border: 1px solid @c-ccc;
                     overflow: hidden;
+                    display: none;
                     box-shadow: 0 0 10px @c-ccc;
                     .title {
                         padding: 6px 10px;
@@ -485,6 +506,14 @@
                                 &.active {
                                     background-color: @c-777;
                                     color: @white;
+                                    &:hover {
+                                        color: @c-e8;
+                                        background-color: @c-777;
+                                    }
+                                }
+                                &:hover {
+                                    color: @c-666;
+                                    background-color: @c-eee;
                                 }
                             }
                             .list-btn {
@@ -497,6 +526,9 @@
                         }
                         .icon-close {
                             cursor: pointer;
+                            &:hover {
+                                color: @c-666;
+                            }
                         }
                     }
                     
@@ -504,6 +536,15 @@
                         padding: 0 20px;
                         line-height: 30px;
                         color: @c-666;
+                        .total, .operation i,
+                        .operation i {
+                            &:hover {
+                                color: @c-333;
+                                i,.num, &::after, &::before {
+                                    color: @c-333;
+                                }
+                            }
+                        }
                         .line {
                             color: @c-ccc;
                         }
@@ -677,6 +718,7 @@
             color: @c-666;
             .name {
                 width: auto;
+                color: @c-333;
                 max-width: 120px;
             }
             .singer {
