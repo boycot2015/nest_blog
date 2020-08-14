@@ -1,5 +1,5 @@
 <template>
-  <div class="root tc" ref="rootDom" :class="{'night': isNight}">
+  <div class="root tc" ref="rootDom" :class="{'night': ''}">
     <Header :class="{ 'fixed': isHeadFixed, 'unfixed': scrollObj.value > 0 }" @on-night=" (val) => isNight = val"></Header>
     <div class="root-main clearfix" :class="{ 'active': isHeadFixed }">
         <div
@@ -20,7 +20,7 @@
                         :y="18"
                         ></time-canvas>
                 </div>
-                <div class="weather">
+                <div class="weather" v-if="weather.wea">
                     <h3 class="title" :title="weather.city + '/' + weather.wea + '/' + weather.win + weather.win_speed">
                         {{ weather.city }}<i class="sperate" v-if="weather.wea">·</i>{{ weather.wea }}/{{ weather.tem }}℃/{{ weather.win }}{{ weather.win_speed }}
                     </h3>
@@ -167,8 +167,10 @@ export default {
         isNight (val) {
             val && window.localStorage.setItem('theme', val)
             !val && window.localStorage.removeItem('theme')
-            val && (document.documentElement.style.backgroundColor = '#000000')
-            !val && (document.documentElement.style.backgroundColor = '#f8f8f8')
+            val && (document.documentElement.classList = 'night')
+            !val && (document.documentElement.classList = '')
+            // val && (document.documentElement.style.backgroundColor = '#000000')
+            // !val && (document.documentElement.style.backgroundColor = '#f8f8f8')
         }
     },
     created () {

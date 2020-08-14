@@ -74,7 +74,8 @@ export const mutations = {
         // console.log(state.asideConfig)
     },
     setWeather (state, res) {
-        // console.log(res[1], 'weathers')
+        console.log(res[1], 'weathers')
+        if (res[1].errcode === 100) return
         state.weather = res[0]
         state.weathers = res[1].data
         state.weatherIcons = config.weatherIcons
