@@ -36,7 +36,33 @@ const config = {
             name: '邮件通知',
             value: '收到新评论时，会邮件通知管理员；评论通过后，会邮件通知被评论人'
         }
-        ]
+        ],
+        links: [{
+            imgUrl: require('../assets/img/admin.jpg'),
+            url: 'http://admin.blog.boycot.top',
+            targetType: '_blank',
+            name: '博客后台管理'
+        }, {
+            imgUrl: require('../assets/img/mobile.jpg'),
+            url: 'http://m.boycot.top',
+            targetType: '_blank',
+            name: '博客移动端'
+        }, {
+            imgUrl: require('../assets/img/music.gif'),
+            url: 'http://music.boycot.top',
+            targetType: '_blank',
+            name: '仿网易云音乐'
+        }, {
+            imgUrl: require('../assets/img/minio.jpg'),
+            url: 'http://file.boycot.top',
+            targetType: '_blank',
+            name: 'minio文件管理系统'
+        }, {
+            imgUrl: require('../assets/img/swagger_logo.jpg'),
+            url: 'http://www.blog.api.boycot.top/api-docs/',
+            targetType: '_blank',
+            name: '博客后台api文档'
+        }]
     },
     weatherConfig: {
         appid: '47499825',
