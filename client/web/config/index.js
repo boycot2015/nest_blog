@@ -62,6 +62,11 @@ const config = {
             url: 'http://www.blog.api.boycot.top/api-docs/',
             targetType: '_blank',
             name: '博客后台api文档'
+        }, {
+            imgUrl: require('../assets/img/yapi_logo.png'),
+            url: 'http://yapi.boycot.top',
+            targetType: '_blank',
+            name: 'yapi平台'
         }]
     },
     weatherConfig: {

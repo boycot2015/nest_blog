@@ -103,7 +103,8 @@ export default {
         &-item {
             font-size: 16px;
             cursor: pointer;
-            border: 1px solid @c-e8;
+            // border: 1px solid @c-e8;
+            box-shadow: 0px 0px 10px @c-e8;
             border-radius: 5px;
             overflow: hidden;
             transition: all 0.5s;
@@ -114,7 +115,7 @@ export default {
             &:hover {
                 z-index: 10000;
                 transform: translateY(-10px);
-                box-shadow: 0px 10px 10px @c-e8;
+                box-shadow: 0px 10px 30px @c-e8;
             }
             &-link:hover {
                 color: @primary;
