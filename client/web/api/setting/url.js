@@ -6,7 +6,7 @@ export default {
     add: prefix + '/add', // 新增用户
     edit: prefix + '/edit', // 编辑用户
     status: prefix + '/status', // 更改用户状态
-    weather: '/getWeather', // 获取天气接口api
+    weather: '/weather', // 获取天气接口api
     getIp: prefix + '/getIp', // 获取ip接口api
     yiketianqi: '/yiketianqi' // 天气api
 }

@@ -74,21 +74,23 @@ export default async function ({ app, redirect, route, req, res, store }) {
 
             console.log(process.env.IP, ip, 'process.env.IP, ipRes')
             // 对ip做业务处理
-            let [weatherRes, weathersRes] = await Promise.all([
-                app.$axios.get('/yiketianqi', {
-                    params: {
-                        version: 'v61',
-                        ip: ip || process.env.IP || '',
-                        ...config.weatherConfig
-                    }
-                }), app.$axios.get('/yiketianqi', {
-                    params: {
-                        version: 'v9',
-                        ip: ip || process.env.IP || '',
-                        ...config.weatherConfig
-                    }
-                })])
-            store.commit('setWeather', [weatherRes.data, weathersRes.data])
+            // let [weatherRes, weathersRes] = await Promise.all([
+            //     app.$axios.get('/yiketianqi', {
+            //         params: {
+            //             version: 'v61',
+            //             ip: ip || process.env.IP || '',
+            //             ...config.weatherConfig
+            //         }
+            //     }), app.$axios.get('/yiketianqi', {
+            //         params: {
+            //             version: 'v9',
+            //             ip: ip || process.env.IP || '',
+            //             ...config.weatherConfig
+            //         }
+            //     })])
+            let weatherRes = await app.$api.setting.weather({})
+            // console.log(weatherRes, 'weatherRes')
+            store.commit('setWeather', [weatherRes.data, {}])
         }
 
         // 获取热点搜索词汇列表

@@ -20,30 +20,30 @@
                         :y="18"
                         ></time-canvas>
                 </div>
-                <div class="weather" v-if="weather.wea">
-                    <h3 class="title" :title="weather.city + '/' + weather.wea + '/' + weather.win + weather.win_speed">
-                        {{ weather.city }}<i class="sperate" v-if="weather.wea">·</i>{{ weather.wea }}/{{ weather.tem }}℃/{{ weather.win }}{{ weather.win_speed }}
+                <div class="weather" v-if="weather.weather">
+                    <h3 class="title" :title="weather.area + '/' + weather.weather + '/' + weather.wind + weather.windsc">
+                        {{ weather.area }}<i class="sperate" v-if="weather.weather">·</i>{{ weather.weather }}/{{ weather.real }}/{{ weather.wind }}{{ weather.windsc }}
                     </h3>
-                    <div class="body" v-if="weather.wea">
-                        <span class="air name">{{ weather.air_level }}</span>
+                    <div class="body" v-if="weather.weather">
+                        <span class="air name">{{ weather.humidity }}</span>
                         <i class="icon" :class="`icon-weather-${weather.icon}`"></i>
-                        <span class="name">{{ weather.tem1 }}℃/{{ weather.tem2 }}℃</span>
+                        <span class="name">{{ weather.lowest }}~{{ weather.highest }}</span>
                     </div>
-                    <div
-                    ref="weatherSwiper"
-                    class="list weatherSwiper"
-                    v-if="weathers.length"
-                    >
+                     <div
+                        class="list weatherSwiper"
+                        v-if="weathers.length"
+                        v-swiper:mySwipers="swiperOption"
+                        >
                         <div class="swiper-wrapper">
                             <div
                             class="swiper-slide list-item tc"
                             v-for="item in weathers"
-                            :key="item.id"
+                            :key="item.week"
                             >
                                 <i class="icon" :class="`icon-weather-${item.icon}`"></i>
-                                <p class="weather-text">{{ item.wea }}</p>
-                                <p class="name">{{ item.tem1 }}℃/{{ item.tem2 }}℃</p>
-                                <p class="week">{{ item.day }}</p>
+                                <p class="weather-text">{{ item.weather }}</p>
+                                <p class="name">{{ item.lowest }}~{{ item.highest }}</p>
+                                <p class="week">{{ item.week }}</p>
                             </div>
                         </div>
                     </div>
@@ -98,7 +98,7 @@ export default {
                 // 是一个组件自有属性，如果notNextTick设置为true，组件则不会通过NextTick来实例化swiper，也就意味着你可以在第一时间获取到swiper对象，假如你需要刚加载遍使用获取swiper对象来做什么事，那么这个属性一定要是true
                 // notNextTick: true,
                 // 循环
-                loop: false,
+                loop: true,
                 // 设定初始化时slide的索引
                 initialSlide: 1,
                 // freeMode: true,
@@ -108,9 +108,9 @@ export default {
                 //     stopOnLastSlide: false,
                 //     disableOnInteraction: false
                 // },
-                autoplay: false,
-                paginationClickable: true,
-                autoplayDisableOnInteraction: false,
+                autoplay: true,
+                // paginationClickable: true,
+                // autoplayDisableOnInteraction: false,
                 // 滑动速度
                 // speed: 1000,
                 // 滑动方向
@@ -118,7 +118,7 @@ export default {
                 // 小手掌抓取滑动
                 grabCursor: true,
                 // 分页器设置
-                pagination: '.swiper-pagination',
+                // pagination: '.swiper-pagination',
                 slidesPerView: 3,
                 slidesPerGroup: 3,
                 centeredSlides: false,
@@ -186,9 +186,9 @@ export default {
         setTimeout(() => {
             this.loading = false
         }, 300)
-        this.$nextTick(() => {
-            new window.Swiper('.weatherSwiper', this.swiperOption)
-        })
+        // this.$nextTick(() => {
+        //     new window.Swiper('.weatherSwiper', this.swiperOption)
+        // })
         this.toggleMobile() // 根据浏览器器窗口切换服务
     },
     methods: {

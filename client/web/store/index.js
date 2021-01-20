@@ -74,23 +74,38 @@ export const mutations = {
         // console.log(state.asideConfig)
     },
     setWeather (state, res) {
-        console.log(res[1], 'weathers')
         if (res[1].errcode === 100) return
-        state.weather = res[0]
-        state.weathers = res[1].data
+        // state.weather = res[0]
+        // state.weathers = res[1].data
+        // state.weatherIcons = config.weatherIcons
+        // state.weatherIcons.map(el => {
+        //     if (state.weather.wea.includes(el.name)) {
+        //         state.weather.icon = el.value
+        //     }
+        // })
+        // state.weathers.map(el => {
+        //     state.weatherIcons.map(val => {
+        //         if (el.wea.includes(val.name)) {
+        //             el.icon = val.value
+        //         }
+        //     })
+        // })
+        state.weather = res[0][0]
+        state.weathers = res[0]
         state.weatherIcons = config.weatherIcons
         state.weatherIcons.map(el => {
-            if (state.weather.wea.includes(el.name)) {
+            if (state.weather.weather.includes(el.name)) {
                 state.weather.icon = el.value
             }
         })
         state.weathers.map(el => {
             state.weatherIcons.map(val => {
-                if (el.wea.includes(val.name)) {
+                if (el.weather.includes(val.name)) {
                     el.icon = val.value
                 }
             })
         })
+        console.log(state.weathers, 'weathers')
     },
     setKeyWordList (state, res) {
         state.keyWordList = res

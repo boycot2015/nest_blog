@@ -91,16 +91,16 @@ export default {
         {
             src: '@/plugins/components',
             ssr: false
-        }
+        },
         // {
         //     src: '@/plugins/vue2editor',
         //     ssr: false
         // }
-        // {
-        //     src: '~/plugins/vue-swiper.js',
-        //     mode: 'client',
-        //     ssr: false
-        // }
+        {
+            src: '~/plugins/vue-swiper.js',
+            mode: 'client',
+            ssr: false
+        }
     ],
     /*
     ** Auto import components
@@ -193,13 +193,13 @@ export default {
         //         '^/getIp': ''
         //     }
         // },
-        '/getWeather': {
-            target: 'http://api.k780.com',
-            changeOrigin: true, // 允许跨域
-            pathRewrite: {
-                '^/getWeather': ''
-            }
-        },
+        // '/getWeather': {
+        //     target: 'http://api.k780.com',
+        //     changeOrigin: true, // 允许跨域
+        //     pathRewrite: {
+        //         '^/getWeather': ''
+        //     }
+        // },
         '/yiketianqi': {
             target: 'https://yiketianqi.com/api',
             changeOrigin: true, // 允许跨域
