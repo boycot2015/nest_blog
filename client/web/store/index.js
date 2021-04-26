@@ -90,7 +90,7 @@ export const mutations = {
         //         }
         //     })
         // })
-        if (res[0] && res[0][0]) {
+        if (res && res[0] && res[0][0]) {
             state.weather = res[0][0]
             state.weathers = res[0]
             state.weatherIcons = config.weatherIcons
