@@ -90,22 +90,24 @@ export const mutations = {
         //         }
         //     })
         // })
-        state.weather = res[0][0]
-        state.weathers = res[0]
-        state.weatherIcons = config.weatherIcons
-        state.weatherIcons.map(el => {
-            if (state.weather.weather.includes(el.name)) {
-                state.weather.icon = el.value
-            }
-        })
-        state.weathers.map(el => {
-            state.weatherIcons.map(val => {
-                if (el.weather.includes(val.name)) {
-                    el.icon = val.value
+        if (res[0] && res[0][0]) {
+            state.weather = res[0][0]
+            state.weathers = res[0]
+            state.weatherIcons = config.weatherIcons
+            state.weatherIcons.map(el => {
+                if (state.weather.weather.includes(el.name)) {
+                    state.weather.icon = el.value
                 }
             })
-        })
-        console.log(state.weathers, 'weathers')
+            state.weathers.map(el => {
+                state.weatherIcons.map(val => {
+                    if (el.weather.includes(val.name)) {
+                        el.icon = val.value
+                    }
+                })
+            })
+            console.log(state.weathers, 'weathers')
+        }
     },
     setKeyWordList (state, res) {
         state.keyWordList = res
