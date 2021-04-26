@@ -88,9 +88,10 @@ export default async function ({ app, redirect, route, req, res, store }) {
             //             ...config.weatherConfig
             //         }
             //     })])
-            let weatherRes = await app.$api.setting.weather({})
-            // console.log(weatherRes, 'weatherRes')
-            store.commit('setWeather', [weatherRes.data, {}])
+            await app.$api.setting.weather({}).then(weatherRes => {
+                // console.log(weatherRes, 'weatherRes')
+                store.commit('setWeather', [weatherRes.data, {}])
+            })
         }
 
         // 获取热点搜索词汇列表
