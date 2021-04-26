@@ -89,7 +89,7 @@ export default async function ({ app, redirect, route, req, res, store }) {
             //         }
             //     })])
             await app.$api.setting.weather({}).then(weatherRes => {
-                // console.log(weatherRes, 'weatherRes')
+                console.log(weatherRes, 'weatherRes')
                 weatherRes && weatherRes.data && store.commit('setWeather', [weatherRes.data, {}])
             })
         }
