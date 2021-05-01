@@ -6,7 +6,7 @@
 				<view class="user-name">
 					{{isLogin ? userInfo.username : '未登录，请登录！'}}
 				</view>
-				<view class="email" v-if="userInfo.email">
+				<view class="email" v-if="isLogin && userInfo.email">
 					邮箱：{{ userInfo.email }}
 				</view>
 			</view>
@@ -25,20 +25,25 @@
 				}"
 			>
 			    <view class="u-body-item-title u-flex-1 u-text-left u-line-2" v-html="val.title"></view>
-			    <image v-if="$options.filters.getImgUrl(val.content)" :src="val.content|getImgUrl" mode="aspectFill" />
+			    <image v-if="val.img || $options.filters.getImgUrl(val.content)" :src="val.img || $options.filters.getImgUrl(val.content)" mode="aspectFill" />
 			</view>
 		</view>
 	</view>
 </template>
 <style lang="scss">
+uni-page, uni-page-body {
+    height: 100%;
+}
 .user-center {
 	background-color: $c-f8;
-	height: 100%;
+    height: 100%;
+    overflow: hidden;
+    overflow-y: auto;
 	.user-info {
 		// background: linear-gradient($c-ccc, $primary, $error);
 		background-color: $primary;
-		height: 300upx;
-		padding: 90upx 40upx;
+		height: 220upx;
+		padding: 60upx 40upx;
 		box-sizing: border-box;
 		color: $white;
 		.image {

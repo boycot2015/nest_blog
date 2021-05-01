@@ -13,8 +13,8 @@
 }
 	
 .u-body-item image {
-	width: 120upx;
-	flex: 0 0 120upx;
+	width: 180upx;
+	flex: 0 0 180upx;
 	height: 120upx;
 	border-radius: 8upx;
 	margin-left: 12upx;
@@ -26,4 +26,10 @@ uni-tabbar .uni-tabbar~.uni-placeholder {
 uni-tabbar .uni-tabbar__icon {
 	height: 48upx;
 	width: 48upx;
+}
+uni-toast .uni-toast {
+    width: 480upx;
+}
+uni-modal .uni-modal__hd {
+    padding: 30upx 0;
 }

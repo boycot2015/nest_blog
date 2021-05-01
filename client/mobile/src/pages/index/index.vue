@@ -45,7 +45,7 @@
                     class="u-body-item u-flex u-col-between"
                 >
                     <view class="u-body-item-title u-flex-1 u-text-left u-line-2" v-html="val.title"></view>
-                    <image v-if="$options.filters.getImgUrl(val.content)" :src="val.content|getImgUrl" mode="aspectFill" />
+                    <image v-if="val.img||$options.filters.getImgUrl(val.content)" :src="val.img||$options.filters.getImgUrl(val.content)" mode="aspectFill" />
                 </view>
             </view>
             <view class="" slot="foot"><u-icon name="chat-fill" size="34" color="" :label="homeData.newLeast[0] && getCommentNum(homeData.newLeast[0].comment) + '评论'"></u-icon></view>
@@ -179,6 +179,10 @@
 				this.loading = false
             },
             handleView (item) {
+                if (item.url) {
+                    window.open(item.url)
+                    return
+                }
 				uni.navigateTo({
 					url: '/pages/articles/view?id='+ item.id
 				})

@@ -22,13 +22,12 @@
 	&-list {
 		min-height: 450upx;
 		image {
-			width: 130upx;
-			height: 130upx;
-			border-radius: 10upx;
+			width: 180upx;
+			height: 120upx;
+			border-radius: 6upx;
 			overflow: hidden;
 		}
-		.left {
-			margin-right: 20upx;
+		.text {
 			.title {
 				font-size: 34upx;
 				margin-bottom: 10upx;

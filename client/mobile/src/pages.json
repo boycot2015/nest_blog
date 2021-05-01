@@ -6,7 +6,6 @@
 			"style": {
 				"navigationBarTitleText": "博客首页",
 				"enablePullDownRefresh": true,
-				// "titleNView": false,
 				"app-plus": {
 					"pullToRefresh": {
 						"support": true,
@@ -64,6 +63,7 @@
             "name": "login",
             "path" : "pages/login/login",
             "style" : {
+                "navigationBarTitleText": "博客登录"
 			}
         }
         ,{

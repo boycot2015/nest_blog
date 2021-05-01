@@ -457,7 +457,8 @@
 		border-bottom: 1px solid $c-e8;
 	}
 	.public-time {
-		font-size: 32upx;
+        font-size: 28upx;
+        color: $c-999;
 	}
 	.pop-header {
 		height: 68upx;

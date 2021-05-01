@@ -1,20 +1,20 @@
 <template>
 	<view class="article">
-		<view class="article-banner" @click="goDetail(viewList[0])" v-if="viewList && viewList.length">
-			<image class="banner-img" :src="viewList[0].content|getImgUrl" mode="aspectFill"></image>
-			<view class="banner-title">{{ viewList[0].title }}</view>
+		<view class="article-banner" @click="goDetail(currentView || viewList[0])" v-if="viewList && viewList.length">
+			<image class="banner-img" :src="currentView.img || $options.filters.getImgUrl(currentView.content)" mode="aspectFill"></image>
+			<view class="banner-title">{{ currentView.title }}</view>
 		</view>
 		<view class="article-list">
 			<uni-card v-for="(val, index) in viewList" :key="index">
 				<view class="u-flex u-flex-row" @click="goDetail(val)">
 					<view class="u-flex-1">
-						<view class="left">
+						<view class="text">
 							<view class="title u-line-2">{{val.title}}</view>
 							<view class="time" v-if="val.comment && val.comment.length">{{val.comment|getCommentNum }} 条评论 · {{new Date(val.createTime).getTime()|timeFilter}}</view>
 							<view class="time" v-else>暂无评论 · {{new Date(val.createTime).getTime()|timeFilter}}</view>
 						</view>
 					</view>
-					<image :src="val.content|getImgUrl" mode="aspectFill"></image>
+					<image class="ml10 img" v-if="val.img || $options.filters.getImgUrl(val.content)" :src="val.img || $options.filters.getImgUrl(val.content)" mode="aspectFill"></image>
 				</view>
 			</uni-card>
 		</view>
@@ -27,11 +27,12 @@
         name: 'articles',
 		data() {
 			return {
-				viewList: [],
+                viewList: [],
+                currentView: '',
 				status: 'loading',
 				contentText: '',
 				current: 1,
-				pageSize: 3,
+				pageSize: 10,
 				category: '',
 				total: 0
 			}
@@ -50,7 +51,7 @@
 					category: this.category,
 					pageSize: this.pageSize
 				})
-			}
+            }
 		},
 		onHide() {
 			// this.category = ''
@@ -95,7 +96,10 @@
 						this.status = 'more'
 						if (this.viewList.length === res.data[1]) {
 							this.status = 'noMore'
-						}
+                        }
+                        this.viewList.some(el => {
+                            return el.img && (this.currentView = el)
+                        })
 					}
 					setTimeout(function() {
 						uni.stopPullDownRefresh()
@@ -103,6 +107,11 @@
 				}
 			},
 			goDetail (item) {
+                this.currentView = item
+                if (item.url) {
+                    window.open(item.url)
+                    return
+                }
 				uni.navigateTo({
 					url: '/pages/articles/view?id='+ item.id
 				})
@@ -117,6 +126,11 @@
 	}
 </script>
 
-<style>
-
+<style scoped>
+.ml10 {
+    margin-left: 16upx;
+}
+.mr10 {
+    margin-right: 16upx;
+}
 </style>

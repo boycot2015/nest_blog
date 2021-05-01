@@ -1,7 +1,7 @@
 <template>
 	<view class="login pdlr30 u-flex u-flex-col">
-		<view class="logo u-flex-1">
-			<image src="../../static/logo.png" mode=""></image>
+		<view class="logo">
+			<image src="../../static/logo.png" mode="aspecFill"></image>
 		</view>
 		<form
 		class="login-form"
@@ -128,15 +128,16 @@
 		&-form {
 			width: 600upx;
 			.uni-form-item {
-				margin-bottom: 30upx;
-				font-size: 32upx;
+				margin-bottom: 60upx;
+                font-size: 32upx;
+                line-height: 64upx;
 				.uni-input {
-					// padding-bottom: 8upx;
+					padding-bottom: 10upx;
 					border-bottom: 1px solid $c-e8;
 				}
 			}
 			.uni-btn-v {
-				margin-top: 60upx;
+				margin-top: 120upx;
 				uni-button[type=primary] {
 					margin-bottom: 30upx;
 					background-color: $uni-color-primary;
