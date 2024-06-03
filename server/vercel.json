@@ -1,6 +1,6 @@
 {
     "version": 3.0.1,
-    "name": "blog-server",
+    "name": "nest_blog_server",
     "builds": [
         {
             "src": "dist/main.js",
