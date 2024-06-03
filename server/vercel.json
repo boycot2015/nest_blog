@@ -1,3 +1,16 @@
 {
-  "rewrites": [{ "source": "/:path*", "destination": "/index.html" }]
+    "version": 3.0.1,
+    "name": "blog-server",
+    "builds": [
+        {
+            "src": "dist/main.js",
+            "use": "@vercel/node"
+        }
+    ],
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "dist/main.js"
+        }
+    ]
 }
