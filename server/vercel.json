@@ -1,16 +1,16 @@
 {
-    "version": 3.0.1,
+    "version": 1.0.1,
     "name": "nest_blog_server",
     "builds": [
         {
-            "src": "dist/main.js",
+            "src": "src/main.ts",
             "use": "@vercel/node"
         }
     ],
     "routes": [
         {
             "src": "/(.*)",
-            "dest": "dist/main.js"
+            "dest": "/"
         }
     ]
 }
